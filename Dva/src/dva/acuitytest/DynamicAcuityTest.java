@@ -37,8 +37,15 @@ public class DynamicAcuityTest extends AcuityTest{
             TestAnswer lastAnswer = getTestAnswers().get(getTestAnswers().size()-1);
             lastSize = lastAnswer.getElement().getSize(); 
 
-            //decrease size
-            lastSize--; 
+            //decrease size - Basic Adaptive algo
+            if (lastAnswer.isPatientAnswer()){
+                lastSize-=(lastSize*0.2); 
+            } else {
+                lastSize = lastSize * 2; 
+            }
+            
+            //font size should be an integer
+            lastSize = Math.round(lastSize); 
         }
         
         //randomly pick a number between 0 and 9

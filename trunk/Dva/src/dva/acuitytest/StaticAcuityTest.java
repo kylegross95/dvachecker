@@ -44,8 +44,12 @@ public class StaticAcuityTest  extends AcuityTest {
             TestAnswer lastAnswer = getTestAnswers().get(getTestAnswers().size()-1);
             lastSize = lastAnswer.getElement().getSize(); 
 
-            //decrease size
-            lastSize--; 
+            //decrease size - Basic adaptive algo
+            if (lastAnswer.isPatientAnswer()){
+                lastSize -= (lastSize * 0.2); 
+            } else {
+                lastSize = lastSize * 2; 
+            }
         }
         
         //randomly pick on orientation

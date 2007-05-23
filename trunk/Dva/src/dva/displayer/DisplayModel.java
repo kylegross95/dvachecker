@@ -82,7 +82,7 @@ public class DisplayModel extends Observable {
         
         //notify ModelView
         setChanged(); 
-        notifyObservers();
+        notifyObservers(DisplayModel.EventType.SCALING);
     }
     
     public void enableCallibration(){
@@ -107,7 +107,7 @@ public class DisplayModel extends Observable {
     }
     
     public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestMaxStepException {
-        DvaLogger.debug(DisplayModel.class, "currentState:"+currentState); 
+        DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
         
         if (currentState == State.INIT){
             
@@ -154,6 +154,9 @@ public class DisplayModel extends Observable {
                     //display next character
                     currentElement = AcuityTestManager.getAcuityTest().getNext();
                 } 
+            } else if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_DONE){
+                //update displayer
+                setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
             }
             
         } else if (currentState == State.PAUSE){
@@ -170,7 +173,7 @@ public class DisplayModel extends Observable {
       
         //notify ModelView
         setChanged(); 
-        notifyObservers();
+        notifyObservers(DisplayModel.EventType.OPERATOR_EVENT);
         
         DvaLogger.debug(DisplayModel.class, "currentState:"+currentState); 
         
@@ -187,7 +190,7 @@ public class DisplayModel extends Observable {
         
         //notify ModelView
         setChanged(); 
-        notifyObservers();
+        notifyObservers(DisplayModel.EventType.DISPLAY_MESSAGE);
     }
     
     public void disableMessage(){
@@ -234,6 +237,7 @@ public class DisplayModel extends Observable {
     //state machine attributes
     public enum OperatorEvent {LEFT_CLICK, RIGHT_CLICK}; 
     public enum State { INIT, TESTING, PAUSE, END }; 
+    public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING}; 
     boolean pauseBetween = false; 
     private State currentState = State.INIT; 
     

@@ -38,7 +38,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
      */
     public void update(Observable o, Object object){
 
-        if (!callibrating){
+        DisplayModel.EventType eventType= (DisplayModel.EventType)object; 
+        
+        if (!callibrating && eventType==DisplayModel.EventType.OPERATOR_EVENT ){
             AcuityTestManager.Status status = AcuityTestManager.getStatus();
 
             if ( status == AcuityTestManager.Status.TEST_RUNNING || status == AcuityTestManager.Status.INIT){

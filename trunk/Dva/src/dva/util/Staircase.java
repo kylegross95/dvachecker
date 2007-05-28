@@ -9,6 +9,22 @@
 
 package dva.util;
 
+import java.io.IOException;
+import org.jfree.chart.*;
+import org.jfree.chart.axis.*;
+import org.jfree.chart.labels.*;
+import org.jfree.chart.plot.*;
+import org.jfree.chart.plot.*;
+import org.jfree.chart.renderer.xy.*;
+import org.jfree.chart.title.*;
+import org.jfree.data.time.*;
+import org.jfree.data.xy.*;
+import org.jfree.chart.ChartUtilities;
+import java.io.File;
+import java.lang.String;
+
+
+
 /**
  *Staircase algo
  *
@@ -40,6 +56,8 @@ public class Staircase {
     private int lastPositive; //0: single, 1: double (peak)
     private boolean converged; //whether the algo has converged yet
     private float convergenceVal;
+    
+    private int seriesCnt;
 
     private final float INIT_STEP_SIZE = 0.1f;
     private final float INIT_STIM_SIZE = 1;
@@ -47,6 +65,8 @@ public class Staircase {
     private final float LIMIT_DOWN = 0;
     private final float MIN_STEPSIZE = 0.01f;
     private final int MAX_RUNS = 500;
+    
+    org.jfree.data.xy.XYSeries series;
     
        
     /**
@@ -60,6 +80,9 @@ public class Staircase {
         peaker = false;
         lastPositive = 1; //to avoid step resizing at init
         
+      series = new org.jfree.data.xy.XYSeries("");
+        
+        
     }
     
     public void initSize (float initSize, float initStepSize) {
@@ -72,6 +95,8 @@ public class Staircase {
         stepSize = initStepSize;
         
         //return curVal;
+        seriesCnt = 1;
+        series.add(seriesCnt,initSize);
     }
     public float whatSize(boolean answer) {
     prevStepSize = stepSize;
@@ -106,7 +131,7 @@ public class Staircase {
            // runDir = runDir;
             peaker = true; //we are at a potential double peak
             //lastPositive should be changed but its deferred to next round
-            System.out.print("HERE1");
+            
             }
         else if(answer && peaker) { //we are at a double peak, invert direction
            if (lastPositive == 1) { //check for last positive response
@@ -120,7 +145,7 @@ public class Staircase {
            lastPositive = 1; //log the double peak
            peaks[peakIdx] = curVal; //log the peak
            peakIdx++;
-           System.out.print("HERE2");
+           
         }
         else if (!answer && peaker) { //FIXME: not sure about this 
             stepSize = prevStepSize;
@@ -131,6 +156,9 @@ public class Staircase {
         }     
     } 
     runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
+    
+    
+    
     if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
     if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
     else if (curVal < LIMIT_DOWN) curVal = -1; //check if lower bound has been surpassed
@@ -148,7 +176,9 @@ public class Staircase {
             curVal = 0;
         }
         
-          
+    series.add(seriesCnt,curVal);
+    
+    seriesCnt++;
     return curVal; 
     
     }//close whatSize
@@ -156,6 +186,29 @@ public class Staircase {
     public float getConvergenceValue() {
     if (converged) return convergenceVal;
     else return -1;
+    
+    }
+    
+    public void doGraph(String param) {
+   XYDataset xyDataset = new XYSeriesCollection(series);
+    org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
+                     ("DVA Exp Values",  // Title
+                      "Run",           // X-Axis label
+                      "Value",           // Y-Axis label
+                      xyDataset,          // Dataset
+                       org.jfree.chart.plot.PlotOrientation.VERTICAL,
+                      true,                // Show legend
+                      true,   
+                      true
+                     );
+    String filename = "c:/temp/chart" + param + ".jpg";
+    try {
+            ChartUtilities.saveChartAsJPEG(new File(filename), chart, 1000, 600);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+   
+    
     
     }
     

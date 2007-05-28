@@ -46,9 +46,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             if ( status == AcuityTestManager.Status.TEST_RUNNING || status == AcuityTestManager.Status.INIT){
                 if (displayer.getDisplayModel().getState() == DisplayModel.State.PAUSE){
                     //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
+                    
+                    //enable the next button
+                    this.jButtonDisplayNextOptotype.setEnabled(true); 
 
                 } else if (displayer.getDisplayModel().getState() == DisplayModel.State.TESTING){
                     //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.waitanswer")); 
+                    //enable the next button
+                    this.jButtonDisplayNextOptotype.setEnabled(false); 
                 }
 
             } else if ( status == AcuityTestManager.Status.TEST_FAILED ){
@@ -146,30 +151,30 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             
             //DvaLogger.debug(MainFrame.class, "MouseClicked:" + e.getButton()+", ModelState:"+displayer.getDisplayModel().getState()); 
 
-            try {
+            //try {
                 if (e.getButton() == MouseEvent.BUTTON1){
                     //left button on a right-handed mouse
 
-                    Element element = displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.LEFT_CLICK);
+                    //Element element = displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.LEFT_CLICK);
                     
                     //update character position and orientation label
-                    jLabelCharacter.setText(element.toString()); 
+                    //jLabelCharacter.setText(element.toString()); 
                     //jLabelOrientation.setText(element.getOrientation().toString()); 
                     
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) { 
                     //right button on a right-handed mouse
 
-                    Element element = displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.RIGHT_CLICK);
+                    //Element element = displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.RIGHT_CLICK);
 
                     //update character position and orientation label
-                    jLabelCharacter.setText(element.toString()); 
+                    //jLabelCharacter.setText(element.toString()); 
                     //jLabelOrientation.setText(element.getOrientation().toString());
                 }
                 
-            } catch (AcuityTestMaxStepException atmsex){
-                DvaLogger.error(MainFrame.class, atmsex); 
-            }
+            //} catch (AcuityTestMaxStepException atmsex){
+            //    DvaLogger.error(MainFrame.class, atmsex); 
+            //}
 
         }
         
@@ -352,7 +357,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel12.setText("Comment:");
 
         jTextAreaDialogPatientComment.setColumns(15);
-        jTextAreaDialogPatientComment.setEditable(false);
         jTextAreaDialogPatientComment.setFont(new java.awt.Font("Tahoma", 0, 12));
         jTextAreaDialogPatientComment.setRows(3);
         jScrollPane3.setViewportView(jTextAreaDialogPatientComment);
@@ -631,24 +635,74 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jPanelResultsValidation.setBorder(javax.swing.BorderFactory.createTitledBorder("Operator real-time results validation"));
         jPanelDisplayedCharacter.setBorder(javax.swing.BorderFactory.createTitledBorder("Patient answer"));
         jButtonOptotypeC.setText("C");
+        jButtonOptotypeC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeCActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeD.setText("D");
+        jButtonOptotypeD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeDActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeH.setText("H");
+        jButtonOptotypeH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeHActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeK.setText("K");
+        jButtonOptotypeK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeKActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeN.setText("N");
+        jButtonOptotypeN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeNActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeO.setText("O");
+        jButtonOptotypeO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeOActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeR.setText("R");
+        jButtonOptotypeR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeRActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeS.setText("S");
+        jButtonOptotypeS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeSActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeV.setText("V");
+        jButtonOptotypeV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeVActionPerformed(evt);
+            }
+        });
 
         jButtonOptotypeZ.setText("Z");
+        jButtonOptotypeZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOptotypeZActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jPanelDisplayedCharacterLayout = new org.jdesktop.layout.GroupLayout(jPanelDisplayedCharacter);
         jPanelDisplayedCharacter.setLayout(jPanelDisplayedCharacterLayout);
@@ -708,6 +762,11 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabelCharacter.setText("0");
 
         jButtonDisplayNextOptotype.setText("Next");
+        jButtonDisplayNextOptotype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDisplayNextOptotypeActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout jPanelResultsValidationLayout = new org.jdesktop.layout.GroupLayout(jPanelResultsValidation);
         jPanelResultsValidation.setLayout(jPanelResultsValidationLayout);
@@ -861,6 +920,94 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonOptotypeZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeZActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_Z);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeZActionPerformed
+
+    private void jButtonOptotypeVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeVActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_V);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeVActionPerformed
+
+    private void jButtonOptotypeSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeSActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_S);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeSActionPerformed
+
+    private void jButtonOptotypeRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeRActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_R);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeRActionPerformed
+
+    private void jButtonOptotypeOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeOActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_O);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeOActionPerformed
+
+    private void jButtonOptotypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeNActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_N);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeNActionPerformed
+
+    private void jButtonOptotypeKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeKActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_K);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeKActionPerformed
+
+    private void jButtonOptotypeHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeHActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_H);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeHActionPerformed
+
+    private void jButtonOptotypeDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeDActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_D);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeDActionPerformed
+
+    private void jButtonOptotypeCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeCActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_C);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonOptotypeCActionPerformed
+
+    private void jButtonDisplayNextOptotypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayNextOptotypeActionPerformed
+        try{
+            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.NEXT_OPTOTYPE);
+        } catch (AcuityTestMaxStepException e){
+            DvaLogger.error(MainFrame.class, e); 
+        }
+    }//GEN-LAST:event_jButtonDisplayNextOptotypeActionPerformed
 
     private void jCheckBoxMenuItemPauseBetweenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemPauseBetweenActionPerformed
         this.displayer.getDisplayModel().setPauseBetween(jCheckBoxMenuItemPauseBetween.isSelected()); 

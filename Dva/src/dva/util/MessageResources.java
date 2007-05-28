@@ -49,13 +49,13 @@ public final class MessageResources
    *  The set of resource bundles from which we access resources, keyed by the
    *  key computed in <code>getLocaleKey()</code> .
    */
-  private Hashtable bundles = new Hashtable();
+  private Hashtable<String, ResourceBundle> bundles = new Hashtable<String, ResourceBundle>();
 
   /**
    *  The set of previously created message format objects, keyed by the key
    *  computed in <code>getResourceKey()</code> .
    */
-  private Hashtable formats = new Hashtable();
+  private Hashtable<String, MessageFormat> formats = new Hashtable<String, MessageFormat>();
 
   /**
    *  Should we return <code>null</code> for message keys that are not found
@@ -75,7 +75,7 @@ public final class MessageResources
    *  The MessageResources instances that have been created so far, keyed by
    *  base name.
    */
-  private static Hashtable cache = new Hashtable();
+  private static Hashtable<String, MessageResources> cache = new Hashtable<String, MessageResources>();
 
 
   // ----------------------------------------------------------- Constructors

@@ -8,7 +8,9 @@
 package dva.acuitytest;
 
 import dva.displayer.Element;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -61,7 +63,6 @@ public abstract class AcuityTest {
     }
     
 
-    
     public String getOperatorInstruction(){
 
         return resourceBundle.getString("message.acuitytest."+getTestName()+".operatorinstruction", String.valueOf(treadmillSpeed) ); 
@@ -73,6 +74,8 @@ public abstract class AcuityTest {
     private boolean testDone = false; 
     private float treadmillSpeed = 0; 
     private boolean testFailed = false; 
+    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
+    private Date startDate = null; 
     
     //resources
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
@@ -129,6 +132,18 @@ public abstract class AcuityTest {
 
     public void setTreadmillSpeed(float treadmillSpeed) {
         this.treadmillSpeed = treadmillSpeed;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+    
+    public String getStartDateAsString(){
+        return formatter.format(startDate); 
+    }
+    
+    public void setStartDate(){
+        startDate = new Date(); 
     }
     
 }

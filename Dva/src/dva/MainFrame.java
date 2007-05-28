@@ -45,10 +45,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
             if ( status == AcuityTestManager.Status.TEST_RUNNING || status == AcuityTestManager.Status.INIT){
                 if (displayer.getDisplayModel().getState() == DisplayModel.State.PAUSE){
-                    jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
+                    //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
 
                 } else if (displayer.getDisplayModel().getState() == DisplayModel.State.TESTING){
-                    jLabelClickArea.setText(resourceBundle.getString("message.clickarea.waitanswer")); 
+                    //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.waitanswer")); 
                 }
 
             } else if ( status == AcuityTestManager.Status.TEST_FAILED ){
@@ -75,7 +75,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                 DvaLogger.debug(MainFrame.class, "TEST_DONE");
 
                 //update click area
-                jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
+                //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
 
                 String finishedTestName = AcuityTestManager.getAcuityTestName().toUpperCase();
 
@@ -105,7 +105,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
      */
     void updateJLabelPatientData(Patient patient){
         DvaLogger.debug("Updated patient data: \"" + patient.toString() + "\"");
-        this.jLabelPatientData.setText( patient.toString() ); 
+        this.jLabelPatientName.setText( patient.getLastname() + " " + patient.getFirstname() );
+        this.jLabelPatientSex.setText( patient.getSex() ); 
+        this.jLabelPatientAge.setText( patient.getAge() );
+        this.jTextAreaPatientComment.setText(patient.getComment()); 
     }
     
     
@@ -125,7 +128,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             
             //propose a speeds set
             int speeds[] = AcuityTestManager.proposeSpeedSet(); 
-            jLabelDialogPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
+            //jLabelDialogPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
             
             //show new patient dialog
             GUIUtils.showDialog(jDialogPatientData, true, e);
@@ -151,7 +154,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                     
                     //update character position and orientation label
                     jLabelCharacter.setText(element.toString()); 
-                    jLabelOrientation.setText(element.getOrientation().toString()); 
+                    //jLabelOrientation.setText(element.getOrientation().toString()); 
                     
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) { 
@@ -161,7 +164,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
                     //update character position and orientation label
                     jLabelCharacter.setText(element.toString()); 
-                    jLabelOrientation.setText(element.getOrientation().toString());
+                    //jLabelOrientation.setText(element.getOrientation().toString());
                 }
                 
             } catch (AcuityTestMaxStepException atmsex){
@@ -177,10 +180,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             
             if (displayer.getDisplayModel().getState() == DisplayModel.State.TESTING){
                 if (e.getButton() == MouseEvent.BUTTON1){
-                    jPanelClickArea.setBackground(Color.GREEN); 
+                    //jPanelClickArea.setBackground(Color.GREEN); 
 
                 } else if (e.getButton() == MouseEvent.BUTTON3){
-                    jPanelClickArea.setBackground(Color.RED); 
+                    //jPanelClickArea.setBackground(Color.RED); 
                 }
             }
    
@@ -188,21 +191,21 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         
         public void mouseReleased(MouseEvent e){
             if (!enableClickArea) return; 
-            jPanelClickArea.setBackground(Color.DARK_GRAY);
+            //jPanelClickArea.setBackground(Color.DARK_GRAY);
         }
         
         public void mouseEntered(MouseEvent e){
             if (!enableClickArea) return; 
             DvaLogger.debug("Mouse ENTERED validation area");
             
-            jPanelClickArea.setBackground(Color.DARK_GRAY);
+            //jPanelClickArea.setBackground(Color.DARK_GRAY);
         }
         
         public void mouseExited(MouseEvent e) {
             if (!enableClickArea) return; 
             DvaLogger.debug("Mouse EXITED validation area");
             
-            jPanelClickArea.setBackground(jLabelClickAreaBackgroundColor);
+            //jPanelClickArea.setBackground(jLabelClickAreaBackgroundColor);
         }
     }
     
@@ -217,9 +220,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         DvaLogger.initLogger(jTextAreaLog); 
         
         //save jLabelClickArea background color
-        jLabelClickAreaBackgroundColor = jLabelClickArea.getBackground();
+        //jLabelClickAreaBackgroundColor = jLabelClickArea.getBackground();
         
-        jLabelClickArea.addMouseListener(new OperatorClickMouseListener()); 
+        //jLabelClickArea.addMouseListener(new OperatorClickMouseListener()); 
         
         //create displayer
         displayer = new Displayer();
@@ -250,8 +253,13 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jRadioButtonDialogPatientSexF = new javax.swing.JRadioButton();
         jLabelDialogPatientAge = new javax.swing.JLabel();
         jTextFieldDialogPatientAge = new javax.swing.JTextField();
-        jLabelDialogPatientSpeedsSet = new javax.swing.JLabel();
-        jLabelDialogPatientSpeedsSetValue = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jTextFieldDialogPatientLastname = new javax.swing.JTextField();
+        jTextFieldDialogPatientFirstname = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextAreaDialogPatientComment = new javax.swing.JTextArea();
         jButtonPatientOk = new javax.swing.JButton();
         jButtonPatientCancel = new javax.swing.JButton();
         buttonGroupDialogPatientSex = new javax.swing.ButtonGroup();
@@ -259,25 +267,38 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanelPatientData = new javax.swing.JPanel();
-        jLabelPatientData = new javax.swing.JLabel();
-        jButtonEditPatient = new javax.swing.JButton();
+        jLabelPatientSex = new javax.swing.JLabel();
+        jLabelPatientName = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabelPatientAge = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaPatientComment = new javax.swing.JTextArea();
         jPanelAcuityTest = new javax.swing.JPanel();
         jButtonStartAcuityTest = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabelCurrentTest = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabelTreadmillSpeed = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabelPatientSpeedsSetValue = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabelAcuityTestDateTime = new javax.swing.JLabel();
         jPanelResultsValidation = new javax.swing.JPanel();
-        jPanelClickArea = new javax.swing.JPanel();
-        jLabelClickArea = new javax.swing.JLabel();
         jPanelDisplayedCharacter = new javax.swing.JPanel();
-        jLabelCharacter = new javax.swing.JLabel();
-        jLabelOrientation = new javax.swing.JLabel();
+        jButtonOptotypeC = new javax.swing.JButton();
+        jButtonOptotypeD = new javax.swing.JButton();
+        jButtonOptotypeH = new javax.swing.JButton();
+        jButtonOptotypeK = new javax.swing.JButton();
+        jButtonOptotypeN = new javax.swing.JButton();
+        jButtonOptotypeO = new javax.swing.JButton();
+        jButtonOptotypeR = new javax.swing.JButton();
+        jButtonOptotypeS = new javax.swing.JButton();
+        jButtonOptotypeV = new javax.swing.JButton();
+        jButtonOptotypeZ = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jLabelCharacter = new javax.swing.JLabel();
+        jButtonDisplayNextOptotype = new javax.swing.JButton();
         jPanelLog = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaLog = new javax.swing.JTextArea();
@@ -299,7 +320,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jDialogPatientData.setModal(true);
         jPanelDialogPatientData.setBorder(javax.swing.BorderFactory.createTitledBorder("Patient data"));
         jLabelDialogPatientSex.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelDialogPatientSex.setText("Sex");
+        jLabelDialogPatientSex.setText("Sex: ");
 
         buttonGroupDialogPatientSex.add(jRadioButtonDialogPatientSexM);
         jRadioButtonDialogPatientSexM.setSelected(true);
@@ -318,15 +339,23 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jRadioButtonDialogPatientSexF.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         jLabelDialogPatientAge.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelDialogPatientAge.setText("Age");
+        jLabelDialogPatientAge.setText("Age: ");
 
         jTextFieldDialogPatientAge.setText("20");
 
-        jLabelDialogPatientSpeedsSet.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelDialogPatientSpeedsSet.setText("Dynamic test order:");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("LastName: ");
 
-        jLabelDialogPatientSpeedsSetValue.setForeground(new java.awt.Color(51, 94, 168));
-        jLabelDialogPatientSpeedsSetValue.setText("FIX WALK RUN");
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("FirstName: ");
+
+        jLabel12.setText("Comment:");
+
+        jTextAreaDialogPatientComment.setColumns(15);
+        jTextAreaDialogPatientComment.setEditable(false);
+        jTextAreaDialogPatientComment.setFont(new java.awt.Font("Tahoma", 0, 12));
+        jTextAreaDialogPatientComment.setRows(3);
+        jScrollPane3.setViewportView(jTextAreaDialogPatientComment);
 
         org.jdesktop.layout.GroupLayout jPanelDialogPatientDataLayout = new org.jdesktop.layout.GroupLayout(jPanelDialogPatientData);
         jPanelDialogPatientData.setLayout(jPanelDialogPatientDataLayout);
@@ -334,37 +363,58 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelDialogPatientDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                        .add(jLabelDialogPatientAge, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jLabelDialogPatientSex, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
-                    .add(jLabelDialogPatientSpeedsSet))
+                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jLabel12)
+                    .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(jLabelDialogPatientSex, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel10, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                    .add(jLabelDialogPatientAge, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 68, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, jTextFieldDialogPatientAge)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDialogPatientDataLayout.createSequentialGroup()
-                            .add(jRadioButtonDialogPatientSexM)
-                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                            .add(jRadioButtonDialogPatientSexF)))
-                    .add(jLabelDialogPatientSpeedsSetValue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
-                .addContainerGap())
+                    .add(jPanelDialogPatientDataLayout.createSequentialGroup()
+                        .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jTextFieldDialogPatientFirstname, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                            .add(jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .add(jPanelDialogPatientDataLayout.createSequentialGroup()
+                        .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDialogPatientDataLayout.createSequentialGroup()
+                                .add(jRadioButtonDialogPatientSexM)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jRadioButtonDialogPatientSexF))
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDialogPatientDataLayout.createSequentialGroup()
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                                    .add(jTextFieldDialogPatientAge))))
+                        .addContainerGap())))
         );
         jPanelDialogPatientDataLayout.setVerticalGroup(
             jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelDialogPatientDataLayout.createSequentialGroup()
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabelDialogPatientSex)
+                    .add(jLabel1)
+                    .add(jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel10)
+                    .add(jTextFieldDialogPatientFirstname, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jRadioButtonDialogPatientSexM)
-                    .add(jRadioButtonDialogPatientSexF))
+                    .add(jRadioButtonDialogPatientSexF)
+                    .add(jLabelDialogPatientSex))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabelDialogPatientAge)
                     .add(jTextFieldDialogPatientAge, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabelDialogPatientSpeedsSet)
-                    .add(jLabelDialogPatientSpeedsSetValue)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanelDialogPatientDataLayout.createSequentialGroup()
+                        .add(jLabel12)
+                        .addContainerGap(44, Short.MAX_VALUE))
+                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)))
         );
 
         jButtonPatientOk.setText("Ok");
@@ -387,13 +437,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             jDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jDialogPatientDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jDialogPatientDataLayout.createSequentialGroup()
-                        .add(jButtonPatientOk)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jButtonPatientCancel))
-                    .add(jPanelDialogPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(65, Short.MAX_VALUE))
+                .add(jPanelDialogPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jDialogPatientDataLayout.createSequentialGroup()
+                .addContainerGap(193, Short.MAX_VALUE)
+                .add(jButtonPatientOk)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jButtonPatientCancel)
+                .addContainerGap())
         );
         jDialogPatientDataLayout.setVerticalGroup(
             jDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -438,15 +489,29 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         setTitle("Dynamic Visual Acuity Checker");
         setResizable(false);
         jPanelPatientData.setBorder(javax.swing.BorderFactory.createTitledBorder("Patient data"));
-        jLabelPatientData.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelPatientData.setText("M-20");
+        jLabelPatientSex.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jButtonEditPatient.setText("Edit");
-        jButtonEditPatient.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonEditPatientActionPerformed(evt);
-            }
-        });
+        jLabel6.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Name:");
+
+        jLabel7.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Sex:");
+
+        jLabel9.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Age:");
+
+        jLabel11.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel11.setText("Comment:");
+
+        jTextAreaPatientComment.setColumns(15);
+        jTextAreaPatientComment.setEditable(false);
+        jTextAreaPatientComment.setFont(new java.awt.Font("Tahoma", 0, 12));
+        jTextAreaPatientComment.setRows(3);
+        jTextAreaPatientComment.setTabSize(4);
+        jScrollPane2.setViewportView(jTextAreaPatientComment);
 
         org.jdesktop.layout.GroupLayout jPanelPatientDataLayout = new org.jdesktop.layout.GroupLayout(jPanelPatientData);
         jPanelPatientData.setLayout(jPanelPatientDataLayout);
@@ -454,18 +519,43 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelPatientDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jLabelPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 138, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .add(jLabel9, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .add(jLabel11, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jLabel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jButtonEditPatient)
-                .add(18, 18, 18))
+                .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanelPatientDataLayout.createSequentialGroup()
+                        .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jLabelPatientAge)
+                            .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                .add(jLabelPatientSex)
+                                .add(jLabelPatientName, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)))
+                        .add(85, 85, 85))
+                    .add(jPanelPatientDataLayout.createSequentialGroup()
+                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanelPatientDataLayout.setVerticalGroup(
             jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelPatientDataLayout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanelPatientDataLayout.createSequentialGroup()
                 .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButtonEditPatient)
-                    .add(jLabelPatientData))
-                .addContainerGap(13, Short.MAX_VALUE))
+                    .add(jLabelPatientName)
+                    .add(jLabel6))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabelPatientSex)
+                    .add(jLabel7))
+                .add(5, 5, 5)
+                .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabelPatientAge)
+                    .add(jLabel9))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel11)
+                    .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanelAcuityTest.setBorder(javax.swing.BorderFactory.createTitledBorder("Acuity Test"));
@@ -478,153 +568,177 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             }
         });
 
-        jLabel1.setForeground(new java.awt.Color(51, 94, 168));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Current Test:");
-
         jLabel2.setForeground(new java.awt.Color(51, 94, 168));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Treadmill speed:");
-
-        jLabelCurrentTest.setText("Landolt C test");
 
         jLabel8.setText("km/h");
 
         jLabelTreadmillSpeed.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelTreadmillSpeed.setText("0");
 
-        jLabel7.setForeground(new java.awt.Color(51, 94, 168));
-        jLabel7.setText("Dynamic test order:");
-
         jLabelPatientSpeedsSetValue.setText(" ");
+
+        jLabel13.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel13.setText("Date / Time:");
+
+        jLabelAcuityTestDateTime.setText(" ");
 
         org.jdesktop.layout.GroupLayout jPanelAcuityTestLayout = new org.jdesktop.layout.GroupLayout(jPanelAcuityTest);
         jPanelAcuityTest.setLayout(jPanelAcuityTestLayout);
         jPanelAcuityTestLayout.setHorizontalGroup(
             jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelAcuityTestLayout.createSequentialGroup()
-                .addContainerGap()
                 .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jButtonStartAcuityTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                     .add(jPanelAcuityTestLayout.createSequentialGroup()
+                        .add(111, 111, 111)
+                        .add(jLabelPatientSpeedsSetValue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                    .add(jPanelAcuityTestLayout.createSequentialGroup()
+                        .addContainerGap()
                         .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelAcuityTestLayout.createSequentialGroup()
+                            .add(jButtonStartAcuityTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                            .add(jPanelAcuityTestLayout.createSequentialGroup()
+                                .add(jLabel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(jLabelTreadmillSpeed, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 16, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jLabel8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
-                            .add(jLabelCurrentTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)))
+                                .add(jLabel8, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))))
                     .add(jPanelAcuityTestLayout.createSequentialGroup()
-                        .add(jLabel7)
+                        .addContainerGap()
+                        .add(jLabel13)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabelPatientSpeedsSetValue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)))
+                        .add(jLabelAcuityTestDateTime, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelAcuityTestLayout.setVerticalGroup(
             jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelAcuityTestLayout.createSequentialGroup()
+                .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel13)
+                    .add(jLabelAcuityTestDateTime))
+                .add(6, 6, 6)
                 .add(jButtonStartAcuityTest)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabelCurrentTest)
-                    .add(jLabel1))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabelTreadmillSpeed)
-                    .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel8))
+                    .add(jLabel8)
+                    .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanelAcuityTestLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel7)
-                    .add(jLabelPatientSpeedsSetValue))
+                .add(jLabelPatientSpeedsSetValue)
                 .addContainerGap())
         );
 
         jPanelResultsValidation.setBorder(javax.swing.BorderFactory.createTitledBorder("Operator real-time results validation"));
-        jPanelClickArea.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        jLabelClickArea.setFont(jLabelClickArea.getFont().deriveFont(jLabelClickArea.getFont().getSize()+9f));
-        jLabelClickArea.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanelDisplayedCharacter.setBorder(javax.swing.BorderFactory.createTitledBorder("Patient answer"));
+        jButtonOptotypeC.setText("C");
 
-        org.jdesktop.layout.GroupLayout jPanelClickAreaLayout = new org.jdesktop.layout.GroupLayout(jPanelClickArea);
-        jPanelClickArea.setLayout(jPanelClickAreaLayout);
-        jPanelClickAreaLayout.setHorizontalGroup(
-            jPanelClickAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jLabelClickArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
-        );
-        jPanelClickAreaLayout.setVerticalGroup(
-            jPanelClickAreaLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jLabelClickArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-        );
+        jButtonOptotypeD.setText("D");
 
-        jPanelDisplayedCharacter.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jLabelCharacter.setFont(new java.awt.Font("Tahoma", 0, 18));
-        jLabelCharacter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelCharacter.setText("0");
+        jButtonOptotypeH.setText("H");
 
-        jLabelOrientation.setFont(new java.awt.Font("Tahoma", 0, 18));
-        jLabelOrientation.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelOrientation.setText("-");
+        jButtonOptotypeK.setText("K");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 2, 11));
-        jLabel3.setForeground(new java.awt.Color(51, 94, 168));
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Character:");
+        jButtonOptotypeN.setText("N");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 2, 11));
-        jLabel6.setForeground(new java.awt.Color(51, 94, 168));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Orientation:");
+        jButtonOptotypeO.setText("O");
+
+        jButtonOptotypeR.setText("R");
+
+        jButtonOptotypeS.setText("S");
+
+        jButtonOptotypeV.setText("V");
+
+        jButtonOptotypeZ.setText("Z");
 
         org.jdesktop.layout.GroupLayout jPanelDisplayedCharacterLayout = new org.jdesktop.layout.GroupLayout(jPanelDisplayedCharacter);
         jPanelDisplayedCharacter.setLayout(jPanelDisplayedCharacterLayout);
         jPanelDisplayedCharacterLayout.setHorizontalGroup(
             jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanelDisplayedCharacterLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(jLabel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
-                .add(25, 25, 25)
-                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(jLabelOrientation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jLabelCharacter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE)
+                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jButtonOptotypeC)
+                    .add(jButtonOptotypeO))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanelDisplayedCharacterLayout.createSequentialGroup()
+                        .add(jButtonOptotypeD)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonOptotypeH)
+                        .add(6, 6, 6)
+                        .add(jButtonOptotypeK)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonOptotypeN))
+                    .add(jPanelDisplayedCharacterLayout.createSequentialGroup()
+                        .add(jButtonOptotypeR)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonOptotypeS)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonOptotypeV)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonOptotypeZ)))
                 .addContainerGap())
         );
         jPanelDisplayedCharacterLayout.setVerticalGroup(
             jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelDisplayedCharacterLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                    .add(jLabelCharacter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButtonOptotypeC)
+                    .add(jButtonOptotypeD)
+                    .add(jButtonOptotypeH)
+                    .add(jButtonOptotypeK)
+                    .add(jButtonOptotypeN))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jLabelOrientation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
-                    .add(jLabel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
-                .addContainerGap())
+                .add(jPanelDisplayedCharacterLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jButtonOptotypeO)
+                    .add(jButtonOptotypeR)
+                    .add(jButtonOptotypeS)
+                    .add(jButtonOptotypeV)
+                    .add(jButtonOptotypeZ))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 2, 11));
+        jLabel3.setForeground(new java.awt.Color(51, 94, 168));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Character:");
+
+        jLabelCharacter.setFont(new java.awt.Font("Tahoma", 0, 18));
+        jLabelCharacter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelCharacter.setText("0");
+
+        jButtonDisplayNextOptotype.setText("Next");
 
         org.jdesktop.layout.GroupLayout jPanelResultsValidationLayout = new org.jdesktop.layout.GroupLayout(jPanelResultsValidation);
         jPanelResultsValidation.setLayout(jPanelResultsValidationLayout);
         jPanelResultsValidationLayout.setHorizontalGroup(
             jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanelResultsValidationLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelClickArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDisplayedCharacter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(jPanelResultsValidationLayout.createSequentialGroup()
+                .add(jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanelResultsValidationLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanelDisplayedCharacter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(jPanelResultsValidationLayout.createSequentialGroup()
+                                .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 72, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jLabelCharacter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))))
+                    .add(jPanelResultsValidationLayout.createSequentialGroup()
+                        .add(115, 115, 115)
+                        .add(jButtonDisplayNextOptotype)))
                 .addContainerGap())
         );
         jPanelResultsValidationLayout.setVerticalGroup(
             jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelResultsValidationLayout.createSequentialGroup()
+                .add(jPanelResultsValidationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(jLabelCharacter, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelDisplayedCharacter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanelClickArea, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .add(jButtonDisplayNextOptotype)
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         jPanelLog.setBorder(javax.swing.BorderFactory.createTitledBorder("Log"));
@@ -640,13 +754,13 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             jPanelLogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelLogLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelLogLayout.setVerticalGroup(
             jPanelLogLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelLogLayout.createSequentialGroup()
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -724,11 +838,11 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelLog, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanelAcuityTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(jPanelPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 237, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jPanelAcuityTest, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPanelPatientData, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanelResultsValidation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(jPanelResultsValidation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -739,10 +853,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                     .add(layout.createSequentialGroup()
                         .add(jPanelPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanelAcuityTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(jPanelResultsValidation, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(jPanelAcuityTest, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+                    .add(jPanelResultsValidation, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanelLog, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(jPanelLog, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         pack();
@@ -760,13 +874,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         this.displayer.getDisplayModel().setupAcuityTest(); 
         
         //set clickarea message
-        jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue"));
+        //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue"));
         
         //enable click area
         enableClickArea(true);
         
         //disable start button
         this.jButtonStartAcuityTest.setEnabled(false); 
+        
+        //set date and time
+        this.jLabelAcuityTestDateTime.setText(AcuityTestManager.getAcuityTest().getStartDateAsString());
         
     }//GEN-LAST:event_jButtonStartAcuityTestActionPerformed
 
@@ -778,12 +895,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 // TODO add your handling code here:
         
     }//GEN-LAST:event_jRadioButtonDialogPatientSexMActionPerformed
-
-    private void jButtonEditPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditPatientActionPerformed
-        int[] speeds = AcuityTestManager.acceptProposedSpeedsSet();
-        jLabelDialogPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
-        GUIUtils.showDialog(jDialogPatientData, true, evt);
-    }//GEN-LAST:event_jButtonEditPatientActionPerformed
 
     private void jMenuHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuHelpActionPerformed
 // TODO add your handling code here:
@@ -803,15 +914,21 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
     private void jButtonPatientOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPatientOkActionPerformed
         //get new patient data
+        String firstname = this.jTextFieldDialogPatientFirstname.getText(); 
+        String lastname = this.jTextFieldDialogPatientLastname.getText(); 
+        String comment = this.jTextAreaDialogPatientComment.getText(); 
         String sex = GUIUtils.getSelection(buttonGroupDialogPatientSex).getText();
         String age = this.jTextFieldDialogPatientAge.getText(); 
         
         //update patient
+        getCurrentPatient().setFirstname(firstname); 
+        getCurrentPatient().setLastname(lastname); 
+        getCurrentPatient().setComment(comment); 
         getCurrentPatient().setSex(sex); 
         getCurrentPatient().setAge(age); 
         
-        int speeds[] = AcuityTestManager.acceptProposedSpeedsSet(); 
-        jLabelPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
+        //int speeds[] = AcuityTestManager.acceptProposedSpeedsSet(); 
+        //jLabelPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
         
         
         //enable StartAcuityTest button
@@ -854,7 +971,17 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupDialogPatientSex;
-    private javax.swing.JButton jButtonEditPatient;
+    private javax.swing.JButton jButtonDisplayNextOptotype;
+    private javax.swing.JButton jButtonOptotypeC;
+    private javax.swing.JButton jButtonOptotypeD;
+    private javax.swing.JButton jButtonOptotypeH;
+    private javax.swing.JButton jButtonOptotypeK;
+    private javax.swing.JButton jButtonOptotypeN;
+    private javax.swing.JButton jButtonOptotypeO;
+    private javax.swing.JButton jButtonOptotypeR;
+    private javax.swing.JButton jButtonOptotypeS;
+    private javax.swing.JButton jButtonOptotypeV;
+    private javax.swing.JButton jButtonOptotypeZ;
     private javax.swing.JButton jButtonPatientCancel;
     private javax.swing.JButton jButtonPatientOk;
     private javax.swing.JButton jButtonStartAcuityTest;
@@ -862,6 +989,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JDialog jDialogAbout;
     private javax.swing.JDialog jDialogPatientData;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -869,15 +1000,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelAcuityTestDateTime;
     private javax.swing.JLabel jLabelCharacter;
-    private javax.swing.JLabel jLabelClickArea;
-    private javax.swing.JLabel jLabelCurrentTest;
     private javax.swing.JLabel jLabelDialogPatientAge;
     private javax.swing.JLabel jLabelDialogPatientSex;
-    private javax.swing.JLabel jLabelDialogPatientSpeedsSet;
-    private javax.swing.JLabel jLabelDialogPatientSpeedsSetValue;
-    private javax.swing.JLabel jLabelOrientation;
-    private javax.swing.JLabel jLabelPatientData;
+    private javax.swing.JLabel jLabelPatientAge;
+    private javax.swing.JLabel jLabelPatientName;
+    private javax.swing.JLabel jLabelPatientSex;
     private javax.swing.JLabel jLabelPatientSpeedsSetValue;
     private javax.swing.JLabel jLabelTreadmillSpeed;
     private javax.swing.JMenuItem jMenuAbout;
@@ -891,7 +1021,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenu jMenuView;
     private javax.swing.JMenuItem jMenuViewDisplayer;
     private javax.swing.JPanel jPanelAcuityTest;
-    private javax.swing.JPanel jPanelClickArea;
     private javax.swing.JPanel jPanelDialogPatientData;
     private javax.swing.JPanel jPanelDisplayedCharacter;
     private javax.swing.JPanel jPanelLog;
@@ -900,9 +1029,15 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JRadioButton jRadioButtonDialogPatientSexF;
     private javax.swing.JRadioButton jRadioButtonDialogPatientSexM;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea jTextAreaDialogPatientComment;
     private javax.swing.JTextArea jTextAreaLog;
+    private javax.swing.JTextArea jTextAreaPatientComment;
     private javax.swing.JTextField jTextFieldDialogPatientAge;
+    private javax.swing.JTextField jTextFieldDialogPatientFirstname;
+    private javax.swing.JTextField jTextFieldDialogPatientLastname;
     // End of variables declaration//GEN-END:variables
     
 }

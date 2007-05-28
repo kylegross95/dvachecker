@@ -9,14 +9,9 @@ package dva.acuitytest;
 
 import dva.acuitytest.AcuityTest.TestAnswer;
 import dva.displayer.Element;
-import dva.displayer.LandoltC;
+import dva.displayer.Optotype;
 import dva.util.DvaLogger;
 import dva.util.Staircase;
-import java.lang.String;
-import java.lang.Float;
-
-
-
 
 /**
  *
@@ -29,7 +24,7 @@ public class StaticAcuityTest  extends AcuityTest {
     Staircase sc;
     String cv;
     
-    final static String charactersList[] = {"C"};
+    final static String charactersList[] = {"C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"};
     
     /** Creates a new instance of StaticAcuityTest */
     public StaticAcuityTest() {
@@ -42,13 +37,13 @@ public class StaticAcuityTest  extends AcuityTest {
 
     }
     
-    public Element getNext() throws AcuityTestMaxStepException{
+    public Element getNext() throws AcuityTestException{
         
 
         
         
      /*   if (getTestAnswers().size() == this.getMaxStep()){
-            throw new AcuityTestMaxStepException("Maximum number of step done!");
+            throw new AcuityTestException("Maximum number of step done!");
         }
         
         //TO BE UPDATED
@@ -78,25 +73,28 @@ public class StaticAcuityTest  extends AcuityTest {
                 
                 
        if(lastSize == -1)  { //divergence
-            throw new AcuityTestMaxStepException("Adaptive algo diverged (either up or down)");
+            throw new AcuityTestException("Adaptive algo diverged (either up or down)");
        }
        if(lastSize == -2) { //exceeded steps
-              throw new AcuityTestMaxStepException("Max number of steps exceeded)");
+              throw new AcuityTestException("Max number of steps exceeded)");
        }
        else if (lastSize == 0) { //convergence
           Float f = new Float(sc.getConvergenceValue());
           cv =  new String(f.toString());
-          throw new AcuityTestMaxStepException(cv);
+          throw new AcuityTestException(cv);
        }
         
         //randomly pick on orientation
-        Element.Orientation orientations[] = Element.Orientation.values();
-        int randomindex = getRandom().nextInt(8); 
+        //Element.Orientation orientations[] = Element.Orientation.values();
+        //int randomindex = getRandom().nextInt(8); 
         
-        DvaLogger.debug(StaticAcuityTest.class, "Orientation:"+orientations[randomindex]); 
+        //randomly pick a number between 0 and 9
+        int randomindex = getRandom().nextInt(10); //pi
+        
+        DvaLogger.debug(StaticAcuityTest.class, "Character:"+charactersList[randomindex]); 
         
         //create a new DisplayElement
-        LandoltC lc = new LandoltC(lastSize, orientations[randomindex]);
+        Optotype lc = new Optotype(charactersList[randomindex], lastSize);
         
         return lc; 
     }

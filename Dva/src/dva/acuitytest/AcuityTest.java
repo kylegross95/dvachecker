@@ -30,7 +30,7 @@ public abstract class AcuityTest {
     
     public abstract String getTestName(); 
     
-    public abstract Element getNext() throws AcuityTestMaxStepException; 
+    public abstract Element getNext() throws AcuityTestException; 
     
     protected void setMaxStep(int maxStep){
         this.maxStep = maxStep; 

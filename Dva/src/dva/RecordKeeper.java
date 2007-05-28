@@ -15,7 +15,7 @@ package dva;
 public class RecordKeeper {
     private int PatientSex; //male=0, female=1
     private int PatientAge; 
-    private int TestOrder; //0:FWR, 1:FRW, 2:WFR, 3:WRF, 4:RWF, 5:RFW
+    //private int TestOrder; //0:FWR, 1:FRW, 2:WFR, 3:WRF, 4:RWF, 5:RFW
     private int finalDA; //final dynamic visual acuity value
    
     

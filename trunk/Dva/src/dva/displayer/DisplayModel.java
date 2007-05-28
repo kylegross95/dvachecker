@@ -8,7 +8,7 @@
 package dva.displayer;
 
 import dva.acuitytest.AcuityTestManager;
-import dva.acuitytest.AcuityTestMaxStepException;
+import dva.acuitytest.AcuityTestException;
 import dva.util.DvaLogger;
 import java.awt.Color;
 import java.awt.Font;
@@ -106,7 +106,7 @@ public class DisplayModel extends Observable {
         return currentState; 
     }
     
-    public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestMaxStepException {
+    public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestException {
         DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
         
         if (currentState == State.INIT){

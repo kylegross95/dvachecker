@@ -8,7 +8,7 @@ package dva;
 
 import dva.actions.CallibrationAction;
 import dva.acuitytest.AcuityTestManager;
-import dva.acuitytest.AcuityTestMaxStepException;
+import dva.acuitytest.AcuityTestException;
 import dva.displayer.DisplayModel;
 import dva.displayer.Displayer;
 import dva.displayer.Element;
@@ -172,7 +172,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                     //jLabelOrientation.setText(element.getOrientation().toString());
                 }
                 
-            //} catch (AcuityTestMaxStepException atmsex){
+            //} catch (AcuityTestException atmsex){
             //    DvaLogger.error(MainFrame.class, atmsex); 
             //}
 
@@ -924,7 +924,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeZActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_Z);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeZActionPerformed
@@ -932,7 +932,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeVActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_V);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeVActionPerformed
@@ -940,7 +940,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeSActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_S);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeSActionPerformed
@@ -948,7 +948,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeRActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_R);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeRActionPerformed
@@ -956,7 +956,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeOActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_O);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeOActionPerformed
@@ -964,7 +964,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeNActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_N);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeNActionPerformed
@@ -972,7 +972,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeKActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_K);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeKActionPerformed
@@ -980,7 +980,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeHActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_H);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeHActionPerformed
@@ -988,7 +988,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeDActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_D);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeDActionPerformed
@@ -996,7 +996,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonOptotypeCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeCActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_C);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonOptotypeCActionPerformed
@@ -1004,7 +1004,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonDisplayNextOptotypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayNextOptotypeActionPerformed
         try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.NEXT_OPTOTYPE);
-        } catch (AcuityTestMaxStepException e){
+        } catch (AcuityTestException e){
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonDisplayNextOptotypeActionPerformed

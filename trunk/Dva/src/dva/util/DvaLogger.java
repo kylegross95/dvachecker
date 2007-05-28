@@ -70,6 +70,14 @@ public class DvaLogger {
         log(LogLevel.FATAL, clazz,  null, msg);
     }
     
+    public static void fatal(Class clazz, Exception e){
+        log(LogLevel.FATAL, clazz, e, null);
+    }
+    
+    public static void fatal(Class clazz, Exception e, String msg){
+        log(LogLevel.FATAL, clazz, e, msg);
+    }
+    
     public static void log(LogLevel level, String msg){
         log(level, null, null, msg); 
     }

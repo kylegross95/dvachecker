@@ -1,5 +1,5 @@
 /*
- * LandoltC.java
+ * OptotypeC.java
  *
  * Created on May 17, 2007, 12:31 PM
  *
@@ -22,28 +22,28 @@ import java.awt.geom.Rectangle2D;
  *
  * @author J-Chris
  */
-public class LandoltC extends Element {
+public class OptotypeC extends Element {
     
     
-    public LandoltC(int x, int y, float size, Color color) {
+    public OptotypeC(int x, int y, float size, Color color) {
         super(x, y, color);
         this.size = size;  
         init();
     }
     
-     public LandoltC(float size, Color color) {
+     public OptotypeC(float size, Color color) {
         super(color);
         this.size = size;  
         init();
     }
     
-    public LandoltC(float size, Orientation orientation) {
+    public OptotypeC(float size, Orientation orientation) {
         super(orientation);
         this.size = size;  
         init();
     }
     
-    public LandoltC(float size) {
+    public OptotypeC(float size) {
         this.size = size;  
         init();
     }

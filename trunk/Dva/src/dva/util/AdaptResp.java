@@ -30,10 +30,10 @@ public class AdaptResp {
     private int convergence; //1: convergence, 0: no conv, -1: divergence
     
        
-    private final int LIMITE_UP;
-    private final int LIMITE_DOWN;
-    private final int MIN_STEPSIZE;
-    private final int NR_SEG_MAX;
+    private final int LIMITE_UP = 0;
+    private final int LIMITE_DOWN = 0;
+    private final int MIN_STEPSIZE = 0;
+    private final int NR_SEG_MAX = 0;
     
     
     
@@ -47,14 +47,14 @@ public class AdaptResp {
     }
     public int whatSize(int rd) {
         runDir = rd;
-        switch(runDir) {
-            case 1: bla;
-            case -1:ble;
-        }
-                              
+//        switch(runDir) {
+//            case 1: bla;
+//            case -1:ble;
+//        }
+//                              
                                 
                     
-        
+        return 0; 
     
     }
     

@@ -104,6 +104,10 @@ public class DisplayView extends JPanel implements Observer {
             g2D.drawString(cd.getDisplayModel().getMessageToDisplay(), cd.getDisplayModel().getX(), cd.getDisplayModel().getY());
             
         } else {
+            tx = new AffineTransform();
+            tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
+            g2D.setTransform(tx);
+              
             cd.getDisplayModel().getCurrentDisplayedElement().draw(g2D); 
         }
     }

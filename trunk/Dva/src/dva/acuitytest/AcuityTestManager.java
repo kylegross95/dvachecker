@@ -44,9 +44,12 @@ public  class AcuityTestManager {
             Class clazz = Class.forName("dva.acuitytest." + acuityTestIds[currentAcuityTestId] + "AcuityTest");
             acuityTest = (AcuityTest) clazz.newInstance(); 
             
-            if (acuityTest instanceof DynamicAcuityTest){
-                acuityTest.setTreadmillSpeed(getSpeedValue()); 
-            }
+            //set start date
+            acuityTest.setStartDate(); 
+            
+            //if (acuityTest instanceof DynamicAcuityTest){
+            //    acuityTest.setTreadmillSpeed(getSpeedValue()); 
+            //}
         } catch (Exception e){
             DvaLogger.error(DisplayModel.class, e); 
         }
@@ -125,7 +128,8 @@ public  class AcuityTestManager {
     private static Random random = new Random();
     private static Status status = Status.INIT; 
     private static AcuityTest acuityTest; 
-    private static String acuityTestIds[] = {"Static", "Dynamic", "Dynamic", "Dynamic"}; 
+    //private static String acuityTestIds[] = {"Static", "Dynamic", "Dynamic", "Dynamic"}; 
+    private static String acuityTestIds[] = {"Static"}; 
     
     private static int currentAcuityTestId = -1; 
     

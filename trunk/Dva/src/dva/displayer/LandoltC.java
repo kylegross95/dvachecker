@@ -69,7 +69,7 @@ public class LandoltC extends Element {
     }
     
     public String toString(){
-        return "C"; 
+        return "OPTOTYPE_C"; 
     }
 
     // Return the circle as a Shape reference
@@ -103,7 +103,7 @@ public class LandoltC extends Element {
       return area.getBounds();  
     }
 
-
+    
     private float size; 
     private Area area; 
 }

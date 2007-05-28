@@ -129,7 +129,13 @@ public class DisplayModel extends Observable {
             answerTime = savedTime - System.currentTimeMillis(); 
             
             //save patient response
-            this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
+            if (operatorEvent != OperatorEvent.NEXT_OPTOTYPE){
+                //should be an 'OPTOTYPE_' event
+                this.patientAnswer = operatorEvent.toString().equals(currentElement.toString()); 
+            }
+                    
+            //save patient response
+            //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
             
             //save patient answer
             AcuityTestManager.getAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
@@ -235,7 +241,7 @@ public class DisplayModel extends Observable {
     }
    
     //state machine attributes
-    public enum OperatorEvent {LEFT_CLICK, RIGHT_CLICK}; 
+    public enum OperatorEvent {NEXT_OPTOTYPE, OPTOTYPE_C, OPTOTYPE_D, OPTOTYPE_H, OPTOTYPE_K, OPTOTYPE_N, OPTOTYPE_O, OPTOTYPE_R, OPTOTYPE_S, OPTOTYPE_V, OPTOTYPE_Z }; 
     public enum State { INIT, TESTING, PAUSE, END }; 
     public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING}; 
     boolean pauseBetween = false; 

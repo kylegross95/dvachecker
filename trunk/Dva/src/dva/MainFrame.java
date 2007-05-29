@@ -1017,10 +1017,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         String patientDistance = this.jTextFieldDialogSetupDisplayerPatientDistance.getText(); 
         
         //update model
-        this.displayer.getDisplayModel().setDisplayerOptions(Integer.valueOf(horizontalRes), 
+        ScreenMapper.setDisplayerOptions(Integer.valueOf(horizontalRes), 
                 Integer.valueOf(verticalRes), 
                 Float.valueOf(diagonalLength), 
-                Float.valueOf(patientDistance));
+                Float.valueOf(patientDistance) );
         
     }//GEN-LAST:event_jButtonDialogSetupDisplayerApplyActionPerformed
 
@@ -1037,10 +1037,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         String patientDistance = this.jTextFieldDialogSetupDisplayerPatientDistance.getText(); 
         
         //update model
-        this.displayer.getDisplayModel().setDisplayerOptions(Integer.valueOf(horizontalRes), 
+        ScreenMapper.setDisplayerOptions(Integer.valueOf(horizontalRes), 
                 Integer.valueOf(verticalRes), 
                 Float.valueOf(diagonalLength), 
-                Float.valueOf(patientDistance));
+                Float.valueOf(patientDistance) );
         
         GUIUtils.showDialog(jDialogDisplayerOption, false, evt); 
     }//GEN-LAST:event_jButtonDialogSetupDisplayerOkActionPerformed

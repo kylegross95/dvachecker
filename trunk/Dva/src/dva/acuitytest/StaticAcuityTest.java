@@ -58,20 +58,15 @@ public class StaticAcuityTest  extends AcuityTest {
             //decrease size - Basic adaptive algo
             if (lastAnswer.isPatientAnswer()){
                 lastSize = sc.whatSize(true);
-                //lastSize -= (lastSize * 0.2); 
             } else {
                 lastSize = sc.whatSize(false);    
-                //lastSize = lastSize * 2; 
             }
         }
         
         
         DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
         
-        if (++runCnt==20) sc.doGraph("at_20"); 
-                
-       runCnt++;
-       if(runCnt==20) sc.doGraph("_at20");
+        if (++runCnt==50) sc.doGraph("at_20"); 
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("divergence"); 
@@ -88,10 +83,6 @@ public class StaticAcuityTest  extends AcuityTest {
           throw new AcuityTestException(cv);
        }
         
-        //randomly pick on orientation
-        //Element.Orientation orientations[] = Element.Orientation.values();
-        //int randomindex = getRandom().nextInt(8); 
-        
         //randomly pick a number between 0 and 9
         int randomindex = getRandom().nextInt(10); //pi
         
@@ -99,7 +90,6 @@ public class StaticAcuityTest  extends AcuityTest {
         
         //create a new DisplayElement
         setCurrentElement( new Optotype(charactersList[randomindex], lastSize) ); 
-        
         
         return this.getCurrentElement(); 
     }

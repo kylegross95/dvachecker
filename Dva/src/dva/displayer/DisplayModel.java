@@ -246,10 +246,6 @@ public class DisplayModel extends Observable {
     public void setDefault(){
         x = resourceBundle.getInt("config.displayer.defaultX"); 
         y = resourceBundle.getInt("config.displayer.defaultY"); 
-        
-        double staircaseInitialValue = resourceBundle.getDouble("config.staircase.initialsize");
-        
-        scalingFactor = ScreenMapper.getRatio(diagonalLength, horizontalRes, verticalRes, 1400, patientDistance, staircaseInitialValue); 
     }
    
     //state machine attributes
@@ -265,10 +261,6 @@ public class DisplayModel extends Observable {
     private boolean patientAnswer = true; 
     
     //Graphics attribute
-    private int horizontalRes = 1280; 
-    private int verticalRes = 800; 
-    private float diagonalLength = 12.1f; 
-    private float patientDistance = 6f; 
     private double scalingFactor = 1; 
     private int x; 
     private int y; 
@@ -282,51 +274,5 @@ public class DisplayModel extends Observable {
     
     //resources
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
-
-    public int getHorizontalRes() {
-        return horizontalRes;
-    }
-
-    public void setHorizontalRes(int horizontalRes) {
-        this.horizontalRes = horizontalRes;
-    }
-
-    public int getVerticalRes() {
-        return verticalRes;
-    }
-
-    public void setVerticalRes(int verticalRes) {
-        this.verticalRes = verticalRes;
-    }
-
-    public float getDiagonalLength() {
-        return diagonalLength;
-    }
-
-    public void setDiagonalLength(float diagonalLength) {
-        this.diagonalLength = diagonalLength;
-    }
-
-    public float getPatientDistance() {
-        return patientDistance;
-    }
-
-    public void setPatientDistance(float patientDistance) {
-        this.patientDistance = patientDistance;
-    }
     
-    public void setDisplayerOptions(int horizontalRes, int verticalRes, float diagonalLength, float patientDistance){
-        this.horizontalRes = horizontalRes;
-        this.verticalRes = verticalRes;
-        this.diagonalLength = diagonalLength;
-        this.patientDistance = patientDistance;
-        
-        double staircaseInitialValue = resourceBundle.getDouble("config.staircase.initialsize");
-        
-        scalingFactor = ScreenMapper.getRatio(diagonalLength, horizontalRes, verticalRes, 1400, patientDistance, staircaseInitialValue); 
-        
-        //notify ModelView
-        setChanged(); 
-        notifyObservers(DisplayModel.EventType.SCALING);
-    }
 }

@@ -9,6 +9,7 @@ package dva.displayer;
 
 
 import dva.util.DvaLogger;
+import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -109,6 +110,9 @@ public class Optotype extends Element {
         
         g2D.setPaint(this.color); 
         
+        DvaLogger.debug(Optotype.class, "size:" + size);
+
+        ratio = ScreenMapper.getRatio( Math.round(size) ); 
         
         g2D.scale(size * ratio, size * ratio); 
         

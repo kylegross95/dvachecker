@@ -15,6 +15,23 @@ package dva.util;
  */
 public class ScreenMapper {
     
+    private static double visualAcuityCharts[] = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1, 1.25, 1.67, 2};
+    
+    private static double horizontalRes = 1280; 
+    private static double verticalRes = 800; 
+    private static float diagonalLength = 12.1f; 
+    private static float patientDistance = 6f; 
+    private static double screen_width = 0; 
+    private static double pixel_width = 0; 
+    private static double characterResolution = 1400;
+    
+    static {
+        screen_width = getScreenWidth(diagonalLength, horizontalRes / verticalRes, Units.INCHES); 
+        pixel_width = getPixelWidth(screen_width, horizontalRes, Units.MM); 
+    }
+    
+    private static dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N;
+            
     /** prevente from instanciation */
     private ScreenMapper() {}
     
@@ -63,17 +80,33 @@ public class ScreenMapper {
         return size * 5;
     }
     
-    static public double getRatio(double diagonalLength, double horizontalRes, double verticalRes, double characterResolution, double patientDistance, double staircaseInitialValue){
-        //we will assume the scaling factor is the same on vertical and horizontal axis
-        double screen_width = getScreenWidth(diagonalLength, horizontalRes / verticalRes, Units.INCHES);
+    public static void setDisplayerOptions(double _horizontalRes, double _verticalRes, float _diagonalLength, float _patientDistance){
+        horizontalRes = _horizontalRes;
+        verticalRes = _verticalRes;
+        diagonalLength = _diagonalLength;
+        patientDistance = _patientDistance;
+        DvaLogger.debug(ScreenMapper.class, "horizontalRes:"+horizontalRes+", verticalRes:"+verticalRes+", diagonalLength:"+diagonalLength+", patientDistance:"+patientDistance);
+        
+        characterResolution = resourceBundle.getDouble("config.character.resolution");
+        double aspect_ratio = horizontalRes / verticalRes;
+        DvaLogger.debug(ScreenMapper.class, "aspect_ratio:"+aspect_ratio);
+        screen_width = getScreenWidth(diagonalLength, aspect_ratio, Units.INCHES);
         DvaLogger.debug(ScreenMapper.class, "screen_width:"+screen_width); 
-        double pixel_width = getPixelWidth(screen_width, horizontalRes, Units.MM); 
+        pixel_width = getPixelWidth(screen_width, horizontalRes, Units.MM); 
         DvaLogger.debug(ScreenMapper.class, "pixel_width:"+pixel_width); 
-        double character_width = va2size(0.1, patientDistance, Units.M); 
+        
+    }
+    
+    static public double getRatio(int chartLevel){
+        DvaLogger.debug(ScreenMapper.class, "chartLevel:"+chartLevel+", index:"+(visualAcuityCharts.length - chartLevel));
+        //we will assume the scaling factor is the same on vertical and horizontal axis
+        double va = visualAcuityCharts[visualAcuityCharts.length - chartLevel]; 
+        DvaLogger.debug(ScreenMapper.class, "va:"+va); 
+        double character_width = va2size(va, patientDistance, Units.M); 
         DvaLogger.debug(ScreenMapper.class, "character_width:"+character_width); 
         double numberOfPixel = character_width / pixel_width;
         DvaLogger.debug(ScreenMapper.class, "numberOfPixel:"+numberOfPixel); 
-        double ratio = (1 / characterResolution) * (numberOfPixel / staircaseInitialValue);
+        double ratio =  numberOfPixel / (characterResolution * 14);
         DvaLogger.debug(ScreenMapper.class, "ratio:"+ratio); 
         return ratio; 
     }

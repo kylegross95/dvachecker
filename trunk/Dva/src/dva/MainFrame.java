@@ -155,7 +155,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         public SetupDisplayerAction(String text, String icon, String desc) {
             super(text, GUIUtils.createNavigationIcon(icon));
             putValue(SHORT_DESCRIPTION, desc);
-        }
+        }   
         
         public void actionPerformed(ActionEvent e) {
             

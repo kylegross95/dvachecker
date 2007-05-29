@@ -20,6 +20,8 @@ import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
 import java.io.File;
 import java.lang.String;
+import java.lang.Math;
+
 
 
 
@@ -50,19 +52,22 @@ public class Staircase {
     private float peaks[]; //vector with peaks
     private int valleyIdx;
     private float valleys[]; //vector with valleys
+    private double Lvalleys[];
+    private double Lpeaks[];
     private boolean peaker; //var to identify double peaks
     private int lastPositive; //0: single, 1: double (peak)
     private boolean converged; //whether the algo has converged yet
     private float convergenceVal;
+    private float convergenceValStdDev;
     
     private int seriesCnt;
 
-    private final float INIT_STEP_SIZE = 0.1f;
-    private final float INIT_STIM_SIZE = 1;
+    private final float INIT_STEP_SIZE = 15.0f;
+    private final float INIT_STIM_SIZE = 200;
     private final float LIMIT_UP = 10000;
     private final float LIMIT_DOWN = 0;
     private final float MIN_STEPSIZE = 0.01f;
-    private final int MAX_RUNS = 500;
+    private final int MAX_RUNS = 50;
     
     //chart output
     private org.jfree.data.xy.XYSeries series;
@@ -82,9 +87,7 @@ public class Staircase {
       series = new org.jfree.data.xy.XYSeries("");
     }
     
-    /**
-     *
-     */
+   
     public void initSize (float initSize, float initStepSize) {
         runNumber = 1;
         runDir = 1;
@@ -100,9 +103,7 @@ public class Staircase {
         series.add(seriesCnt,initSize);
     }
     
-    /*
-     *
-     */
+ 
     public float whatSize(boolean answer) {
         prevStepSize = stepSize;
         prevVal = curVal;
@@ -184,19 +185,58 @@ public class Staircase {
         seriesCnt++;
         return curVal; 
     
+
+    
+    
+    //if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
+    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
+    else if (curVal < LIMIT_DOWN) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+    
+    //check for convergence
+    if (runNumber> MAX_RUNS){
+        convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2])/6;    
+        //            %stdev=sqrt(1/5*(sum((minima-mean).^2)+sum((maxima-mean).^2)));
+
+        Lvalleys = new double[3];
+        Lpeaks = new double[3];
+        
+        Lvalleys[2] = (double) valleys[valleyIdx];
+        Lvalleys[1] = (double) valleys[valleyIdx-1];
+        Lvalleys[0] = (double) valleys[valleyIdx-2];
+        
+        Lpeaks[2] = (double) peaks[valleyIdx];
+        Lpeaks[1] = (double) peaks[valleyIdx-1];
+        Lpeaks[0] = (double) peaks[valleyIdx-2];
+        
+        double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
+        double sumValleys = java.lang.Math.pow(Lvalleys[0]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]-convergenceVal,2.0);
+        convergenceValStdDev = (float) java.lang.Math.sqrt((1/6)*(sumPeaks+sumValleys));
+        
+        converged = true; 
+        curVal = 0;
+        }
+        
+    series.add(seriesCnt,curVal);
+    
+    seriesCnt++;
+    return curVal; 
+    
+
     }//close whatSize
     
-    /*
-     *
-     */
+
     public float getConvergenceValue() {
         if (converged) return convergenceVal;
         else return -1;
     }
     
-    /*
-     *
-     */
+
+    public float getConvergenceValueStdDev() {
+        if (converged) return convergenceValStdDev;
+    else return -1;
+    }
+    
+    
     public void doGraph(String param) {
         XYDataset xyDataset = new XYSeriesCollection(series);
         org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart

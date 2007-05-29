@@ -19,7 +19,6 @@ import dva.util.Staircase;
  */
 public class StaticAcuityTest  extends AcuityTest {
     
-    int runCnt;
     float lastSize;
     float lastStep;
     Staircase sc;
@@ -76,11 +75,11 @@ public class StaticAcuityTest  extends AcuityTest {
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("divergence"); 
-           throw new AcuityTestMaxStepException("Adaptive algo diverged (either up or down)");         
+           throw new AcuityTestException("Adaptive algo diverged (either up or down)");         
        }
        if(lastSize == -2) { //exceeded steps
            sc.doGraph("exceededSteps");  
-           throw new AcuityTestMaxStepException("Max number of steps exceeded)");
+           throw new AcuityTestException("Max number of steps exceeded)");
        }
        else if (lastSize == 0) { //convergence
           Float f = new Float(sc.getConvergenceValue());

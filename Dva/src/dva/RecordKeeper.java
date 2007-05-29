@@ -21,6 +21,7 @@ public class RecordKeeper {
     
     private char[] dispChar; //characters displayed 
     private int[][] resultsLog; 
+    int TestOrder; 
     /*
      This matrix contains the experiment results
      0-49: exp1, 50-99: exp2, 100-149;exp3

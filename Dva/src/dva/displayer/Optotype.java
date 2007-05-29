@@ -14,10 +14,9 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 
@@ -56,16 +55,25 @@ public class Optotype extends Element {
     }
     
     private void init(){
-        //open file
-        URL url = this.getClass().getResource("/dva/ressources/"+name+".jpg"); 
-        if (url!=null){
-            try {
-                bimg = ImageIO.read(url);
-            } catch (IOException ex) {
-                DvaLogger.fatal( Optotype.class, ex, "Failed to read image file " + url.getFile() ); 
+        //check if bufferedImage is already existing
+        bimg = bimgList.get(name); 
+        
+        if (bimg==null) {
+            //open file
+            URL url = this.getClass().getResource("/dva/ressources/"+name+".jpg"); 
+            if (url!=null){
+                try {
+                    bimg = ImageIO.read(url);
+                    bimgList.put(name, bimg); 
+                } catch (IOException ex) {
+                    DvaLogger.fatal( Optotype.class, ex, "Failed to read image file " + url.getFile() ); 
+                }
+            } else {
+                DvaLogger.fatal(Optotype.class, "Failed to access image " + url.getFile()); 
             }
+            
         } else {
-            DvaLogger.fatal(Optotype.class, "Failed to access image " + url.getFile()); 
+            DvaLogger.debug(Optotype.class, "Re-use bufferedimage named '" + name + "'");
         }
     }
 
@@ -112,6 +120,9 @@ public class Optotype extends Element {
     public java.awt.Rectangle getBounds() { 
       return null;  
     }
+    
+    //list of already instancied bufferedimage
+    private static HashMap<String, BufferedImage> bimgList = new HashMap<String, BufferedImage>();
 
     private BufferedImage bimg = null; 
     private float size; 

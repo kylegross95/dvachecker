@@ -3,8 +3,6 @@
  *
  * Created on May 25, 2007, 12:17 AM
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
  */
 
 package dva.util;
@@ -26,11 +24,11 @@ import java.lang.String;
 
 
 /**
- *Staircase algo
+ * Staircase algo
  *
  * @author Roberto
  *
- *Instructions
+ * Instructions
  *
   1) Create instance of object 
   2) Call whatSize method with right or wrong arg to obtain the next size of char to display 
@@ -66,7 +64,8 @@ public class Staircase {
     private final float MIN_STEPSIZE = 0.01f;
     private final int MAX_RUNS = 500;
     
-    org.jfree.data.xy.XYSeries series;
+    //chart output
+    private org.jfree.data.xy.XYSeries series;
     
        
     /**
@@ -81,13 +80,15 @@ public class Staircase {
         lastPositive = 1; //to avoid step resizing at init
         
       series = new org.jfree.data.xy.XYSeries("");
-        
-        
     }
     
+    /**
+     *
+     */
     public void initSize (float initSize, float initStepSize) {
         runNumber = 1;
         runDir = 1;
+        
        // curVal = INIT_STIM_SIZE;
         curVal = initSize;
         
@@ -98,100 +99,107 @@ public class Staircase {
         seriesCnt = 1;
         series.add(seriesCnt,initSize);
     }
+    
+    /*
+     *
+     */
     public float whatSize(boolean answer) {
-    prevStepSize = stepSize;
-    prevVal = curVal;
+        prevStepSize = stepSize;
+        prevVal = curVal;
 
-    if(runDir == -1) { //descending
-        if(answer) { //keep descending
-            stepSize = prevStepSize;
-            curVal = prevVal - stepSize; 
-            lastPositive = 0;
-            //runDir = runDir;
-        }//close if answer
-        else if (!answer) { //reverse direction, start climbing
-            stepSize = prevStepSize;
-            curVal = prevVal + stepSize;
-            runDir = 1;
-            valleys[valleyIdx] = curVal; //store valley information
-            valleyIdx++;
-        }//close elseif answer
-        
-       }
-    else if (runDir == 1) { //
-       
-        if(!answer) { //keep climbing -- FIXME: NOT SURE ABOUT THIS DECISION
-            stepSize = prevStepSize;
-            curVal = prevVal + stepSize;
-            //runDir = 1;
-        }
-        else if(answer && !peaker) { //check again for a positive response
-            stepSize = prevStepSize; 
-            curVal = prevVal;
-           // runDir = runDir;
-            peaker = true; //we are at a potential double peak
-            //lastPositive should be changed but its deferred to next round
-            
-            }
-        else if(answer && peaker) { //we are at a double peak, invert direction
-           if (lastPositive == 1) { //check for last positive response
-               stepSize = prevStepSize;
-           } else if (lastPositive == 0) {
-               stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
+        if(runDir == -1) { //descending
+            if(answer) { //keep descending
+                stepSize = prevStepSize;
+                curVal = prevVal - stepSize; 
+                lastPositive = 0;
+                //runDir = runDir;
+            }//close if answer
+            else if (!answer) { //reverse direction, start climbing
+                stepSize = prevStepSize;
+                curVal = prevVal + stepSize;
+                runDir = 1;
+                valleys[valleyIdx] = curVal; //store valley information
+                valleyIdx++;
+            }//close elseif answer
+
            }
-           curVal = prevVal - stepSize; 
-           runDir = -1;  //direction inversion
-           peaker = false; //reset this var
-           lastPositive = 1; //log the double peak
-           peaks[peakIdx] = curVal; //log the peak
-           peakIdx++;
-           
-        }
-        else if (!answer && peaker) { //FIXME: not sure about this 
-            stepSize = prevStepSize;
-            curVal = prevVal + stepSize;
-            peaker = false;
-            lastPositive = 0; //FIXME: not sure
-            //runDir = 1;     
-        }     
-    } 
-    runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
-    
-    
-    
-    if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
-    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
-    else if (curVal < LIMIT_DOWN) curVal = -1; //check if lower bound has been surpassed
-    
-    //check for convergence
-    if (valleyIdx>3 && peakIdx>3 &&
-            valleys[valleyIdx] == valleys[valleyIdx-1] && 
-            valleys[valleyIdx] == valleys[valleyIdx-2] && 
-            valleys[valleyIdx] == valleys[valleyIdx-3] && 
-            peaks[peakIdx] == peaks[peakIdx-1] &&
-            peaks[peakIdx] == peaks[peakIdx-2] &&
-            peaks[peakIdx] == peaks[peakIdx-3]) {
-            convergenceVal = (valleys[valleyIdx]+peaks[peakIdx])/2;
-            converged = true; 
-            curVal = 0;
-        }
-        
-    series.add(seriesCnt,curVal);
-    
-    seriesCnt++;
-    return curVal; 
+        else if (runDir == 1) { //
+
+            if(!answer) { //keep climbing -- FIXME: NOT SURE ABOUT THIS DECISION
+                stepSize = prevStepSize;
+                curVal = prevVal + stepSize;
+                //runDir = 1;
+            }
+            else if(answer && !peaker) { //check again for a positive response
+                stepSize = prevStepSize; 
+                curVal = prevVal;
+               // runDir = runDir;
+                peaker = true; //we are at a potential double peak
+                //lastPositive should be changed but its deferred to next round
+
+                }
+            else if(answer && peaker) { //we are at a double peak, invert direction
+               if (lastPositive == 1) { //check for last positive response
+                   stepSize = prevStepSize;
+               } else if (lastPositive == 0) {
+                   stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
+               }
+               curVal = prevVal - stepSize; 
+               runDir = -1;  //direction inversion
+               peaker = false; //reset this var
+               lastPositive = 1; //log the double peak
+               peaks[peakIdx] = curVal; //log the peak
+               peakIdx++;
+
+            }
+            else if (!answer && peaker) { //FIXME: not sure about this 
+                stepSize = prevStepSize;
+                curVal = prevVal + stepSize;
+                peaker = false;
+                lastPositive = 0; //FIXME: not sure
+                //runDir = 1;     
+            }     
+        } 
+        runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
+
+        if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
+        if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
+        else if (curVal < LIMIT_DOWN) curVal = -1; //check if lower bound has been surpassed
+
+        //check for convergence
+        if (valleyIdx>3 && peakIdx>3 &&
+                valleys[valleyIdx] == valleys[valleyIdx-1] && 
+                valleys[valleyIdx] == valleys[valleyIdx-2] && 
+                valleys[valleyIdx] == valleys[valleyIdx-3] && 
+                peaks[peakIdx] == peaks[peakIdx-1] &&
+                peaks[peakIdx] == peaks[peakIdx-2] &&
+                peaks[peakIdx] == peaks[peakIdx-3]) {
+                convergenceVal = (valleys[valleyIdx]+peaks[peakIdx])/2;
+                converged = true; 
+                curVal = 0;
+            }
+
+        series.add(seriesCnt,curVal);
+
+        seriesCnt++;
+        return curVal; 
     
     }//close whatSize
     
+    /*
+     *
+     */
     public float getConvergenceValue() {
-    if (converged) return convergenceVal;
-    else return -1;
-    
+        if (converged) return convergenceVal;
+        else return -1;
     }
     
+    /*
+     *
+     */
     public void doGraph(String param) {
-   XYDataset xyDataset = new XYSeriesCollection(series);
-    org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
+        XYDataset xyDataset = new XYSeriesCollection(series);
+        org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
                      ("DVA Exp Values",  // Title
                       "Run",           // X-Axis label
                       "Value",           // Y-Axis label
@@ -201,16 +209,14 @@ public class Staircase {
                       true,   
                       true
                      );
-    String filename = "c:/temp/chart" + param + ".jpg";
-    try {
-            ChartUtilities.saveChartAsJPEG(new File(filename), chart, 1000, 600);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        String filename = "c:/temp/chart" + param + ".jpg";
+        try {
+                ChartUtilities.saveChartAsJPEG(new File(filename), chart, 1000, 600);
+                DvaLogger.info(Staircase.class, "Result saved under '" + filename + "'"); 
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-   
-    
-    
-    }
     
     }
             

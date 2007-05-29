@@ -30,6 +30,13 @@ public abstract class AcuityTest {
     
     public abstract String getTestName(); 
     
+    public void setCurrentElement(Element current){
+        this.current = current; 
+    }
+    public Element getCurrentElement(){
+        return this.current; 
+    }
+    
     public abstract Element getNext() throws AcuityTestException; 
     
     protected void setMaxStep(int maxStep){
@@ -76,9 +83,10 @@ public abstract class AcuityTest {
     private boolean testFailed = false; 
     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
     private Date startDate = null; 
+    private Element current = null; 
     
     //resources
-    private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
+    protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
     
     class TestAnswer {
         

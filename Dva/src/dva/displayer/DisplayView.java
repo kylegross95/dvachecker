@@ -9,6 +9,7 @@ package dva.displayer;
 
 import dva.actions.CallibrationAction;
 import dva.util.DvaLogger;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -35,6 +36,7 @@ public class DisplayView extends JPanel implements Observer {
     public DisplayView(Displayer cd) {
         this.cd = cd; 
         this.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        setBackground(Color.WHITE);
         createPopupMenu();
     }
     
@@ -78,6 +80,8 @@ public class DisplayView extends JPanel implements Observer {
         super.paint(g); 
         Graphics2D g2D = (Graphics2D)g; 
         
+        //g2D.clearRect(0,0,this.getWidth(), this.getHeight()); 
+                
         AffineTransform tx = new AffineTransform();
         //translate character
         tx.translate( translateX, translateY );
@@ -92,11 +96,14 @@ public class DisplayView extends JPanel implements Observer {
         //apply transform
         g2D.setTransform(tx);
         
-        g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        
+       // g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+       //         RenderingHints.VALUE_ANTIALIAS_ON);
             
-        g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+       // g2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+       //     RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         if (cd.getDisplayModel().isMessage()){
             g2D.setFont(cd.getDisplayModel().getMessageFont()); 
@@ -104,12 +111,17 @@ public class DisplayView extends JPanel implements Observer {
             g2D.drawString(cd.getDisplayModel().getMessageToDisplay(), cd.getDisplayModel().getX(), cd.getDisplayModel().getY());
             
         } else {
-            tx = new AffineTransform();
+            //tx = new AffineTransform();
             tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
             g2D.setTransform(tx);
               
             cd.getDisplayModel().getCurrentDisplayedElement().draw(g2D); 
+            
+            
         }
+        
+        //help garbage
+        tx = null; 
     }
     
     JPopupMenu popupMenu; 

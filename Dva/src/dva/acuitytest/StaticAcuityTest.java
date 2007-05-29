@@ -22,7 +22,7 @@ public class StaticAcuityTest  extends AcuityTest {
     float lastSize;
     float lastStep;
     Staircase sc;
-    String cv;
+    String cv_txt;
     int runCnt = 0; 
     
     final static String charactersList[] = {"C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"};
@@ -30,8 +30,10 @@ public class StaticAcuityTest  extends AcuityTest {
     /** Creates a new instance of StaticAcuityTest */
     public StaticAcuityTest() {
         //initial size
-        lastSize = resourceBundle.getFloat("config.staircase.initialsize"); 
-        lastStep = resourceBundle.getFloat("config.staircase.initialstep");
+        //lastSize = resourceBundle.getFloat("config.staircase.initialsize"); 
+        //lastStep = resourceBundle.getFloat("config.staircase.initialstep");
+        lastSize=14.0f;
+        lastStep=4.0f;
         runCnt = 0;
         sc = new Staircase();
         sc.initSize(lastSize,lastStep);
@@ -40,22 +42,13 @@ public class StaticAcuityTest  extends AcuityTest {
     }
     
     public Element getNext() throws AcuityTestException{
-
-//        if (getTestAnswers().size() == this.getMaxStep()){
-//            throw new AcuityTestException("Maximum number of step done!");
-//        }
-//        
-//        //TO BE UPDATED
-//        if (getTestAnswers().size() == 10) {
-//            setTestDone(true);
-//        }
         
         if (getTestAnswers().size() > 0){
             //get size of the last element
             TestAnswer lastAnswer = getTestAnswers().get(getTestAnswers().size()-1);
             lastSize = lastAnswer.getElement().getSize(); 
 
-            //decrease size - Basic adaptive algo
+            //decrease size - adaptive algo
             if (lastAnswer.isPatientAnswer()){
                 lastSize = sc.whatSize(true);
             } else {
@@ -66,21 +59,22 @@ public class StaticAcuityTest  extends AcuityTest {
         
         DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
         
-        if (++runCnt==50) sc.doGraph("at_20"); 
+        if (++runCnt==50) sc.doGraph("_at50"); 
        
        if(lastSize == -1)  { //divergence
-           sc.doGraph("divergence"); 
-           throw new AcuityTestException("Adaptive algo diverged (either up or down)");         
+           sc.doGraph("_divergence");   
+           throw new AcuityTestException("Adaptive algo diverged");         
        }
        if(lastSize == -2) { //exceeded steps
-           sc.doGraph("exceededSteps");  
-           throw new AcuityTestException("Max number of steps exceeded)");
+           sc.doGraph("_exceededSteps");  
+           throw new AcuityTestException("Max number of steps exceeded");
        }
        else if (lastSize == 0) { //convergence
           Float f = new Float(sc.getConvergenceValue());
-          cv =  new String(f.toString());
-          sc.doGraph("convergence"); 
-          throw new AcuityTestException(cv);
+          Float f2 = new Float(sc.getConvergenceValueStdDev());
+          cv_txt =  "The converged value is "+ new String(f.toString()) + " with stddev: " + new String(f2.toString())  ;
+          sc.doGraph("_convergence"); 
+          throw new AcuityTestException(cv_txt);
        }
         
         //randomly pick a number between 0 and 9

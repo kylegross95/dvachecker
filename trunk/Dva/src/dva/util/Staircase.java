@@ -22,9 +22,6 @@ import java.io.File;
 import java.lang.String;
 import java.lang.Math;
 
-
-
-
 /**
  * Staircase algo
  *
@@ -55,24 +52,24 @@ public class Staircase {
     private double Lvalleys[];
     private double Lpeaks[];
     private boolean peaker; //var to identify double peaks
-    private int lastPositive; //0: single, 1: double (peak)
+    private float minSizeCnt; 
+    //private int lastPositive; //0: single, 1: double (peak)
     private boolean converged; //whether the algo has converged yet
     private float convergenceVal;
     private float convergenceValStdDev;
     
     private int seriesCnt;
 
-    private final float INIT_STEP_SIZE = 15.0f;
-    private final float INIT_STIM_SIZE = 200;
-    private final float LIMIT_UP = 10000;
-    private final float LIMIT_DOWN = 0;
-    private final float MIN_STEPSIZE = 0.01f;
-    private final int MAX_RUNS = 50;
+    //private final float INIT_STEP_SIZE = 15.0f;
+    //private final float INIT_STIM_SIZE = 200;
+    private final float LIMIT_UP = 15;
+    private final float LIMIT_DOWN = 0.5f;
+    private final float MIN_STEPSIZE = 1.00f;
+    private final int MAX_RUNS = 60;
     
     //chart output
     private org.jfree.data.xy.XYSeries series;
-    
-       
+           
     /**
      * Creates a new instance of Staircase
      */
@@ -81,147 +78,123 @@ public class Staircase {
         peakIdx = 0;
         valleys = new float[50];
         valleyIdx = 0;
-        peaker = false;
-        lastPositive = 1; //to avoid step resizing at init
-        
-      series = new org.jfree.data.xy.XYSeries("");
+        //lastPositive = 1; //to avoid step resizing at init
+        series = new org.jfree.data.xy.XYSeries("");
     }
     
    
     public void initSize (float initSize, float initStepSize) {
         runNumber = 1;
         runDir = 1;
-        
        // curVal = INIT_STIM_SIZE;
         curVal = initSize;
-        
         //stepSize = INIT_STEP_SIZE;
         stepSize = initStepSize;
-        
-        //return curVal;
         seriesCnt = 1;
+     
         series.add(seriesCnt,initSize);
+        seriesCnt++;
+        
+        peaker = false;
+        minSizeCnt = 0;
     }
     
  
     public float whatSize(boolean answer) {
+        //prepare for next round
         prevStepSize = stepSize;
         prevVal = curVal;
-
+        
         if(runDir == -1) { //descending
-            if(answer) { //keep descending
+            if(answer && !peaker) { //check again
                 stepSize = prevStepSize;
-                curVal = prevVal - stepSize; 
-                lastPositive = 0;
+                peaker = true;
+                //lastPositive = 0;
                 //runDir = runDir;
             }//close if answer
+            else if (answer && peaker) { //keep descending if checked again
+                stepSize = prevStepSize;
+                curVal = prevVal - stepSize; 
+                peaker = false; //potential double correct 
+                //runDir = runDir 
+            }//close else if
             else if (!answer) { //reverse direction, start climbing
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 runDir = 1;
                 valleys[valleyIdx] = curVal; //store valley information
                 valleyIdx++;
+                if (peaker) peaker = false; //in case of false double correct
             }//close elseif answer
 
            }
-        else if (runDir == 1) { //
-
-            if(!answer) { //keep climbing -- FIXME: NOT SURE ABOUT THIS DECISION
+        else if (runDir == 1) { //climbing
+            if(!answer) { //keep climbing
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
-                //runDir = 1;
+                
+            //runDir = runDir;
             }
             else if(answer && !peaker) { //check again for a positive response
                 stepSize = prevStepSize; 
                 curVal = prevVal;
                // runDir = runDir;
-                peaker = true; //we are at a potential double peak
-                //lastPositive should be changed but its deferred to next round
-
+                peaker = true; //we are at a potential double peak  
                 }
             else if(answer && peaker) { //we are at a double peak, invert direction
-               if (lastPositive == 1) { //check for last positive response
-                   stepSize = prevStepSize;
-               } else if (lastPositive == 0) {
-                   stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
-               }
+               if(runNumber>1) stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
                curVal = prevVal - stepSize; 
                runDir = -1;  //direction inversion
                peaker = false; //reset this var
-               lastPositive = 1; //log the double peak
+               //lastPositive = 1; //log the double peak
                peaks[peakIdx] = curVal; //log the peak
                peakIdx++;
 
             }
-            else if (!answer && peaker) { //FIXME: not sure about this 
+            else if (!answer && peaker) { //keep on climbing, false alarm for double correct
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 peaker = false;
-                lastPositive = 0; //FIXME: not sure
-                //runDir = 1;     
+                //runDir = runDir;  
+                //lastPositive = 0; // not sure
+                  
             }     
+    DvaLogger.info(Staircase.class, "CurVal is '" + curVal+ "'"); 
+    
         } 
-        runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
-
-        if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
-        if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
-        else if (curVal < LIMIT_DOWN) curVal = -1; //check if lower bound has been surpassed
-
-        //check for convergence
-        if (valleyIdx>3 && peakIdx>3 &&
-                valleys[valleyIdx] == valleys[valleyIdx-1] && 
-                valleys[valleyIdx] == valleys[valleyIdx-2] && 
-                valleys[valleyIdx] == valleys[valleyIdx-3] && 
-                peaks[peakIdx] == peaks[peakIdx-1] &&
-                peaks[peakIdx] == peaks[peakIdx-2] &&
-                peaks[peakIdx] == peaks[peakIdx-3]) {
-                convergenceVal = (valleys[valleyIdx]+peaks[peakIdx])/2;
-                converged = true; 
-                curVal = 0;
-            }
-
-        series.add(seriesCnt,curVal);
-
-        seriesCnt++;
-        return curVal; 
     
-
+    runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
+    if(stepSize == MIN_STEPSIZE) minSizeCnt++;
     
-    
-    //if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
-    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
-    else if (curVal < LIMIT_DOWN) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
     //check for convergence
-    if (runNumber> MAX_RUNS){
+    if (minSizeCnt==4){ 
         convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2])/6;    
-        //            %stdev=sqrt(1/5*(sum((minima-mean).^2)+sum((maxima-mean).^2)));
-
         Lvalleys = new double[3];
         Lpeaks = new double[3];
-        
         Lvalleys[2] = (double) valleys[valleyIdx];
         Lvalleys[1] = (double) valleys[valleyIdx-1];
         Lvalleys[0] = (double) valleys[valleyIdx-2];
-        
         Lpeaks[2] = (double) peaks[valleyIdx];
         Lpeaks[1] = (double) peaks[valleyIdx-1];
         Lpeaks[0] = (double) peaks[valleyIdx-2];
-        
         double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
         double sumValleys = java.lang.Math.pow(Lvalleys[0]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]-convergenceVal,2.0);
         convergenceValStdDev = (float) java.lang.Math.sqrt((1/6)*(sumPeaks+sumValleys));
-        
         converged = true; 
         curVal = 0;
-        }
-        
+        }//close if convergence
+    
+    //various checks
+    if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
+    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
+    if (curVal < LIMIT_DOWN) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+    
+    //graphing tasks
     series.add(seriesCnt,curVal);
-    
     seriesCnt++;
-    return curVal; 
     
-
+    return curVal; 
     }//close whatSize
     
 

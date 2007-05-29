@@ -19,6 +19,7 @@ import dva.util.Staircase;
  */
 public class StaticAcuityTest  extends AcuityTest {
     
+    int runCnt;
     float lastSize;
     float lastStep;
     Staircase sc;
@@ -32,15 +33,13 @@ public class StaticAcuityTest  extends AcuityTest {
         //initial size
         lastSize = resourceBundle.getFloat("config.staircase.initialsize"); 
         lastStep = resourceBundle.getFloat("config.staircase.initialstep");
+        runCnt = 0;
         sc = new Staircase();
         sc.initSize(lastSize,lastStep);
         
 
     }
     
-    /*
-     *
-     */
     public Element getNext() throws AcuityTestException{
 
 //        if (getTestAnswers().size() == this.getMaxStep()){
@@ -72,16 +71,21 @@ public class StaticAcuityTest  extends AcuityTest {
         
         if (++runCnt==20) sc.doGraph("at_20"); 
                 
-                
+       runCnt++;
+       if(runCnt==20) sc.doGraph("_at20");
+       
        if(lastSize == -1)  { //divergence
-            throw new AcuityTestException("Adaptive algo diverged (either up or down)");
+           sc.doGraph("divergence"); 
+           throw new AcuityTestMaxStepException("Adaptive algo diverged (either up or down)");         
        }
        if(lastSize == -2) { //exceeded steps
-              throw new AcuityTestException("Max number of steps exceeded)");
+           sc.doGraph("exceededSteps");  
+           throw new AcuityTestMaxStepException("Max number of steps exceeded)");
        }
        else if (lastSize == 0) { //convergence
           Float f = new Float(sc.getConvergenceValue());
           cv =  new String(f.toString());
+          sc.doGraph("convergence"); 
           throw new AcuityTestException(cv);
        }
         

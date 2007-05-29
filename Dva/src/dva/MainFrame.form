@@ -416,7 +416,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDialogSetupDisplayerHorizRes">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
-                <Property name="text" type="java.lang.String" value="1024"/>
+                <Property name="text" type="java.lang.String" value="1280"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
@@ -427,7 +427,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDialogSetupDisplayerVertRes">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
-                <Property name="text" type="java.lang.String" value="1024"/>
+                <Property name="text" type="java.lang.String" value="800"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
@@ -444,7 +444,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDialogSetupDisplayerDiagLength">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="21"/>
+                <Property name="text" type="java.lang.String" value="12.1"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
@@ -461,7 +461,7 @@
             <Component class="javax.swing.JTextField" name="jTextFieldDialogSetupDisplayerPatientDistance">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="6.15"/>
+                <Property name="text" type="java.lang.String" value="6.00"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelDialogSetupDisplayerPatientDistance">

@@ -10,6 +10,7 @@ package dva.displayer;
 import dva.acuitytest.AcuityTestManager;
 import dva.acuitytest.AcuityTestException;
 import dva.util.DvaLogger;
+import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Observable;
@@ -81,8 +82,8 @@ public class DisplayModel extends Observable {
         this.scalingFactor = scalingFactor;
         
         //notify ModelView
-        setChanged(); 
-        notifyObservers(DisplayModel.EventType.SCALING);
+        //setChanged(); 
+        //notifyObservers(DisplayModel.EventType.SCALING);
     }
     
     public void enableCallibration(){
@@ -245,6 +246,10 @@ public class DisplayModel extends Observable {
     public void setDefault(){
         x = resourceBundle.getInt("config.displayer.defaultX"); 
         y = resourceBundle.getInt("config.displayer.defaultY"); 
+        
+        double staircaseInitialValue = resourceBundle.getDouble("config.staircase.initialsize");
+        
+        scalingFactor = ScreenMapper.getRatio(diagonalLength, horizontalRes, verticalRes, 1400, patientDistance, staircaseInitialValue); 
     }
    
     //state machine attributes
@@ -260,10 +265,10 @@ public class DisplayModel extends Observable {
     private boolean patientAnswer = true; 
     
     //Graphics attribute
-    private int horizontalRes = 1024; 
-    private int verticalRes = 768; 
-    private float diagonalLength = 21; 
-    private float patientDistance = 6; 
+    private int horizontalRes = 1280; 
+    private int verticalRes = 800; 
+    private float diagonalLength = 12.1f; 
+    private float patientDistance = 6f; 
     private double scalingFactor = 1; 
     private int x; 
     private int y; 
@@ -315,6 +320,10 @@ public class DisplayModel extends Observable {
         this.verticalRes = verticalRes;
         this.diagonalLength = diagonalLength;
         this.patientDistance = patientDistance;
+        
+        double staircaseInitialValue = resourceBundle.getDouble("config.staircase.initialsize");
+        
+        scalingFactor = ScreenMapper.getRatio(diagonalLength, horizontalRes, verticalRes, 1400, patientDistance, staircaseInitialValue); 
         
         //notify ModelView
         setChanged(); 

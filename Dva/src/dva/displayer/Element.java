@@ -106,9 +106,14 @@ public abstract class Element {
     public abstract void draw(Graphics2D g2D); 
     public abstract float getSize(); 
     
+    public void setRatio(double ratio){
+        this.ratio = ratio; 
+    }
+    
     protected Color color = Color.BLACK; 
     protected int x = 100; 
     protected int y = 100; 
+    protected double ratio; 
     protected Orientation orientation = Orientation.RIGHT;
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
 }

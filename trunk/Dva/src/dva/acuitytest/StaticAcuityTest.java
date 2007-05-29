@@ -29,29 +29,27 @@ public class StaticAcuityTest  extends AcuityTest {
     /** Creates a new instance of StaticAcuityTest */
     public StaticAcuityTest() {
         //initial size
-        lastSize = 200; 
-        lastStep = 15;
+        lastSize = resourceBundle.getFloat("config.staircase.initialsize"); 
+        lastStep = resourceBundle.getFloat("config.staircase.initialstep");
         sc = new Staircase();
         sc.initSize(lastSize,lastStep);
         
 
     }
     
+    /*
+     *
+     */
     public Element getNext() throws AcuityTestException{
-        
 
-        
-        
-     /*   if (getTestAnswers().size() == this.getMaxStep()){
-            throw new AcuityTestException("Maximum number of step done!");
-        }
-        
-        //TO BE UPDATED
-        if (getTestAnswers().size() == 10) {
-            setTestDone(true);
-        }
-        
-*/
+//        if (getTestAnswers().size() == this.getMaxStep()){
+//            throw new AcuityTestException("Maximum number of step done!");
+//        }
+//        
+//        //TO BE UPDATED
+//        if (getTestAnswers().size() == 10) {
+//            setTestDone(true);
+//        }
         
         if (getTestAnswers().size() > 0){
             //get size of the last element
@@ -94,15 +92,22 @@ public class StaticAcuityTest  extends AcuityTest {
         DvaLogger.debug(StaticAcuityTest.class, "Character:"+charactersList[randomindex]); 
         
         //create a new DisplayElement
-        Optotype lc = new Optotype(charactersList[randomindex], lastSize);
+        setCurrentElement( new Optotype(charactersList[randomindex], lastSize) ); 
         
-        return lc; 
+        
+        return this.getCurrentElement(); 
     }
     
+    /*
+     *
+     */
     public String getTestName(){
         return "static"; 
     }
     
+    /*
+     *
+     */
     public boolean isFailureFatal(){
         return true; 
     }

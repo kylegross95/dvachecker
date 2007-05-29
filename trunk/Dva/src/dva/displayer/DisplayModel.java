@@ -107,21 +107,26 @@ public class DisplayModel extends Observable {
     }
     
     public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestException {
+        //if no acuitytest is available, exit
+        if (AcuityTestManager.getAcuityTest() == null) return null;
+        
         DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
         
-        if (currentState == State.INIT){
+        if (currentState == State.INIT){ 
             
-            //save time
-            this.savedTime = System.currentTimeMillis(); 
-            
-            //disable message
-            disableMessage(); 
-            
-            //display next character
-            currentElement = AcuityTestManager.getAcuityTest().getNext();
-            
-            //set new state
-            this.currentState = State.TESTING; 
+            if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
+                //save time
+                this.savedTime = System.currentTimeMillis(); 
+
+                //disable message
+                disableMessage(); 
+
+                //display next character
+                currentElement = AcuityTestManager.getAcuityTest().getNext();
+
+                //set new state
+                this.currentState = State.TESTING; 
+            }
             
         } else if (currentState == State.TESTING){
             
@@ -167,13 +172,15 @@ public class DisplayModel extends Observable {
             
         } else if (currentState == State.PAUSE){
          
-            disableMessage(); 
-            
-            //display next character
-            currentElement = AcuityTestManager.getAcuityTest().getNext();
-            
-            //set new state
-            this.currentState = State.TESTING; 
+            if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
+                disableMessage(); 
+
+                //display next character
+                currentElement = AcuityTestManager.getAcuityTest().getNext();
+
+                //set new state
+                this.currentState = State.TESTING; 
+            }
         }
         
       
@@ -253,6 +260,10 @@ public class DisplayModel extends Observable {
     private boolean patientAnswer = true; 
     
     //Graphics attribute
+    private int horizontalRes = 1024; 
+    private int verticalRes = 768; 
+    private float diagonalLength = 21; 
+    private float patientDistance = 6; 
     private double scalingFactor = 1; 
     private int x; 
     private int y; 
@@ -266,4 +277,47 @@ public class DisplayModel extends Observable {
     
     //resources
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
+
+    public int getHorizontalRes() {
+        return horizontalRes;
+    }
+
+    public void setHorizontalRes(int horizontalRes) {
+        this.horizontalRes = horizontalRes;
+    }
+
+    public int getVerticalRes() {
+        return verticalRes;
+    }
+
+    public void setVerticalRes(int verticalRes) {
+        this.verticalRes = verticalRes;
+    }
+
+    public float getDiagonalLength() {
+        return diagonalLength;
+    }
+
+    public void setDiagonalLength(float diagonalLength) {
+        this.diagonalLength = diagonalLength;
+    }
+
+    public float getPatientDistance() {
+        return patientDistance;
+    }
+
+    public void setPatientDistance(float patientDistance) {
+        this.patientDistance = patientDistance;
+    }
+    
+    public void setDisplayerOptions(int horizontalRes, int verticalRes, float diagonalLength, float patientDistance){
+        this.horizontalRes = horizontalRes;
+        this.verticalRes = verticalRes;
+        this.diagonalLength = diagonalLength;
+        this.patientDistance = patientDistance;
+        
+        //notify ModelView
+        setChanged(); 
+        notifyObservers(DisplayModel.EventType.SCALING);
+    }
 }

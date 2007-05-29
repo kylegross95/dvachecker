@@ -23,6 +23,7 @@ public class StaticAcuityTest  extends AcuityTest {
     float lastStep;
     Staircase sc;
     String cv;
+    int runCnt = 0; 
     
     final static String charactersList[] = {"C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"};
     
@@ -67,7 +68,9 @@ public class StaticAcuityTest  extends AcuityTest {
         }
         
         
-                DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
+        DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
+        
+        if (++runCnt==20) sc.doGraph("at_20"); 
                 
                 
        if(lastSize == -1)  { //divergence

@@ -11,15 +11,13 @@ import dva.acuitytest.AcuityTestManager;
 import dva.acuitytest.AcuityTestException;
 import dva.displayer.DisplayModel;
 import dva.displayer.Displayer;
-import dva.displayer.Optotype;
 import dva.util.DvaLogger;
 import dva.util.GUIUtils;
+import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
@@ -457,12 +455,12 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel14.setText("Resolution:");
 
         jTextFieldDialogSetupDisplayerHorizRes.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldDialogSetupDisplayerHorizRes.setText("1024");
+        jTextFieldDialogSetupDisplayerHorizRes.setText("1280");
 
         jLabel15.setText("px * ");
 
         jTextFieldDialogSetupDisplayerVertRes.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        jTextFieldDialogSetupDisplayerVertRes.setText("1024");
+        jTextFieldDialogSetupDisplayerVertRes.setText("800");
 
         jLabel16.setText("px");
 
@@ -470,7 +468,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel17.setText("Diagonal length:");
 
         jTextFieldDialogSetupDisplayerDiagLength.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldDialogSetupDisplayerDiagLength.setText("21");
+        jTextFieldDialogSetupDisplayerDiagLength.setText("12.1");
 
         jLabel18.setText("inches");
 
@@ -478,7 +476,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel19.setText("Patient distance:");
 
         jTextFieldDialogSetupDisplayerPatientDistance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextFieldDialogSetupDisplayerPatientDistance.setText("6.15");
+        jTextFieldDialogSetupDisplayerPatientDistance.setText("6.00");
 
         jLabelDialogSetupDisplayerPatientDistance.setText("meters");
 

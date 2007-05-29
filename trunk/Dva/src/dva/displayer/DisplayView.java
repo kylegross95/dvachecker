@@ -112,9 +112,12 @@ public class DisplayView extends JPanel implements Observer {
             
         } else {
             //tx = new AffineTransform();
-            tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
-            g2D.setTransform(tx);
-              
+            //tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
+            //g2D.setTransform(tx);
+            Element el = cd.getDisplayModel().getCurrentDisplayedElement(); 
+            //double ratio = cd.getDisplayModel().getScalingFactor(); DvaLogger.debug(DisplayView.class, "ratio:"+ratio);
+            //g2D.scale(, ratio ); 
+            cd.getDisplayModel().getCurrentDisplayedElement().setRatio( cd.getDisplayModel().getScalingFactor() ); 
             cd.getDisplayModel().getCurrentDisplayedElement().draw(g2D); 
             
             

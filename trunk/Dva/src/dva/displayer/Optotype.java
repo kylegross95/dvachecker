@@ -109,7 +109,8 @@ public class Optotype extends Element {
         
         g2D.setPaint(this.color); 
         
-        g2D.scale(0.2, 0.2); 
+        
+        g2D.scale(size * ratio, size * ratio); 
         
         g2D.drawImage(bimg, 0, 0, null); 
         //g2D.draw(area); 

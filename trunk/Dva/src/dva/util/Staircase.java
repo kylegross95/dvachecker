@@ -68,7 +68,7 @@ public class Staircase {
     //private final float INIT_STEP_SIZE = 15.0f;
     //private final float INIT_STIM_SIZE = 200;
     private final float LIMIT_UP = 15;
-    private final float LIMIT_DOWN = 0.5f;
+    private final float LIMIT_DOWN = 1.0f;
     private final float MIN_STEPSIZE = 1.00f;
     private final int MAX_RUNS = 60;
     
@@ -79,7 +79,7 @@ public class Staircase {
     
     //snelling scale
     
-        float[] sScale  = {0.1f,0.13f,0.17f,0.2f,0.25f,0.33f,0.4f,0.5f,0.67f,0.8f,1.0f,1.25f,1.67f,2.0f};
+        double[] sScale  = {0.1,0.13,0.17,0.2,0.25,0.33,0.4,0.5,0.67,0.8,1.0,1.25,1.67,2.0};
  
     /**
      * Creates a new instance of Staircase
@@ -105,7 +105,7 @@ public class Staircase {
         stepSize = initStepSize;
         seriesCnt = 1;
      
-        series.add(seriesCnt,initSize);
+        //series.add((double)seriesCnt,initSize);
         seriesCnt++;
         
         peaker = false;
@@ -177,11 +177,11 @@ public class Staircase {
         } 
     
     runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
-    if(stepSize == MIN_STEPSIZE) minSizeCnt++;
+    if(stepSize == MIN_STEPSIZE && !peaker) minSizeCnt++;
     
     
     //check for convergence
-    if (minSizeCnt==4){ 
+    if (minSizeCnt==8){ 
         convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2])/6;    
         Lvalleys = new double[3];
         Lpeaks = new double[3];
@@ -198,18 +198,33 @@ public class Staircase {
         curVal = 0;
         }//close if convergence
     
-    //various checks
-    if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
-    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
-    if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
-    //graphing tasks
-    series.add(seriesCnt,curVal);
+    //check
+      if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+    
+    //plotting
+    if (!converged)  {  series.add(seriesCnt,sScale[(int)curVal-1]); }
+    //else { series.add(seriesCnt,convergenceVal); }
+    
     seriesRunDir.add(seriesCnt,runDir);
     int tmpVal = (peaker) ? 1 : 0;
     seriesPeaker.add(seriesCnt,stepSize);
-    
     seriesCnt++;
+    
+    //various checks
+    if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
+    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
+  
+    
+    //graphing tasks
+    //series.add((double)seriesCnt,);
+      
+    
+        
+    
+    
+    
+
     
 
         
@@ -232,8 +247,8 @@ public class Staircase {
     public void doGraph(String param) {
         XYSeriesCollection xyc = new XYSeriesCollection();
         xyc.addSeries(series);
-        xyc.addSeries(seriesRunDir);
-        xyc.addSeries(seriesPeaker);
+        //xyc.addSeries(seriesRunDir);
+        //xyc.addSeries(seriesPeaker);
         org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
                      ("DVA Exp Values",  // Title
                       "Run",           // X-Axis label

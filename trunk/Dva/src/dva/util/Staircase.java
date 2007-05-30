@@ -18,9 +18,14 @@ import org.jfree.chart.title.*;
 import org.jfree.data.time.*;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.annotations.XYImageAnnotation;
 import java.io.File;
 import java.lang.String;
 import java.lang.Math;
+import java.awt.*;
+import java.awt.image.*;
+import java.awt.Paint;
+import java.io.*;
 
 /**
  * Staircase algo
@@ -69,7 +74,13 @@ public class Staircase {
     
     //chart output
     private org.jfree.data.xy.XYSeries series;
-           
+    private XYSeries seriesRunDir;
+    private XYSeries seriesPeaker;
+    
+    //snelling scale
+    
+        float[] sScale  = {0.1f,0.13f,0.17f,0.2f,0.25f,0.33f,0.4f,0.5f,0.67f,0.8f,1.0f,1.25f,1.67f,2.0f};
+ 
     /**
      * Creates a new instance of Staircase
      */
@@ -79,7 +90,9 @@ public class Staircase {
         valleys = new float[50];
         valleyIdx = 0;
         //lastPositive = 1; //to avoid step resizing at init
-        series = new org.jfree.data.xy.XYSeries("");
+        series = new org.jfree.data.xy.XYSeries("Values");
+        seriesRunDir = new org.jfree.data.xy.XYSeries("RunDir");
+        seriesPeaker  = new org.jfree.data.xy.XYSeries("Peaker");
     }
     
    
@@ -103,7 +116,7 @@ public class Staircase {
     public float whatSize(boolean answer) {
         //prepare for next round
         prevStepSize = stepSize;
-        prevVal = curVal;
+        prevVal = curVal;  
         
         if(runDir == -1) { //descending
             if(answer && !peaker) { //check again
@@ -188,12 +201,18 @@ public class Staircase {
     //various checks
     if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
     if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
-    if (curVal < LIMIT_DOWN) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+    if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
     //graphing tasks
     series.add(seriesCnt,curVal);
+    seriesRunDir.add(seriesCnt,runDir);
+    int tmpVal = (peaker) ? 1 : 0;
+    seriesPeaker.add(seriesCnt,stepSize);
+    
     seriesCnt++;
     
+
+        
     return curVal; 
     }//close whatSize
     
@@ -211,17 +230,27 @@ public class Staircase {
     
     
     public void doGraph(String param) {
-        XYDataset xyDataset = new XYSeriesCollection(series);
+        XYSeriesCollection xyc = new XYSeriesCollection();
+        xyc.addSeries(series);
+        xyc.addSeries(seriesRunDir);
+        xyc.addSeries(seriesPeaker);
         org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
                      ("DVA Exp Values",  // Title
                       "Run",           // X-Axis label
                       "Value",           // Y-Axis label
-                      xyDataset,          // Dataset
+                      xyc,          // Dataset
                        org.jfree.chart.plot.PlotOrientation.VERTICAL,
                       true,                // Show legend
                       true,   
                       true
                      );
+        
+        XYPlot plot = chart.getXYPlot();
+        Image image = Toolkit.getDefaultToolkit().getImage("c:/temp/plus.jpg");
+        XYImageAnnotation ant = new XYImageAnnotation(500.0, 300.0, image);
+        //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
+        plot.addAnnotation(ant);
+        chart.setBackgroundPaint(Color.yellow);
         String filename = "c:/temp/chart" + param + ".jpg";
         try {
                 ChartUtilities.saveChartAsJPEG(new File(filename), chart, 1000, 600);

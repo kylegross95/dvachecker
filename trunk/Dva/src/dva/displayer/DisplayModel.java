@@ -10,19 +10,18 @@ package dva.displayer;
 import dva.acuitytest.AcuityTestManager;
 import dva.acuitytest.AcuityTestException;
 import dva.util.DvaLogger;
-import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Observable;
 
 /**
  *
  * @author J-Chris
  */
-public class DisplayModel extends Observable {
-    
-    
-    
+public class DisplayModel extends Observable implements ComponentListener {
+
     /**
      * Creates a new instance of DisplayModel
      */
@@ -247,11 +246,29 @@ public class DisplayModel extends Observable {
         setChanged(); 
         notifyObservers(DisplayModel.EventType.SCALING);
     }
+    
+    public void componentHidden(ComponentEvent e){
+        //do nothing
+    }
+    public void componentMoved(ComponentEvent e){
+        //do nothing
+    }
+    
+    public void componentResized(ComponentEvent e){
+        DvaLogger.debug(DisplayView.class, "Window resized");
+        //notify ModelView
+        setChanged(); 
+        notifyObservers(DisplayModel.EventType.RESIZED_WINDOW);
+        
+    }
+    public void componentShown(ComponentEvent e) {
+        //do nothing
+    }
    
     //state machine attributes
     public enum OperatorEvent {NEXT_OPTOTYPE, OPTOTYPE_DONTKNOW, OPTOTYPE_C, OPTOTYPE_D, OPTOTYPE_H, OPTOTYPE_K, OPTOTYPE_N, OPTOTYPE_O, OPTOTYPE_R, OPTOTYPE_S, OPTOTYPE_V, OPTOTYPE_Z }; 
     public enum State { INIT, TESTING, PAUSE, END }; 
-    public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING}; 
+    public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING, RESIZED_WINDOW}; 
     boolean pauseBetween = false; 
     private State currentState = State.INIT; 
     

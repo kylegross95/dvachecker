@@ -110,10 +110,33 @@ public abstract class Element {
         this.ratio = ratio; 
     }
     
+    public double getRatio(){
+        return this.ratio; 
+    }
+    
+    
     protected Color color = Color.BLACK; 
     protected int x = 100; 
     protected int y = 100; 
     protected double ratio; 
+    private int pixelWidth = 0; 
+    private int pixelHeight = 0; 
     protected Orientation orientation = Orientation.RIGHT;
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
+
+    public int getPixelWidth() {
+        return pixelWidth;
+    }
+
+    public void setPixelWidth(int pixelWidth) {
+        this.pixelWidth = pixelWidth;
+    }
+
+    public int getPixelHeight() {
+        return pixelHeight;
+    }
+
+    public void setPixelHeight(int pixelHeight) {
+        this.pixelHeight = pixelHeight;
+    }
 }

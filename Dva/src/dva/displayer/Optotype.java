@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -52,6 +53,12 @@ public class Optotype extends Element {
     public Optotype(String name, float size) {
         this.size = size;  
         this.name = name; 
+        init();
+    }
+    
+    public Optotype() {
+        this.size = 14;  
+        this.name = "square"; 
         init();
     }
     
@@ -108,17 +115,28 @@ public class Optotype extends Element {
         //apply transform
         g2D.setTransform(tx);
         
+        //set background color
         g2D.setPaint(this.color); 
         
         DvaLogger.debug(Optotype.class, "size:" + size);
-
-        ratio = ScreenMapper.getRatio( Math.round(size) ); 
         
-        g2D.scale(size * ratio, size * ratio); 
+        //translate and scale optotype
+        ScreenMapper sm = ScreenMapper.getInstance(); 
+        sm.scale(this, Displayer.getInstance()); 
+        sm.center(this, Displayer.getInstance()); 
         
-        g2D.drawImage(bimg, 0, 0, null); 
-        //g2D.draw(area); 
-        //g2D.fill(area);
+        //apply transformation to graphics object
+        g2D.translate(this.getX(), this.getY()); 
+        g2D.scale(getRatio(), getRatio()); 
+        
+        DvaLogger.debug(ScreenMapper.class, "translate x/y:" + this.getX() + "/" + this.getY() ); 
+        
+        //draw the element
+        g2D.drawImage(bimg, 0, 0, null);
+    }
+    
+    public BufferedImage getBimg(){
+        return this.bimg; 
     }
 
     // Return the rectangle bounding this circle

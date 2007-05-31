@@ -65,6 +65,9 @@ public class Staircase {
     private int seriesCnt;
     private double[] curValHistory;
     private boolean[] curValResponses;
+    
+    private int numCVals; //# of consecutive valleys at size=1
+    
     //private final float INIT_STEP_SIZE = 15.0f;
     //private final float INIT_STIM_SIZE = 200;
     private final float LIMIT_UP = 15;
@@ -97,6 +100,8 @@ public class Staircase {
         series2 = new XYSeries("Values-Linear");
         seriesRunDir = new XYSeries("RunDir");
         seriesPeaker  = new XYSeries("Peaker");
+        numCVals = 0;
+        
     }
     
    
@@ -173,6 +178,7 @@ public class Staircase {
                curVal = prevVal - stepSize; 
                runDir = -1;  //direction inversion
                peaker = false; //reset this var
+               if (stepSize == MIN_STEPSIZE) numCVals++;
                //lastPositive = 1; //log the double peak
                peaks[peakIdx] = curVal; //log the peak
                peakIdx++;
@@ -188,7 +194,7 @@ public class Staircase {
     
     
     //check for convergence
-    if (minSizeCnt==8){ 
+    if (minSizeCnt>=8 && numCVals == 4){ 
         convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2])/6;    
         Lvalleys = new double[3];
         Lpeaks = new double[3];

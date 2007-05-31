@@ -7,8 +7,7 @@
 
 package dva.displayer;
 
-import dva.actions.CallibrationAction;
-import dva.util.DvaLogger;
+import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -54,17 +53,6 @@ public class DisplayView extends JPanel implements Observer {
             }
         });
         popup.add(menuItem);
-        
-        //item calibration
-        menuItem = new JMenuItem("Calibrate displayer");
-        menuItem.addActionListener(new CallibrationAction("Calibrate Displayer", "calibrate24", "Calibrate Displayer")); 
-        
-//        menuItem.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                GUIUtils.showDialog(cd.getJDialogCalibration(), true, evt);
-//            }
-//        });
-        popup.add(menuItem);
 
         //Add listener to the text area so the popup menu can come up.
         DisplayerMouseListener displayerMouseListener = new DisplayerMouseListener(popup);
@@ -81,20 +69,6 @@ public class DisplayView extends JPanel implements Observer {
         Graphics2D g2D = (Graphics2D)g; 
         
         //g2D.clearRect(0,0,this.getWidth(), this.getHeight()); 
-                
-        AffineTransform tx = new AffineTransform();
-        //translate character
-        tx.translate( translateX, translateY );
-        //scale
-        //tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
-        //translate to origine
-        //tx.translate(de.getX(), de.getY()); 
-        //rotate
-        //tx.rotate(de.getOrientation().ordinal() * 45); 
-        //translate back
-        //tx.translate(-de.getX(), -de.getY());
-        //apply transform
-        g2D.setTransform(tx);
         
         g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, 
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -106,31 +80,31 @@ public class DisplayView extends JPanel implements Observer {
        //     RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         if (cd.getDisplayModel().isMessage()){
+            AffineTransform tx = new AffineTransform();
+            //translate character
+            tx.translate( translateX, translateY );
+
+            //apply transform
+            g2D.setTransform(tx);
+        
             g2D.setFont(cd.getDisplayModel().getMessageFont()); 
             g2D.setPaint(cd.getDisplayModel().getMessageColor()); 
             g2D.drawString(cd.getDisplayModel().getMessageToDisplay(), cd.getDisplayModel().getX(), cd.getDisplayModel().getY());
             
+            //help garbage
+            tx = null;
+            
         } else {
-            //tx = new AffineTransform();
-            //tx.scale(cd.getDisplayModel().getScalingFactor(), cd.getDisplayModel().getScalingFactor());
-            //g2D.setTransform(tx);
             Element el = cd.getDisplayModel().getCurrentDisplayedElement(); 
-            //double ratio = cd.getDisplayModel().getScalingFactor(); DvaLogger.debug(DisplayView.class, "ratio:"+ratio);
-            //g2D.scale(, ratio ); 
-            cd.getDisplayModel().getCurrentDisplayedElement().setRatio( cd.getDisplayModel().getScalingFactor() ); 
             cd.getDisplayModel().getCurrentDisplayedElement().draw(g2D); 
-            
-            
-        }
-        
-        //help garbage
-        tx = null; 
+        } 
     }
     
     JPopupMenu popupMenu; 
     private Displayer cd; 
     private int translateX = 0; 
     private int translateY = 0; 
+    
     
     
     class DisplayerMouseListener extends MouseAdapter implements MouseMotionListener {

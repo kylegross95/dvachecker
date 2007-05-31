@@ -6,7 +6,7 @@
 
 package dva.displayer;
 
-import java.util.Observer;
+import java.awt.GraphicsConfiguration;
 
 /**
  *
@@ -17,7 +17,8 @@ public class Displayer extends javax.swing.JFrame {
     /**
      * Creates new form Displayer
      */
-    public Displayer() {
+    public Displayer(GraphicsConfiguration gc) {
+        super(gc);
         instance = this; 
         initComponents();
         initSpecificComponents(); 
@@ -34,64 +35,6 @@ public class Displayer extends javax.swing.JFrame {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jDialogCalibration = new javax.swing.JDialog();
-        jPanelScalingFactor = new javax.swing.JPanel();
-        jSliderScalingFactor = new javax.swing.JSlider();
-        jLabelCalibrationScalingFactor = new javax.swing.JLabel();
-
-        jDialogCalibration.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        jDialogCalibration.setTitle("DVA - Displayer Calibration");
-        jDialogCalibration.setResizable(false);
-        jPanelScalingFactor.setBorder(javax.swing.BorderFactory.createTitledBorder("Scaling Factor"));
-        jSliderScalingFactor.setMajorTickSpacing(25);
-        jSliderScalingFactor.setMaximum(200);
-        jSliderScalingFactor.setMinorTickSpacing(10);
-        jSliderScalingFactor.setValue(100);
-        jSliderScalingFactor.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jSliderScalingFactorStateChanged(evt);
-            }
-        });
-
-        jLabelCalibrationScalingFactor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelCalibrationScalingFactor.setText("100");
-
-        org.jdesktop.layout.GroupLayout jPanelScalingFactorLayout = new org.jdesktop.layout.GroupLayout(jPanelScalingFactor);
-        jPanelScalingFactor.setLayout(jPanelScalingFactorLayout);
-        jPanelScalingFactorLayout.setHorizontalGroup(
-            jPanelScalingFactorLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelScalingFactorLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jSliderScalingFactor, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 226, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabelCalibrationScalingFactor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanelScalingFactorLayout.setVerticalGroup(
-            jPanelScalingFactorLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelScalingFactorLayout.createSequentialGroup()
-                .add(jPanelScalingFactorLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabelCalibrationScalingFactor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jSliderScalingFactor, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        org.jdesktop.layout.GroupLayout jDialogCalibrationLayout = new org.jdesktop.layout.GroupLayout(jDialogCalibration.getContentPane());
-        jDialogCalibration.getContentPane().setLayout(jDialogCalibrationLayout);
-        jDialogCalibrationLayout.setHorizontalGroup(
-            jDialogCalibrationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jDialogCalibrationLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelScalingFactor, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
-        jDialogCalibrationLayout.setVerticalGroup(
-            jDialogCalibrationLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jDialogCalibrationLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelScalingFactor, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("DVA Displayer");
@@ -108,20 +51,10 @@ public class Displayer extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jSliderScalingFactorStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderScalingFactorStateChanged
-        
-        //update JLabel 
-        jLabelCalibrationScalingFactor.setText( String.valueOf( jSliderScalingFactor.getValue() ) ); 
-        
-        double value = jSliderScalingFactor.getValue(); 
-        //apply affine transform
-        this.getDisplayModel().setScalingFactor( value / 100); 
-
-    }//GEN-LAST:event_jSliderScalingFactorStateChanged
     
     private void initSpecificComponents(){
         
+        //instanciate the View
         displayView = new DisplayView(this);
         
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -135,21 +68,12 @@ public class Displayer extends javax.swing.JFrame {
             .add(displayView, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         
+        //instanciate the Model
         displayModel = new DisplayModel(); 
+        
         //register the observer
         displayModel.addObserver(displayView); 
         
-    }
-   
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Displayer().setVisible(true);
-            }
-        });
     }
     
     public void resizeDisplayer(){
@@ -164,10 +88,6 @@ public class Displayer extends javax.swing.JFrame {
         return isCalibrated; 
     }
     
-    public javax.swing.JDialog getJDialogCalibration(){
-        return jDialogCalibration; 
-    }
-    
     
     private boolean isCalibrated = false;  
     private DisplayView displayView; 
@@ -176,10 +96,6 @@ public class Displayer extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDialog jDialogCalibration;
-    private javax.swing.JLabel jLabelCalibrationScalingFactor;
-    private javax.swing.JPanel jPanelScalingFactor;
-    private javax.swing.JSlider jSliderScalingFactor;
     // End of variables declaration//GEN-END:variables
     
 }

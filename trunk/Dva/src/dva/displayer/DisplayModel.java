@@ -74,20 +74,8 @@ public class DisplayModel extends Observable {
         notifyObservers();
     }
     
-     public double getScalingFactor() {
-        return scalingFactor;
-    }
-
-    public void setScalingFactor(double scalingFactor) {
-        this.scalingFactor = scalingFactor;
-        
-        //notify ModelView
-        //setChanged(); 
-        //notifyObservers(DisplayModel.EventType.SCALING);
-    }
-    
     public void enableCallibration(){
-        currentElement = new DisplayElement("+", 40);
+        currentElement = new Optotype();
     }
     
     public boolean setupAcuityTest() {
@@ -247,9 +235,21 @@ public class DisplayModel extends Observable {
         x = resourceBundle.getInt("config.displayer.defaultX"); 
         y = resourceBundle.getInt("config.displayer.defaultY"); 
     }
+    
+    public double getScaleCorrectionFactor() {
+        return scaleCorrectionFactor;
+    }
+
+    public void setScaleCorrectionFactor(double scaleCorrectionFactor) {
+        this.scaleCorrectionFactor = scaleCorrectionFactor;
+        
+        //notify ModelView
+        setChanged(); 
+        notifyObservers(DisplayModel.EventType.SCALING);
+    }
    
     //state machine attributes
-    public enum OperatorEvent {NEXT_OPTOTYPE, OPTOTYPE_C, OPTOTYPE_D, OPTOTYPE_H, OPTOTYPE_K, OPTOTYPE_N, OPTOTYPE_O, OPTOTYPE_R, OPTOTYPE_S, OPTOTYPE_V, OPTOTYPE_Z }; 
+    public enum OperatorEvent {NEXT_OPTOTYPE, OPTOTYPE_DONTKNOW, OPTOTYPE_C, OPTOTYPE_D, OPTOTYPE_H, OPTOTYPE_K, OPTOTYPE_N, OPTOTYPE_O, OPTOTYPE_R, OPTOTYPE_S, OPTOTYPE_V, OPTOTYPE_Z }; 
     public enum State { INIT, TESTING, PAUSE, END }; 
     public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING}; 
     boolean pauseBetween = false; 
@@ -261,10 +261,10 @@ public class DisplayModel extends Observable {
     private boolean patientAnswer = true; 
     
     //Graphics attribute
-    private double scalingFactor = 1; 
     private int x; 
     private int y; 
-    private Element currentElement = null; 
+    private Element currentElement = new Optotype(); 
+    private double scaleCorrectionFactor = 1; 
     
     //message attributes
     private String messageToDisplay = ""; 

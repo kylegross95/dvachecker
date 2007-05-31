@@ -7,11 +7,12 @@
 
 package dva.displayer;
 
-import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -157,5 +158,6 @@ public class DisplayView extends JPanel implements Observer {
         }
         
     }
-    
 }
+    
+    

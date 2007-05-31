@@ -216,8 +216,11 @@ public class ScreenMapper {
     }
     
     public void center(Element e, Component c){
-        int sh = this.getScreenHeight(); 
-        int sw = this.getScreenWidth(); 
+//        int sh = this.getScreenHeight(); 
+//        int sw = this.getScreenWidth(); 
+//        
+        int sw = c.getWidth(); 
+        int sh = c.getHeight(); 
         
         DvaLogger.debug(ScreenMapper.class, "output Width/Height:" + sw + "/" + sh ); 
         

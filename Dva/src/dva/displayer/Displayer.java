@@ -72,7 +72,9 @@ public class Displayer extends javax.swing.JFrame {
         displayModel = new DisplayModel(); 
         
         //register the observer
-        displayModel.addObserver(displayView); 
+        displayModel.addObserver(displayView);
+        
+        displayView.addComponentListener(displayModel); 
         
     }
     

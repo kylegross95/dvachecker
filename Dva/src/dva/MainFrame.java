@@ -286,8 +286,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jMenuOptions = new javax.swing.JMenu();
         jMenuItemSetupDisplayer = new javax.swing.JMenuItem();
         jCheckBoxMenuItemPauseBetween = new javax.swing.JCheckBoxMenuItem();
-        jMenuItemTest = new javax.swing.JMenuItem();
-        jMenuItemTest2 = new javax.swing.JMenuItem();
         jMenuView = new javax.swing.JMenu();
         jMenuViewDisplayer = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
@@ -941,24 +939,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
         jMenuOptions.add(jCheckBoxMenuItemPauseBetween);
 
-        jMenuItemTest.setText("Test");
-        jMenuItemTest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemTestActionPerformed(evt);
-            }
-        });
-
-        jMenuOptions.add(jMenuItemTest);
-
-        jMenuItemTest2.setText("Test2");
-        jMenuItemTest2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemTest2ActionPerformed(evt);
-            }
-        });
-
-        jMenuOptions.add(jMenuItemTest2);
-
         jMenuBar1.add(jMenuOptions);
 
         jMenuView.setText("View");
@@ -1054,46 +1034,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             DvaLogger.error(MainFrame.class, e); 
         }
     }//GEN-LAST:event_jButtonDontKnowActionPerformed
-
-    private void jMenuItemTest2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTest2ActionPerformed
-        //get graphic env.
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        
-        //get screen devices
-        GraphicsDevice[] gs = ge.getScreenDevices();
-        
-        DvaLogger.debug("GraphicsDevice #:" + gs.length);
-        for (int j = 0; j < gs.length; j++) { 
-          GraphicsDevice gd = gs[j];
-          //GraphicsConfiguration[] gc = gd.getConfigurations();
-          //DvaLogger.debug("GraphicsDevice("+j+") has "+gc.length+" GraphicsConfiguration");
-          
-          //for (int i=0; i < gc.length; i++) {
-              
-//             JFrame f = new JFrame(gs[j].getDefaultConfiguration());
-//             Canvas c = new Canvas(gc[i]); 
-//             Rectangle gcBounds = gc[i].getBounds();
-//             int xoffs = gcBounds.x;
-//             int yoffs = gcBounds.y;
-//             f.getContentPane().add(c);
-//             f.setLocation((i*50)+xoffs, (i*60)+yoffs);
-//             f.show();
-          //}
-        }
-    }//GEN-LAST:event_jMenuItemTest2ActionPerformed
-
-    private void jMenuItemTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTestActionPerformed
-        Rectangle virtualBounds = new Rectangle();
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
-        for (int j = 0; j < gs.length; j++) { 
-          GraphicsDevice gd = gs[j];
-          GraphicsConfiguration[] gc = gd.getConfigurations();
-          for (int i=0; i < gc.length; i++) {
-              virtualBounds = virtualBounds.union(gc[i].getBounds());
-          }
-        } 
-    }//GEN-LAST:event_jMenuItemTestActionPerformed
 
     private void jButtonDialogSetupDisplayerApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogSetupDisplayerApplyActionPerformed
         //get options
@@ -1412,8 +1352,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JMenuItem jMenuItemNewExperiment;
     private javax.swing.JMenuItem jMenuItemQuit;
     private javax.swing.JMenuItem jMenuItemSetupDisplayer;
-    private javax.swing.JMenuItem jMenuItemTest;
-    private javax.swing.JMenuItem jMenuItemTest2;
     private javax.swing.JMenu jMenuOptions;
     private javax.swing.JMenu jMenuView;
     private javax.swing.JMenuItem jMenuViewDisplayer;

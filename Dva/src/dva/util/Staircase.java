@@ -62,9 +62,9 @@ public class Staircase {
     private boolean converged; //whether the algo has converged yet
     private float convergenceVal;
     private float convergenceValStdDev;
-    
     private int seriesCnt;
-
+    private double[] curValHistory;
+    private boolean[] curValResponses;
     //private final float INIT_STEP_SIZE = 15.0f;
     //private final float INIT_STIM_SIZE = 200;
     private final float LIMIT_UP = 15;
@@ -106,7 +106,8 @@ public class Staircase {
         //stepSize = INIT_STEP_SIZE;
         stepSize = initStepSize;
         seriesCnt = 1;
-     
+        //start logging curVal
+        curValHistory[0] = initSize;
         //series.add((double)seriesCnt,initSize);
         seriesCnt++;
         
@@ -144,12 +145,22 @@ public class Staircase {
 
            }
         else if (runDir == 1) { //climbing
-            if(!answer) { //keep climbing
+            if(!answer && !peaker) { //keep climbing
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 
             //runDir = runDir;
             }
+            
+            else if (!answer && peaker) { //keep on climbing, false alarm for double correct
+                stepSize = prevStepSize;
+                curVal = prevVal + stepSize;
+                peaker = false;
+                //runDir = runDir;  
+                //lastPositive = 0; // not sure
+                  
+            }     
+            
             else if(answer && !peaker) { //check again for a positive response
                 stepSize = prevStepSize; 
                 curVal = prevVal;
@@ -166,14 +177,7 @@ public class Staircase {
                peakIdx++;
 
             }
-            else if (!answer && peaker) { //keep on climbing, false alarm for double correct
-                stepSize = prevStepSize;
-                curVal = prevVal + stepSize;
-                peaker = false;
-                //runDir = runDir;  
-                //lastPositive = 0; // not sure
-                  
-            }     
+            
     DvaLogger.info(Staircase.class, "CurVal is '" + curVal+ "'"); 
     
         } 
@@ -201,20 +205,29 @@ public class Staircase {
         }//close if convergence
     
     
-    //check
+    //check min limit has not been surpassed
       if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
     //plotting
     if (!converged)  {  
-        series.add(seriesCnt,sScale[(int)curVal-1]); 
+        series.add(seriesCnt,(-1)*sScale[14-(int)curVal]); 
         series2.add(seriesCnt,curVal);
+        curValHistory[seriesCnt-1] = sScale[(int)curVal-1];
+        if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
     }
-    //else { series.add(seriesCnt,convergenceVal); }
+    else { 
+        series.add(seriesCnt,convergenceVal); 
+        curValHistory[seriesCnt] = curVal;
     
+    }
+    
+    
+    /* // for debugging purposes
     seriesRunDir.add(seriesCnt,runDir);
     int tmpVal = (peaker) ? 1 : 0;
     seriesPeaker.add(seriesCnt,stepSize);
     seriesCnt++;
+     */
     
     //various checks
     if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
@@ -225,7 +238,13 @@ public class Staircase {
     
 
     public float getConvergenceValue() {
-        if (converged) return convergenceVal;
+        if (converged) {
+            DvaLogger.info(Staircase.class, "CurValHistory is '" + curValHistory + "'"); 
+            DvaLogger.info(Staircase.class, "CurValResponses is '" + curValResponses + "'"); 
+            return convergenceVal;
+            
+        }
+        
         else return -1;
     }
     

@@ -127,6 +127,7 @@ public class Optotype extends Element {
         
         //apply transformation to graphics object
         g2D.translate(this.getX(), this.getY()); 
+        
         g2D.scale(getRatio(), getRatio()); 
         
         DvaLogger.debug(ScreenMapper.class, "translate x/y:" + this.getX() + "/" + this.getY() ); 

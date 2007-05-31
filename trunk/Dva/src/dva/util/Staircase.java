@@ -79,7 +79,7 @@ public class Staircase {
     private XYSeries seriesPeaker;
     
     //snelling scale
-    
+        
         double[] sScale  = {0.1,0.13,0.17,0.2,0.25,0.33,0.4,0.5,0.67,0.8,1.0,1.25,1.67,2.0};
  
     /**
@@ -90,6 +90,8 @@ public class Staircase {
         peakIdx = 0;
         valleys = new float[50];
         valleyIdx = 0;
+        curValHistory = new double[50];
+        curValResponses = new boolean[50];
         //lastPositive = 1; //to avoid step resizing at init
         series = new XYSeries("Values-Snellen Scale");
         series2 = new XYSeries("Values-Linear");
@@ -101,16 +103,15 @@ public class Staircase {
     public void initSize (float initSize, float initStepSize) {
         runNumber = 1;
         runDir = 1;
-       // curVal = INIT_STIM_SIZE;
+       // curVal = INIT_STIM_SIZE; NOT USED
         curVal = initSize;
-        //stepSize = INIT_STEP_SIZE;
+        //stepSize = INIT_STEP_SIZE; NOT USED
         stepSize = initStepSize;
         seriesCnt = 1;
         //start logging curVal
         curValHistory[0] = initSize;
         //series.add((double)seriesCnt,initSize);
         seriesCnt++;
-        
         peaker = false;
         minSizeCnt = 0;
     }
@@ -226,8 +227,9 @@ public class Staircase {
     seriesRunDir.add(seriesCnt,runDir);
     int tmpVal = (peaker) ? 1 : 0;
     seriesPeaker.add(seriesCnt,stepSize);
-    seriesCnt++;
      */
+    
+    seriesCnt++;
     
     //various checks
     if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded

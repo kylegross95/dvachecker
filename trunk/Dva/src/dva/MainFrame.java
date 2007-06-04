@@ -239,6 +239,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel20 = new javax.swing.JLabel();
         jSliderDialogSetupDisplayerCalibrationSlider = new javax.swing.JSlider();
         jLabelDialogSetupDisplayerCalibrationValue = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jTextFieldDialogSetupDisplayerHorizRes = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jTextFieldDialogSetupDisplayerVertRes = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jTextFieldDialogSetupDisplayerDiagonalLength = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
         jButtonDialogSetupDisplayerCancel = new javax.swing.JButton();
         jButtonDialogSetupDisplayerOk = new javax.swing.JButton();
         jButtonDialogSetupDisplayerApply = new javax.swing.JButton();
@@ -485,16 +493,38 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabelDialogSetupDisplayerCalibrationValue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelDialogSetupDisplayerCalibrationValue.setText("100");
 
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Screen size (width * height):");
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("Diagonal length:");
+
+        jTextFieldDialogSetupDisplayerHorizRes.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldDialogSetupDisplayerHorizRes.setText("1200");
+
+        jLabel16.setText("px *");
+
+        jTextFieldDialogSetupDisplayerVertRes.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldDialogSetupDisplayerVertRes.setText("800");
+
+        jLabel17.setText("px");
+
+        jTextFieldDialogSetupDisplayerDiagonalLength.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextFieldDialogSetupDisplayerDiagonalLength.setText("12.1");
+
+        jLabel18.setText("inches");
+
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel19, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                     .add(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .add(jLabel20, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)))
+                        .add(jLabel15, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                    .add(jLabel19, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                    .add(jLabel14, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel1Layout.createSequentialGroup()
@@ -502,26 +532,53 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jLabelDialogSetupDisplayerCalibrationValue, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 40, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(jPanel1Layout.createSequentialGroup()
-                        .add(jTextFieldDialogSetupDisplayerPatientDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                            .add(jTextFieldDialogSetupDisplayerPatientDistance)
+                            .add(jTextFieldDialogSetupDisplayerHorizRes))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jLabelDialogSetupDisplayerPatientDistance)))
+                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanel1Layout.createSequentialGroup()
+                                .add(jLabel16)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jTextFieldDialogSetupDisplayerVertRes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(4, 4, 4)
+                                .add(jLabel17))
+                            .add(jLabelDialogSetupDisplayerPatientDistance)))
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(jTextFieldDialogSetupDisplayerDiagonalLength, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel18)))
                 .addContainerGap())
+            .add(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel20, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .add(258, 258, 258))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1Layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel19)
                     .add(jTextFieldDialogSetupDisplayerPatientDistance, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jLabelDialogSetupDisplayerPatientDistance))
-                .add(26, 26, 26)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jLabelDialogSetupDisplayerCalibrationValue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel20, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                            .add(jSliderDialogSetupDisplayerCalibrationSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel14)
+                    .add(jTextFieldDialogSetupDisplayerHorizRes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel16)
+                    .add(jTextFieldDialogSetupDisplayerVertRes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel17))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel15)
+                    .add(jTextFieldDialogSetupDisplayerDiagonalLength, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel18))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, jLabelDialogSetupDisplayerCalibrationValue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, jSliderDialogSetupDisplayerCalibrationSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .add(jLabel20, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -550,11 +607,11 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jDialogDisplayerOption.getContentPane().setLayout(jDialogDisplayerOptionLayout);
         jDialogDisplayerOptionLayout.setHorizontalGroup(
             jDialogDisplayerOptionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jDialogDisplayerOptionLayout.createSequentialGroup()
+            .add(jDialogDisplayerOptionLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jDialogDisplayerOptionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(jDialogDisplayerOptionLayout.createSequentialGroup()
+                .add(jDialogDisplayerOptionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jDialogDisplayerOptionLayout.createSequentialGroup()
                         .add(jButtonDialogSetupDisplayerApply)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jButtonDialogSetupDisplayerOk, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 64, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -566,7 +623,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             jDialogDisplayerOptionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jDialogDisplayerOptionLayout.createSequentialGroup()
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(12, 12, 12)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jDialogDisplayerOptionLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jButtonDialogSetupDisplayerCancel)
                     .add(jButtonDialogSetupDisplayerOk)
@@ -1037,13 +1094,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
     private void jButtonDialogSetupDisplayerApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogSetupDisplayerApplyActionPerformed
         //get options
-//        String horizontalRes = this.jTextFieldDialogSetupDisplayerHorizRes.getText(); 
-//        String verticalRes = this.jTextFieldDialogSetupDisplayerVertRes.getText(); 
-//        String diagonalLength = this.jTextFieldDialogSetupDisplayerDiagLength.getText(); 
+        String horizontalRes = this.jTextFieldDialogSetupDisplayerHorizRes.getText(); 
+        String verticalRes = this.jTextFieldDialogSetupDisplayerVertRes.getText(); 
+        String diagonalLength = this.jTextFieldDialogSetupDisplayerDiagonalLength.getText(); 
         String patientDistance = this.jTextFieldDialogSetupDisplayerPatientDistance.getText(); 
         String scaleCorrectionFactor = this.jLabelDialogSetupDisplayerCalibrationValue.getText(); 
         
-        ScreenMapper.getInstance().setDisplayerOptions(Float.valueOf(patientDistance), Float.valueOf(scaleCorrectionFactor)); 
+        ScreenMapper.getInstance().setDisplayerOptions(Integer.valueOf(horizontalRes), 
+                Integer.valueOf(verticalRes), 
+                Float.valueOf(diagonalLength),
+                Float.valueOf(patientDistance), Float.valueOf(scaleCorrectionFactor)); 
         //update model
 //        ScreenMapper.getInstance().setDisplayerOptions(Integer.valueOf(horizontalRes), 
 //                Integer.valueOf(verticalRes), 
@@ -1070,10 +1130,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 //                Float.valueOf(diagonalLength), 
 //                Float.valueOf(patientDistance) );
         
+        String horizontalRes = this.jTextFieldDialogSetupDisplayerHorizRes.getText(); 
+        String verticalRes = this.jTextFieldDialogSetupDisplayerVertRes.getText(); 
+        String diagonalLength = this.jTextFieldDialogSetupDisplayerDiagonalLength.getText(); 
         String patientDistance = this.jTextFieldDialogSetupDisplayerPatientDistance.getText(); 
         String scaleCorrectionFactor = this.jLabelDialogSetupDisplayerCalibrationValue.getText(); 
         
-        ScreenMapper.getInstance().setDisplayerOptions(Float.valueOf(patientDistance), Float.valueOf(scaleCorrectionFactor)); 
+        ScreenMapper.getInstance().setDisplayerOptions(Integer.valueOf(horizontalRes), 
+                Integer.valueOf(verticalRes), 
+                Float.valueOf(diagonalLength),
+                Float.valueOf(patientDistance), Float.valueOf(scaleCorrectionFactor)); 
         
         GUIUtils.showDialog(jDialogDisplayerOption, false, evt); 
     }//GEN-LAST:event_jButtonDialogSetupDisplayerOkActionPerformed
@@ -1325,6 +1391,11 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -1375,7 +1446,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField jTextFieldDialogPatientAge;
     private javax.swing.JTextField jTextFieldDialogPatientFirstname;
     private javax.swing.JTextField jTextFieldDialogPatientLastname;
+    private javax.swing.JTextField jTextFieldDialogSetupDisplayerDiagonalLength;
+    private javax.swing.JTextField jTextFieldDialogSetupDisplayerHorizRes;
     private javax.swing.JTextField jTextFieldDialogSetupDisplayerPatientDistance;
+    private javax.swing.JTextField jTextFieldDialogSetupDisplayerVertRes;
     // End of variables declaration//GEN-END:variables
     
 }

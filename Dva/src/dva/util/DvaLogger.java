@@ -98,12 +98,17 @@ public class DvaLogger {
                 msg+=" " + e;
             }
             jTextAreaLog.append(">" + (clazz!=null ? "[" + clazz.getName() + "] ": "") + msg + "\n");
-            // if (e!=null){
-            //     StackTraceElement stackTraceElement[] = e.getStackTrace(); 
-            //     for (int i=0; i < stackTraceElement.length; i++){
-            //          jTextAreaLog.append("\t" + stackTraceElement[i] ); 
-            //     }
-            // }
+//             if (e!=null){
+//                 StackTraceElement stackTraceElement[] = e.getStackTrace(); 
+//                 for (int i=0; i < stackTraceElement.length; i++){
+//                      jTextAreaLog.append("\t" + stackTraceElement[i] + "\n" ); 
+//                 }
+//            
+//                Throwable t = null; 
+//                while ( (t = e.getCause()) != null){
+//                    
+//                }
+//            }
             if (jTextAreaLog.getLineCount() == logLineCount){
                 logCurrentTruncSize = jTextAreaLog.getDocument().getLength();
             }

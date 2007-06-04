@@ -28,12 +28,12 @@ public class ScreenMapper {
     
     private static double visualAcuityCharts[] = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1, 1.25, 1.67, 2};
     
-//    private double horizontalRes = 1280;
-//    private double verticalRes = 800;
-//    private float diagonalLength = 12.1f;
+    private double horizontalRes = 1280;
+    private double verticalRes = 800;
+    private float diagonalLength = 12.1f;
     private float patientDistance = 6f;
-//    private double screen_width = 0;
-//    private double pixel_width = 0;
+    private double screen_width = 0;
+    private double pixel_width = 0;
     private double characterResolution = 1400;
     
     
@@ -52,8 +52,8 @@ public class ScreenMapper {
     
     /** prevente from instanciation */
     private ScreenMapper() {
-        //screen_width = getScreenWidth(diagonalLength, horizontalRes / verticalRes, Units.INCHES);
-        //pixel_width = getPixelWidth(screen_width, horizontalRes, Units.MM);
+        screen_width = getScreenWidth(diagonalLength, horizontalRes / verticalRes, Units.INCHES);
+        pixel_width = getPixelWidth(screen_width, horizontalRes, Units.MM);
         characterResolution = resourceBundle.getDouble("config.character.resolution");
     }
     
@@ -141,7 +141,10 @@ public class ScreenMapper {
         return size * 5;
     }
     
-    public void setDisplayerOptions(float _patientDistance, float _scaleCorrectionFactor){
+    public void setDisplayerOptions(double _horizontalRes, double _verticalRes, float _diagonalLength, float _patientDistance, float _scaleCorrectionFactor){
+        this.horizontalRes = _horizontalRes;
+        this.verticalRes = _verticalRes;
+        this.diagonalLength = _diagonalLength;
         this.patientDistance = _patientDistance;
         
     }

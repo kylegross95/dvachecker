@@ -112,8 +112,8 @@ public abstract class AcuityTest {
     private Element current = null; 
     private String testName = ""; 
     private String resultComment = ""; 
-    private float convergenceValue = 0.0f; 
-    private float convergenceStdDev = 0.0f; 
+    private double convergenceValue = 0.0; 
+    private double convergenceStdDev = 0.0; 
     
     //resources
     protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
@@ -197,19 +197,19 @@ public abstract class AcuityTest {
         this.resultComment = resultComment;
     }
 
-    public float getConvergenceValue() {
+    public double getConvergenceValue() {
         return convergenceValue;
     }
 
-    public void setConvergenceValue(float convergenceValue) {
+    public void setConvergenceValue(double convergenceValue) {
         this.convergenceValue = convergenceValue;
     }
 
-    public float getConvergenceStdDev() {
+    public double getConvergenceStdDev() {
         return convergenceStdDev;
     }
 
-    public void setConvergenceStdDev(float convergenceStdDev) {
+    public void setConvergenceStdDev(double convergenceStdDev) {
         this.convergenceStdDev = convergenceStdDev;
     }
 

@@ -14,7 +14,7 @@ package dva.acuitytest;
 public class AcuityTestConvergenceException extends AcuityTestException {
     
     /** Creates a new instance of AcuityTestConvergenceException */
-    public AcuityTestConvergenceException(float value, float stddev) {
+    public AcuityTestConvergenceException(double value, double stddev) {
         super("The converged value is " + value + " with stddev: " + stddev);
     }
     

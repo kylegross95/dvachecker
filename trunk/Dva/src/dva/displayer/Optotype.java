@@ -148,7 +148,10 @@ public class Optotype extends Element {
         StringBuffer sb = new StringBuffer("<optotype><name>");
         sb.append(this.name); 
         sb.append("</name><acuity>"); 
-        sb.append( ScreenMapper.getVA( Math.round(this.size) ) ); 
+        String va = String.valueOf( ScreenMapper.getVA( Math.round(this.size) ) );  
+        va = va == null ? "" : va; 
+        DvaLogger.debug("va:" + va); 
+        sb.append( va ); 
         sb.append("</acuity></optotype>"); 
         return sb.toString();
     }

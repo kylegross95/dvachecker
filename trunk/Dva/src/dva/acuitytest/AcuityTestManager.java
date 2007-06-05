@@ -27,6 +27,18 @@ public  class AcuityTestManager {
         
     }
     
+    public static void setFileId(String _fileid){
+        fileid = _fileid; 
+        
+    }
+    
+    private static String fileid = ""; 
+    
+    public static String getFileId(){
+        return fileid; 
+    }
+            
+    
     public static void reset(){
         currentAcuityTestId = -1; 
         for (AcuityTest at : acuityTests){
@@ -132,7 +144,11 @@ public  class AcuityTestManager {
         File actuitestfile = null; 
         
         try {
-            actuitestfile = new File( patientdir + ("/acuitytest_" + String.valueOf( System.currentTimeMillis() ) + ".xml" ) ); 
+            String fileid = String.valueOf( System.currentTimeMillis() ); 
+            AcuityTestManager.setFileId(fileid); 
+            actuitestfile = new File( patientdir + ("/acuitytest_" + fileid + ".xml" ) ); 
+            
+            actuitestfile.createNewFile(); 
             
             DvaLogger.debug(AcuityTestManager.class, "actuitestfile:" + actuitestfile.getAbsoluteFile() );
             
@@ -148,16 +164,16 @@ public  class AcuityTestManager {
      */
     public static String toXml(){
         StringBuffer sb = new StringBuffer("<acuitytests>");
-        //for ()
-        sb.append("</acuitytests>"); 
         for (AcuityTest at : acuityTests){
             sb.append( at.toXml() ); 
         }
+        sb.append("</acuitytests>"); 
         return sb.toString(); 
     }
     
     public static void setPatientDirectory(File _patientdir){
         patientdir = _patientdir; 
+        //DvaLogger.debug(AcuityTestManager.class, "patientdir:" + patientdir.getAbsolutePath());
     }
     
     

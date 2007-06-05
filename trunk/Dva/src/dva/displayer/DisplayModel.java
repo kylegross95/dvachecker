@@ -127,6 +127,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                 //save patient response
                 if (operatorEvent != OperatorEvent.NEXT_OPTOTYPE){
                     //should be an 'OPTOTYPE_' event
+                    this.patientAnswerStr = operatorEvent.toString(); 
                     this.patientAnswer = operatorEvent.toString().equals(currentElement.toString()); 
                 }
 
@@ -134,7 +135,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                 //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
 
                 //save patient answer
-                AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
+                AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer, patientAnswerStr);
 
                 //update status
                 AcuityTestManager.updateStatus(); 
@@ -300,6 +301,7 @@ public class DisplayModel extends Observable implements ComponentListener {
     private long savedTime; 
     private long answerTime; 
     private boolean patientAnswer = true; 
+    private String patientAnswerStr = ""; 
     
     //Graphics attribute
     private int x; 

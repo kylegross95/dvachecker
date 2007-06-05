@@ -28,9 +28,9 @@ public abstract class AcuityTest {
         this.testName = testName; 
     }
     
-    public void saveAnswer(long answerTime, Element element, boolean patientAnswer){
+    public void saveAnswer(long answerTime, Element element, boolean patientAnswer, String patientAnswerStr){
         //add the patient answer to the answer list
-        getTestAnswers().add( new TestAnswer(answerTime, patientAnswer, element) ); 
+        getTestAnswers().add( new TestAnswer(answerTime, patientAnswer, element, patientAnswerStr) ); 
     }
     
     public abstract String getTestName(); 
@@ -83,7 +83,10 @@ public abstract class AcuityTest {
     public String toXml(){
         StringBuffer sb = new StringBuffer("<acuitytest name=\"");
             sb.append( this.getTestName() );
-            sb.append("\"><result value=\"");
+            sb.append( "\" treadmillspeed=\"");
+            sb.append( this.treadmillSpeed ); 
+            sb.append("\">"); 
+            sb.append("<result value=\"");
             sb.append( this.getConvergenceValue() ); 
             sb.append("\" stddev=\"");
             sb.append( this.getConvergenceStdDev() ); 
@@ -101,6 +104,14 @@ public abstract class AcuityTest {
         
         return sb.toString(); 
     }
+    
+    public void setEye(String eye){
+        this.eye = eye; 
+    }
+    
+    public String getEye(){
+        return this.eye; 
+    }
    
     private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>();; 
     private Random random = new Random(); 
@@ -114,7 +125,8 @@ public abstract class AcuityTest {
     private String testName = ""; 
     private String resultComment = ""; 
     private double convergenceValue = 0.0; 
-    private double convergenceStdDev = 0.0; 
+    private double convergenceStdDev = 0.0;  
+    private String eye = ""; 
     
     //resources
     protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
@@ -124,20 +136,24 @@ public abstract class AcuityTest {
         private Element element; 
         private long answerTime; 
         private boolean patientAnswer; 
+        private String patientAnswerStr; 
         
         public String toXml(){
             StringBuffer sb = new StringBuffer("<answer value=\""); 
-                sb.append(patientAnswer); 
+                sb.append(patientAnswer);
+                sb.append("\" str=\"");
+                sb.append(this.patientAnswerStr); 
                 sb.append("\">");
                 sb.append(element.toXml()); 
             sb.append("</answer>"); 
             return sb.toString(); 
         }
 
-        public TestAnswer(long answerTime, boolean patientAnswer, Element element){
+        public TestAnswer(long answerTime, boolean patientAnswer, Element element, String patientAnswerStr){
             this.answerTime = answerTime; 
             this.element = element; 
             this.setPatientAnswer(patientAnswer); 
+            this.patientAnswerStr = patientAnswerStr; 
         }
                 
         public Element getElement() {

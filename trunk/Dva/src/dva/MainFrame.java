@@ -7,17 +7,21 @@
 package dva;
 
 import dva.acuitytest.AcuityTestManager;
-import dva.acuitytest.AcuityTestException;
 import dva.displayer.DisplayModel;
 import dva.displayer.Displayer;
 import dva.util.DvaLogger;
 import dva.util.GUIUtils;
 import dva.util.ScreenMapper;
+import dva.xml.PatientReader;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
@@ -206,7 +210,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         
         displayer.getDisplayModel().addObserver(this); 
         
-        AcuityTestManager.proposeSpeedSet();
+        //AcuityTestManager.proposeSpeedSet();
+        
+        //load existing client
+        loadPatientsList(); 
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = this.getSize();
@@ -240,6 +247,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel12 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextAreaDialogPatientComment = new javax.swing.JTextArea();
+        jButtonDialogPatientLoadExisting = new javax.swing.JButton();
         jButtonPatientOk = new javax.swing.JButton();
         jButtonPatientCancel = new javax.swing.JButton();
         buttonGroupDialogPatientSex = new javax.swing.ButtonGroup();
@@ -317,6 +325,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jDialogPatientData.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialogPatientData.setTitle("Enter patient data");
         jDialogPatientData.setModal(true);
+        jDialogPatientData.getAccessibleContext().setAccessibleParent(this);
         jPanelDialogPatientData.setBorder(javax.swing.BorderFactory.createTitledBorder("Patient data"));
         jLabelDialogPatientSex.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelDialogPatientSex.setText("Sex: ");
@@ -355,6 +364,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jTextAreaDialogPatientComment.setRows(3);
         jScrollPane3.setViewportView(jTextAreaDialogPatientComment);
 
+        jButtonDialogPatientLoadExisting.setText("...");
+        jButtonDialogPatientLoadExisting.setToolTipText("Load existing patient data");
+        jButtonDialogPatientLoadExisting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDialogPatientLoadExistingActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanelDialogPatientDataLayout = new org.jdesktop.layout.GroupLayout(jPanelDialogPatientData);
         jPanelDialogPatientData.setLayout(jPanelDialogPatientDataLayout);
         jPanelDialogPatientDataLayout.setHorizontalGroup(
@@ -371,29 +388,29 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanelDialogPatientDataLayout.createSequentialGroup()
+                        .add(jRadioButtonDialogPatientSexM)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jRadioButtonDialogPatientSexF))
+                    .add(jPanelDialogPatientDataLayout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jTextFieldDialogPatientFirstname, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                            .add(jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
-                        .addContainerGap())
+                            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .add(jTextFieldDialogPatientAge, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)))
                     .add(jPanelDialogPatientDataLayout.createSequentialGroup()
                         .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDialogPatientDataLayout.createSequentialGroup()
-                                .add(jRadioButtonDialogPatientSexM)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jRadioButtonDialogPatientSexF))
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, jPanelDialogPatientDataLayout.createSequentialGroup()
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                                    .add(jTextFieldDialogPatientAge))))
-                        .addContainerGap())))
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextFieldDialogPatientFirstname)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jButtonDialogPatientLoadExisting, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanelDialogPatientDataLayout.setVerticalGroup(
             jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanelDialogPatientDataLayout.createSequentialGroup()
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
-                    .add(jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jTextFieldDialogPatientLastname, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jButtonDialogPatientLoadExisting))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanelDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel10)
@@ -433,16 +450,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jDialogPatientData.getContentPane().setLayout(jDialogPatientDataLayout);
         jDialogPatientDataLayout.setHorizontalGroup(
             jDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jDialogPatientDataLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(jPanelDialogPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jDialogPatientDataLayout.createSequentialGroup()
-                .addContainerGap(178, Short.MAX_VALUE)
+                .addContainerGap(191, Short.MAX_VALUE)
                 .add(jButtonPatientOk, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jButtonPatientCancel)
                 .addContainerGap())
+            .add(jDialogPatientDataLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(jPanelDialogPatientData, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jDialogPatientDataLayout.setVerticalGroup(
             jDialogPatientDataLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -458,6 +475,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jDialogAbout.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         jDialogAbout.setTitle("About");
         jDialogAbout.setModal(true);
+        jDialogAbout.getAccessibleContext().setAccessibleParent(this);
         jLabel4.setText("Roberto Cardona");
 
         jLabel5.setText("Jean-Christophe Fillion-Robin");
@@ -483,6 +501,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jDialogDisplayerOption.setTitle("Displayer options");
+        jDialogDisplayerOption.getAccessibleContext().setAccessibleParent(this);
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Setup Displayer"));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Patient distance:");
@@ -1078,6 +1097,44 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonDialogPatientLoadExistingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogPatientLoadExistingActionPerformed
+        
+        if (patients.size() <= 0) { 
+            DvaLogger.info(MainFrame.class, "There is no existing patient data!"); 
+            return;
+        } 
+        
+        //Display selection dialog
+        String s = (String)JOptionPane.showInputDialog(
+                    this,
+                    "Select a patient name from the list:",
+                    "Load patient data",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    patients.keySet().toArray(),
+                    patients.keySet().toArray()[0]);
+        //If a string was returned, say so.
+        if ((s != null) && (s.length() > 0)) {
+            
+            DvaLogger.debug(MainFrame.class, "Load patient:" + s); 
+            //load patient
+            patient = patients.get(s); 
+            
+            //updatge GUI
+            updateJLabelPatientData(patient); 
+            
+            //set patient directory
+            AcuityTestManager.setPatientDirectory( patient.getPatientdir(outputdir) ); 
+
+            //enable StartAcuityTest button
+            jButtonStartAcuityTest.setEnabled(true); 
+            
+            //close patient dialog
+            GUIUtils.showDialog(this.jDialogPatientData, false, evt); 
+            return;
+        }
+    }//GEN-LAST:event_jButtonDialogPatientLoadExistingActionPerformed
+
     private void jSliderDialogSetupDisplayerCalibrationSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderDialogSetupDisplayerCalibrationSliderStateChanged
         JSlider source = (JSlider)evt.getSource();
         
@@ -1404,6 +1461,40 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         this.jTextFieldDialogPatientAge.setText(""); 
     }
     
+    void loadPatientsList() {
+
+        try {
+            //check if it's a directory and if we can read it
+            if (outputdir.canRead() && outputdir.isDirectory()){
+
+                    File patientdirs[] = outputdir.listFiles();
+
+                    for (File patientdir : patientdirs){
+
+                            DvaLogger.debug(MainFrame.class, "patient:"+patientdir.getPath());
+
+                            File patientfile = new File(patientdir + "/patient.xml"); 
+
+                            //load patient from file
+                            FileReader fr = new FileReader(patientfile);
+                            
+                            //read patient xml file
+                            Patient p = PatientReader.process( fr ); 
+                            
+                            //close reader
+                            fr.close();
+                            
+                            //add patient to list
+                            patients.put( p.getDirectoryName(), p ); 
+                    }
+            }
+            
+        } catch (Exception ex){
+            DvaLogger.error(MainFrame.class, ex); 
+            
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -1418,6 +1509,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     //Model
     private Patient patient = null;  
     
+    //list of Patient loaded from the user directory
+    HashMap<String, Patient> patients = new HashMap<String, Patient>();
+    
     //GUI
     private Color jLabelClickAreaBackgroundColor = null; 
     private Displayer displayer = null; 
@@ -1430,6 +1524,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupDialogPatientSex;
+    private javax.swing.JButton jButtonDialogPatientLoadExisting;
     private javax.swing.JButton jButtonDialogSetupDisplayerApply;
     private javax.swing.JButton jButtonDialogSetupDisplayerCancel;
     private javax.swing.JButton jButtonDialogSetupDisplayerOk;

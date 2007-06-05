@@ -41,7 +41,7 @@ public class ScreenMapper {
      *
      */
     public static double getVA(int step){
-        return visualAcuityCharts[step];
+       return visualAcuityCharts[14 - step];
     }
     
     private GraphicsDevice outputGraphicsDevice = null;

@@ -136,6 +136,15 @@ public class DisplayElement extends Element {
         g2D.setPaint(getColor()); 
         g2D.drawString(character, x, y);
     }
+    
+    public String toXml(){
+        StringBuffer sb = new StringBuffer("<displayelement><character>");
+        sb.append(character); 
+        sb.append("</character><size>"); 
+        sb.append(this.getSize()); 
+        sb.append("</size></displayelement>"); 
+        return sb.toString(); 
+    }
  
     private String character = "0"; 
     private Font font = new Font("Tahoma", Font.PLAIN, 30); 

@@ -14,7 +14,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -143,6 +142,15 @@ public class Optotype extends Element {
     // Return the rectangle bounding this circle
     public java.awt.Rectangle getBounds() { 
       return null;  
+    }
+    
+    public String toXml(){
+        StringBuffer sb = new StringBuffer("<optotype><name>");
+        sb.append(this.name); 
+        sb.append("</name><acuity>"); 
+        sb.append( ScreenMapper.getVA( Math.round(this.size) ) ); 
+        sb.append("</acuity></optotype>"); 
+        return sb.toString();
     }
     
     //list of already instancied bufferedimage

@@ -97,6 +97,8 @@ public class OptotypeC extends Element {
         g2D.draw(area); 
         g2D.fill(area);
     }
+    
+     public String toXml(){ return ""; }
 
     // Return the rectangle bounding this circle
     public java.awt.Rectangle getBounds() { 

@@ -7,11 +7,13 @@
 
 package dva.acuitytest;
 
+import dva.DvaCheckerException;
+
 /**
  *
  * @author J-Chris
  */
-public class AcuityTestException extends Exception{
+public class AcuityTestException extends DvaCheckerException{
     
     public AcuityTestException(String message) {
         super(message); 

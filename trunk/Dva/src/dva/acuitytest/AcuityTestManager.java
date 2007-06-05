@@ -7,10 +7,10 @@
 
 package dva.acuitytest;
 
-import dva.*;
 import dva.displayer.DisplayModel;
 import dva.util.DvaLogger;
 import dva.util.MessageResources;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -23,29 +23,33 @@ public  class AcuityTestManager {
     private AcuityTestManager() {
         
     }
-   
-    
-    public static AcuityTest getAcuityTest(){
-        return acuityTest; 
-    }
     
     public static void reset(){
         currentAcuityTestId = -1; 
+        for (AcuityTest at : acuityTests){
+            at = null; 
+        }
+        acuityTests.clear(); 
     }
     
     public static void setNextAcuityTest(){
         try {
             currentAcuityTestId++;
             if (currentAcuityTestId >= acuityTestIds.length) {
-                acuityTest = null; 
+                //acuityTest = null; 
                 return;
             } 
             
             Class clazz = Class.forName("dva.acuitytest." + acuityTestIds[currentAcuityTestId] + "AcuityTest");
-            acuityTest = (AcuityTest) clazz.newInstance(); 
+            AcuityTest acuityTest = (AcuityTest) clazz.newInstance(); 
+            
+            acuityTest.setName(acuityTestIds[currentAcuityTestId]);
             
             //set start date
             acuityTest.setStartDate(); 
+            
+            //keep track of the acuitytest
+            acuityTests.add(acuityTest); 
             
             //if (acuityTest instanceof DynamicAcuityTest){
             //    acuityTest.setTreadmillSpeed(getSpeedValue()); 
@@ -63,12 +67,16 @@ public  class AcuityTestManager {
         return acuityTestIds[currentAcuityTestId]; 
     }
     
+    public static AcuityTest getCurrentAcuityTest(){
+        return acuityTests.size() > 1 ? acuityTests.get(acuityTests.size() - 1) : null;
+    }
+    
     public static void updateStatus(){
         
-        if (acuityTest.isTestFailed()) {
+        if (getCurrentAcuityTest().isTestFailed()) {
             status = Status.TEST_FAILED; 
             
-        } else if ( acuityTest.isTestDone() ){
+        } else if ( getCurrentAcuityTest().isTestDone() ){
             if (currentAcuityTestId + 1 == acuityTestIds.length){
                 status = Status.ALL_TEST_DONE; 
                 
@@ -114,6 +122,18 @@ public  class AcuityTestManager {
         return currentSpeedsSet; 
     }
     
+    /*
+     *
+     */
+    public String toXml(){
+        StringBuffer sb = new StringBuffer("<acuitytests>");
+        //for ()
+        sb.append("</acuitytests>"); 
+        for (AcuityTest at : acuityTests){
+            sb.append( at.toXml() ); 
+        }
+        return sb.toString(); 
+    }
     
     
     
@@ -127,7 +147,8 @@ public  class AcuityTestManager {
     public enum Status { INIT, TEST_RUNNING, TEST_FAILED, TEST_DONE, ALL_TEST_DONE }; 
     private static Random random = new Random();
     private static Status status = Status.INIT; 
-    private static AcuityTest acuityTest; 
+    private static ArrayList<AcuityTest> acuityTests = new ArrayList<AcuityTest>();
+    //private static AcuityTest acuityTest; 
     //private static String acuityTestIds[] = {"Static", "Dynamic", "Dynamic", "Dynamic"}; 
     private static String acuityTestIds[] = {"Static"}; 
     

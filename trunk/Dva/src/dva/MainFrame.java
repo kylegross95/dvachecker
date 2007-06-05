@@ -15,17 +15,17 @@ import dva.util.GUIUtils;
 import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  *
@@ -57,14 +57,14 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                     //enable the next button
                     this.jButtonDisplayNextOptotype.setEnabled(false); 
                     
-                    jLabelCharacter.setText(AcuityTestManager.getAcuityTest().getCurrentElement().toString()); 
+                    jLabelCharacter.setText(AcuityTestManager.getCurrentAcuityTest().getCurrentElement().toString()); 
                 }
 
             } else if ( status == AcuityTestManager.Status.TEST_FAILED ){
                 DvaLogger.debug(MainFrame.class, "TEST_FAILED");
                 String[] options = {"Continue", "Abort"}; 
                 int n = JOptionPane.showOptionDialog(this,
-                        resourceBundle.getString("message.acuitytest."+AcuityTestManager.getAcuityTest().getTestName()+".failed"),
+                        resourceBundle.getString("message.acuitytest."+AcuityTestManager.getCurrentAcuityTest().getTestName()+".failed"),
                         "Test Failure",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
@@ -92,11 +92,10 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
 
                 AcuityTestManager.setNextAcuityTest(); 
 
-                JOptionPane.showMessageDialog(this, AcuityTestManager.getAcuityTest().getOperatorInstruction() ); 
+                JOptionPane.showMessageDialog(this, AcuityTestManager.getCurrentAcuityTest().getOperatorInstruction() ); 
 
             }  else if ( status == AcuityTestManager.Status.ALL_TEST_DONE ){
                 DvaLogger.debug(MainFrame.class, "ALL_TEST_DONE");
-
             }
         }
     }
@@ -145,6 +144,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             //set no character
             jLabelCharacter.setText(" ");
             
+            //reset Patient data dialog
+            resetPatientDataDialog(); 
+            
             //show new patient dialog
             GUIUtils.showDialog(jDialogPatientData, true, e);
         }
@@ -170,6 +172,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         }
     }
     
+    private void setupOutputDirectory(){
+        // create filename
+        outputdir = new File(SystemUtils.getUserHome() + "/dvachecker_data"); 
+        
+        // try to create directory
+        outputdir.mkdir(); 
+        
+        DvaLogger.info(MainFrame.class, "Output directory:" + outputdir.getAbsolutePath()); 
+    }
+    
     /**
      * Creates new form MainFrame
      */
@@ -179,6 +191,12 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         
         //init logger
         DvaLogger.initLogger(jTextAreaLog); 
+        
+        //setup output directory
+        setupOutputDirectory();
+        
+        //create patient object
+        patient = new Patient(outputdir); 
         
         //detect output screens
         ScreenMapper.getInstance().detectOutputScreen(); 
@@ -199,9 +217,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         //Dimension d = this.getToolkit().getScreenSize(); 
         //DvaLogger.debug(MainFrame.class, "height:" + d.getHeight() ); 
         //DvaLogger.debug(MainFrame.class, "width:" + d.getWidth() ); 
-        
-        
-        
     }
     
     /** This method is called from within the constructor to
@@ -1254,7 +1269,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             //update mainframe GUI
             this.jLabelTreadmillSpeed.setText( treadmillSpeed );
 
-            AcuityTestManager.getAcuityTest().setTreadmillSpeed(Float.valueOf(treadmillSpeed)); 
+            AcuityTestManager.getCurrentAcuityTest().setTreadmillSpeed(Float.valueOf(treadmillSpeed)); 
         
             //check if displayer is visible
             if (!displayer.isVisible()) displayer.setVisible(true);
@@ -1275,7 +1290,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             this.jButtonStartAcuityTest.setEnabled(false); 
 
             //set date and time
-            this.jLabelAcuityTestDateTime.setText(AcuityTestManager.getAcuityTest().getStartDateAsString());
+            this.jLabelAcuityTestDateTime.setText(AcuityTestManager.getCurrentAcuityTest().getStartDateAsString());
         }
         
     }//GEN-LAST:event_jButtonStartAcuityTestActionPerformed
@@ -1306,37 +1321,85 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jButtonPatientCancelActionPerformed
 
     private void jButtonPatientOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPatientOkActionPerformed
-        //get new patient data
-        String firstname = this.jTextFieldDialogPatientFirstname.getText(); 
-        String lastname = this.jTextFieldDialogPatientLastname.getText(); 
-        String comment = this.jTextAreaDialogPatientComment.getText(); 
-        String sex = GUIUtils.getSelection(buttonGroupDialogPatientSex).getText();
-        String age = this.jTextFieldDialogPatientAge.getText(); 
-        
-        //update patient
-        getCurrentPatient().setFirstname(firstname); 
-        getCurrentPatient().setLastname(lastname); 
-        getCurrentPatient().setComment(comment); 
-        getCurrentPatient().setSex(sex); 
-        getCurrentPatient().setAge(age); 
-        
-        //int speeds[] = AcuityTestManager.acceptProposedSpeedsSet(); 
-        //jLabelPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
-        
-        
-        //enable StartAcuityTest button
-        jButtonStartAcuityTest.setEnabled(true); 
+        try {
+            
+            //get new patient data
+            String firstname = StringUtils.capitalize( this.jTextFieldDialogPatientFirstname.getText().trim() ); 
+            String lastname = StringUtils.capitalize( this.jTextFieldDialogPatientLastname.getText().trim() ); 
+            String comment = this.jTextAreaDialogPatientComment.getText().trim(); 
+            String sex = GUIUtils.getSelection(buttonGroupDialogPatientSex).getText().trim();
+            String age = this.jTextFieldDialogPatientAge.getText().trim(); 
+            
+            if (lastname.equals("")){
+                GUIUtils.showWarning(this, "Patient creation problem", "Lastname field is empty !"); 
+                return; 
+            } else if ( firstname.equals("") ){
+                GUIUtils.showWarning(this, "Patient creation problem", "Firstname field is empty !"); 
+                return; 
+            } else if (age.equals("")){
+                GUIUtils.showWarning(this, "Patient creation problem", "Age field is empty !"); 
+                return; 
+            } else if (!NumberUtils.isNumber(age)){
+                GUIUtils.showWarning(this, "Patient creation problem", "Age field is not a valid number !"); 
+                return; 
+            }
+            
+            //generate a patient id number
+            //long id = System.currentTimeMillis(); 
+            
+            //update patient
+            //getCurrentPatient().setId(id); 
+            getCurrentPatient().setFirstname(firstname); 
+            getCurrentPatient().setLastname(lastname); 
+            getCurrentPatient().setComment(comment); 
+            getCurrentPatient().setSex(sex); 
+            getCurrentPatient().setAge(age); 
 
-        
-        //update GUI
-        updateJLabelPatientData(getCurrentPatient());
-        
-        //close dialog
-        GUIUtils.showDialog(jDialogPatientData, false, evt); 
+             //check if patient exists - if yes, ask for operator confirmation
+            if (patient.isPatientExist()){
+                DvaLogger.debug(MainFrame.class, "Patient '" + lastname + "-" + firstname + "' exists !");
+                if ( GUIUtils.askOperator(this, "Patient creation", "Existing patient - Data will be updated\n Do you want to continue ?") == JOptionPane.NO_OPTION)
+                    return; 
+            }
+
+            //write patient data to file
+            patient.toFile();
+            
+            //int speeds[] = AcuityTestManager.acceptProposedSpeedsSet(); 
+            //jLabelPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
+
+            //enable StartAcuityTest button
+            jButtonStartAcuityTest.setEnabled(true); 
+
+
+            //update GUI
+            updateJLabelPatientData(getCurrentPatient());
+            
+            //close dialog
+            GUIUtils.showDialog(jDialogPatientData, false, evt);
+            
+        } catch (PatientFileCreationException pfcex) {
+            
+            DvaLogger.error(MainFrame.class, pfcex); 
+            //close dialog
+            GUIUtils.showDialog(jDialogPatientData, false, evt);
+            
+        }
     }//GEN-LAST:event_jButtonPatientOkActionPerformed
     
     public void enableClickArea(boolean state){
         this.enableClickArea = state; 
+    }
+    
+    public static File getOutputDirectory(){
+        return outputdir; 
+    }
+    
+    public void resetPatientDataDialog(){
+        this.jTextFieldDialogPatientFirstname.setText(""); 
+        this.jTextFieldDialogPatientLastname.setText(""); 
+        this.jTextAreaDialogPatientComment.setText(""); 
+        this.jTextFieldDialogPatientAge.setText(""); 
     }
     
     /**
@@ -1351,7 +1414,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }
     
     //Model
-    private Patient patient = new Patient();  
+    private Patient patient = null;  
     
     //GUI
     private Color jLabelClickAreaBackgroundColor = null; 
@@ -1360,7 +1423,8 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private boolean callibrating = false;
     
     //resources
-    private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
+    private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N;  
+    private static File outputdir = null; 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupDialogPatientSex;

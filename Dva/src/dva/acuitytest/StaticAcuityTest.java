@@ -22,7 +22,6 @@ public class StaticAcuityTest  extends AcuityTest {
     float lastSize;
     float lastStep;
     Staircase sc;
-    String cv_txt;
     int runCnt = 0; 
     
     final static String charactersList[] = {"C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"};
@@ -30,8 +29,6 @@ public class StaticAcuityTest  extends AcuityTest {
     /** Creates a new instance of StaticAcuityTest */
     public StaticAcuityTest() {
         //initial size
-        //lastSize = resourceBundle.getFloat("config.staircase.initialsize"); 
-        //lastStep = resourceBundle.getFloat("config.staircase.initialstep");
         lastSize=14.0f;
         lastStep=4.0f;
         runCnt = 0;
@@ -63,18 +60,17 @@ public class StaticAcuityTest  extends AcuityTest {
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("_divergence");   
-           throw new AcuityTestException("Adaptive algo diverged");         
+           throw new AcuityTestDivergenceException();         
        }
        if(lastSize == -2) { //exceeded steps
            sc.doGraph("_exceededSteps");  
-           throw new AcuityTestException("Max number of steps exceeded");
+           throw new AcuityTestMaxStepException();
        }
        else if (lastSize == 0) { //convergence
-          Float f = new Float(sc.getConvergenceValue());
-          Float f2 = new Float(sc.getConvergenceValueStdDev());
-          cv_txt =  "The converged value is "+ new String(f.toString()) + " with stddev: " + new String(f2.toString())  ;
           sc.doGraph("_convergence"); 
-          throw new AcuityTestException(cv_txt);
+          this.setConvergenceStdDev( sc.getConvergenceValue() );
+          this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
+          throw new AcuityTestConvergenceException(sc.getConvergenceValue(), sc.getConvergenceValueStdDev());
        }
         
         //randomly pick a number between 0 and 9

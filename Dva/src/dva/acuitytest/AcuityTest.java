@@ -23,6 +23,10 @@ public abstract class AcuityTest {
     public AcuityTest() {
     }
     
+    public void setName(String testName){
+        this.testName = testName; 
+    }
+    
     public void saveAnswer(long answerTime, Element element, boolean patientAnswer){
         //add the patient answer to the answer list
         getTestAnswers().add( new TestAnswer(answerTime, patientAnswer, element) ); 
@@ -74,6 +78,28 @@ public abstract class AcuityTest {
 
         return resourceBundle.getString("message.acuitytest."+getTestName()+".operatorinstruction", String.valueOf(treadmillSpeed) ); 
     }
+    
+    public String toXml(){
+        StringBuffer sb = new StringBuffer("<acuitytest name=\"");
+            sb.append( this.getTestName() );
+            sb.append("\"><result value=\"");
+            sb.append( this.getConvergenceValue() ); 
+            sb.append("\" stddev=\"");
+            sb.append( this.getConvergenceStdDev() ); 
+            sb.append("\">");
+            sb.append( this.getResultComment() ); 
+            sb.append("</result>"); 
+            sb.append("<answers>"); 
+            for (TestAnswer ta : testAnswers){
+                
+                sb.append( ta.toXml() ); 
+            }
+        sb.append("</answers></acuitytest>");
+        
+        sb.toString(); 
+        
+        return sb.toString(); 
+    }
    
     private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>();; 
     private Random random = new Random(); 
@@ -84,6 +110,10 @@ public abstract class AcuityTest {
     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
     private Date startDate = null; 
     private Element current = null; 
+    private String testName = ""; 
+    private String resultComment = ""; 
+    private float convergenceValue = 0.0f; 
+    private float convergenceStdDev = 0.0f; 
     
     //resources
     protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
@@ -93,6 +123,15 @@ public abstract class AcuityTest {
         private Element element; 
         private long answerTime; 
         private boolean patientAnswer; 
+        
+        public String toXml(){
+            StringBuffer sb = new StringBuffer("<answer value=\""); 
+                sb.append(patientAnswer); 
+                sb.append("\">");
+                sb.append(element.toXml()); 
+            sb.append("</answer>"); 
+            return sb.toString(); 
+        }
 
         public TestAnswer(long answerTime, boolean patientAnswer, Element element){
             this.answerTime = answerTime; 
@@ -152,6 +191,30 @@ public abstract class AcuityTest {
     
     public void setStartDate(){
         startDate = new Date(); 
+    }
+
+    public void setResult(String resultComment) {
+        this.resultComment = resultComment;
+    }
+
+    public float getConvergenceValue() {
+        return convergenceValue;
+    }
+
+    public void setConvergenceValue(float convergenceValue) {
+        this.convergenceValue = convergenceValue;
+    }
+
+    public float getConvergenceStdDev() {
+        return convergenceStdDev;
+    }
+
+    public void setConvergenceStdDev(float convergenceStdDev) {
+        this.convergenceStdDev = convergenceStdDev;
+    }
+
+    public String getResultComment() {
+        return resultComment;
     }
     
 }

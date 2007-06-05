@@ -7,10 +7,12 @@
 
 package dva.util;
 
+import java.awt.Component;
 import java.util.Enumeration;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 
 /**
@@ -18,6 +20,16 @@ import javax.swing.JRadioButton;
  * @author J-Chris
  */
 public class GUIUtils {
+    
+    /**
+     * The System property key for the user home directory.
+     */
+    private static final String USER_HOME_KEY = "user.home";
+
+    /**
+     * The System property key for the user directory.
+     */
+    private static final String USER_DIR_KEY = "user.dir";
     
     /**
      * Prevent from instanciation
@@ -65,7 +77,16 @@ public class GUIUtils {
         }
         return null;
     }
-
-
     
+    public static void showWarning(Component parent, String title, String message){
+        JOptionPane.showMessageDialog(parent,
+                    message,
+                    title,
+                    JOptionPane.WARNING_MESSAGE);
+    }
+    
+    public static int askOperator(Component parent, String title, String message){
+        return JOptionPane.showConfirmDialog(parent, message, title, JOptionPane.YES_NO_OPTION);
+    }
+
 }

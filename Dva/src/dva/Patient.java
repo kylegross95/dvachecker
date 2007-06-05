@@ -7,6 +7,11 @@
 
 package dva;
 
+import dva.util.DvaLogger;
+import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+
 /**
  *
  * @author J-Chris
@@ -19,9 +24,12 @@ public class Patient {
     private String comment = ""; 
     private String age = "20";
     private String sex = "M";
+    private File outputdir = null; 
+    private File patientdir = null; 
     
     /** Creates a new instance of Patient */
-    public Patient() {
+    public Patient(File outputdir) {
+        this.outputdir = outputdir; 
     }
     
     public String toString(){
@@ -71,6 +79,10 @@ public class Patient {
     public String getId() {
         return id;
     }
+    
+    public void setId(long id){
+        this.id = String.valueOf( id ); 
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -78,6 +90,58 @@ public class Patient {
     
     public void generateAndSetId(){
         this.id = String.valueOf( System.currentTimeMillis() ); 
+    }
+    
+    public void createDirectory(){
+        patientdir = new File(outputdir + ("/" + lastname + "-" + firstname));
+        
+        //create directory
+        patientdir.mkdir(); 
+    }
+    
+    public void toFile() throws PatientFileCreationException {
+        
+        patientdir = new File(outputdir + ("/" + lastname + "-" + firstname) );
+        
+        DvaLogger.debug(Patient.class, "patientdir:" + patientdir.getAbsolutePath() ); 
+        
+        //create directory
+        patientdir.mkdir(); 
+        
+        File patientfile = null; 
+        try {
+            patientfile = new File(patientdir + "/patient.xml");
+            FileUtils.writeStringToFile(patientfile, toXml()); 
+            
+        } catch (IOException ioex){
+            throw new PatientFileCreationException(patientfile, ioex);
+        }
+    }
+    
+    public String toXml(){
+        
+        StringBuffer sb = new StringBuffer("<patient id=\"");
+        sb.append(id);
+        sb.append("\">");
+            sb.append("<firstname>");
+            sb.append(this.firstname);
+            sb.append("</firstname><lastname>");
+            sb.append(this.lastname);
+            sb.append("</lastname><age>");
+            sb.append(this.age);
+            sb.append("</age><sex>");
+            sb.append(this.sex);
+            sb.append("</sex><comment>");
+            sb.append(this.comment);
+            sb.append("</comment>");
+        sb.append("</patient>");
+        
+        return sb.toString(); 
+    }
+    
+    public boolean isPatientExist(){
+        File tmp = new File(outputdir + "/" + lastname + "-" + firstname);
+        return tmp.exists(); 
     }
     
 }

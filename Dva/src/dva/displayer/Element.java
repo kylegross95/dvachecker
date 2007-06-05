@@ -105,6 +105,7 @@ public abstract class Element {
     public abstract java.awt.Rectangle getBounds(); 
     public abstract void draw(Graphics2D g2D); 
     public abstract float getSize(); 
+    public abstract String toXml(); 
     
     public void setRatio(double ratio){
         this.ratio = ratio; 
@@ -113,6 +114,8 @@ public abstract class Element {
     public double getRatio(){
         return this.ratio; 
     }
+    
+    
     
     
     protected Color color = Color.BLACK; 

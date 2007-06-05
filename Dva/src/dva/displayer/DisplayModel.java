@@ -96,7 +96,7 @@ public class DisplayModel extends Observable implements ComponentListener {
     
     public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestException {
         //if no acuitytest is available, exit
-        if (AcuityTestManager.getAcuityTest() == null) return null;
+        if (AcuityTestManager.getCurrentAcuityTest() == null) return null;
         
         DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
         
@@ -110,7 +110,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                 disableMessage(); 
 
                 //display next character
-                currentElement = AcuityTestManager.getAcuityTest().getNext();
+                currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
 
                 //set new state
                 this.currentState = State.TESTING; 
@@ -131,7 +131,7 @@ public class DisplayModel extends Observable implements ComponentListener {
             //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
             
             //save patient answer
-            AcuityTestManager.getAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
+            AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
             
             //update status
             AcuityTestManager.updateStatus(); 
@@ -151,7 +151,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                     disableMessage(); 
             
                     //display next character
-                    currentElement = AcuityTestManager.getAcuityTest().getNext();
+                    currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
                 } 
             } else if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_DONE){
                 //update displayer
@@ -164,7 +164,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                 disableMessage(); 
 
                 //display next character
-                currentElement = AcuityTestManager.getAcuityTest().getNext();
+                currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
 
                 //set new state
                 this.currentState = State.TESTING; 

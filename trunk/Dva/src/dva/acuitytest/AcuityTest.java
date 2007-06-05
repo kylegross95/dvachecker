@@ -7,6 +7,7 @@
 
 package dva.acuitytest;
 
+import dva.DvaCheckerException;
 import dva.displayer.Element;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public abstract class AcuityTest {
         return this.current; 
     }
     
-    public abstract Element getNext() throws AcuityTestException; 
+    public abstract Element getNext() throws DvaCheckerException; 
     
     protected void setMaxStep(int maxStep){
         this.maxStep = maxStep; 

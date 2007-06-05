@@ -7,8 +7,10 @@
 
 package dva.displayer;
 
+import dva.acuitytest.AcuityTestConvergenceException;
+import dva.acuitytest.AcuityTestDivergenceException;
 import dva.acuitytest.AcuityTestManager;
-import dva.acuitytest.AcuityTestException;
+import dva.acuitytest.AcuityTestMaxStepException;
 import dva.util.DvaLogger;
 import java.awt.Color;
 import java.awt.Font;
@@ -94,91 +96,110 @@ public class DisplayModel extends Observable implements ComponentListener {
         return currentState; 
     }
     
-    public Element notifyOperatorEvent(OperatorEvent operatorEvent) throws AcuityTestException {
-        //if no acuitytest is available, exit
-        if (AcuityTestManager.getCurrentAcuityTest() == null) return null;
-        
-        DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
-        
-        if (currentState == State.INIT){ 
-            
-            if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
-                //save time
-                this.savedTime = System.currentTimeMillis(); 
+    public Element notifyOperatorEvent(OperatorEvent operatorEvent) {
+        try{
+            //if no acuitytest is available, exit
+            if (AcuityTestManager.getCurrentAcuityTest() == null) return null;
 
-                //disable message
-                disableMessage(); 
+            DvaLogger.debug(DisplayModel.class, "state:"+currentState); 
 
-                //display next character
-                currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
+            if (currentState == State.INIT){ 
 
-                //set new state
-                this.currentState = State.TESTING; 
-            }
-            
-        } else if (currentState == State.TESTING){
-            
-            //compute answertime
-            answerTime = savedTime - System.currentTimeMillis(); 
-            
-            //save patient response
-            if (operatorEvent != OperatorEvent.NEXT_OPTOTYPE){
-                //should be an 'OPTOTYPE_' event
-                this.patientAnswer = operatorEvent.toString().equals(currentElement.toString()); 
-            }
-                    
-            //save patient response
-            //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
-            
-            //save patient answer
-            AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
-            
-            //update status
-            AcuityTestManager.updateStatus(); 
+                if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
+                    //save time
+                    this.savedTime = System.currentTimeMillis(); 
 
-            if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_RUNNING) {
-                //if there is a pause between each character
-                if (pauseBetween){
-
-                    //display ready message
-                    setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
-
-                    //set new state
-                    this.currentState = State.PAUSE; 
-
-                } else {
-                    
+                    //disable message
                     disableMessage(); 
-            
+
                     //display next character
                     currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
-                } 
-            } else if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_DONE){
-                //update displayer
-                setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
+
+                    //set new state
+                    this.currentState = State.TESTING; 
+                }
+
+            } else if (currentState == State.TESTING){
+
+                //compute answertime
+                answerTime = savedTime - System.currentTimeMillis(); 
+
+                //save patient response
+                if (operatorEvent != OperatorEvent.NEXT_OPTOTYPE){
+                    //should be an 'OPTOTYPE_' event
+                    this.patientAnswer = operatorEvent.toString().equals(currentElement.toString()); 
+                }
+
+                //save patient response
+                //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
+
+                //save patient answer
+                AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer);
+
+                //update status
+                AcuityTestManager.updateStatus(); 
+
+                if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_RUNNING) {
+                    //if there is a pause between each character
+                    if (pauseBetween){
+
+                        //display ready message
+                        setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
+
+                        //set new state
+                        this.currentState = State.PAUSE; 
+
+                    } else {
+
+                        disableMessage(); 
+
+                        //display next character
+                        currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
+                    } 
+                } else if (AcuityTestManager.getStatus() == AcuityTestManager.Status.TEST_DONE){
+                    //update displayer
+                    setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
+                }
+
+            } else if (currentState == State.PAUSE){
+
+                if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
+                    disableMessage(); 
+
+                    //display next character
+                    currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
+
+                    //set new state
+                    this.currentState = State.TESTING; 
+                }
             }
+
+
+            //notify ModelView
+            setChanged(); 
+            notifyObservers(DisplayModel.EventType.OPERATOR_EVENT);
+
+            DvaLogger.debug(DisplayModel.class, "currentState:"+currentState); 
             
-        } else if (currentState == State.PAUSE){
-         
-            if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
-                disableMessage(); 
-
-                //display next character
-                currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
-
-                //set new state
-                this.currentState = State.TESTING; 
-            }
+            return this.currentElement; 
+            
+        } catch (AcuityTestConvergenceException atcex){
+            setMessageToDisplay(atcex.toString());
+            DvaLogger.error(DisplayModel.class, atcex); 
+            
+        } catch (AcuityTestDivergenceException atdex){
+            setMessageToDisplay(atdex.toString());
+            DvaLogger.error(DisplayModel.class, atdex); 
+            
+        } catch (AcuityTestMaxStepException atmsex) {
+            setMessageToDisplay(atmsex.toString());
+            DvaLogger.error(DisplayModel.class, atmsex); 
+            
+        } finally {
+            return null; 
         }
         
-      
-        //notify ModelView
-        setChanged(); 
-        notifyObservers(DisplayModel.EventType.OPERATOR_EVENT);
         
-        DvaLogger.debug(DisplayModel.class, "currentState:"+currentState); 
-        
-        return this.currentElement; 
     }
     
     public void setPauseBetween(boolean pauseBetween){

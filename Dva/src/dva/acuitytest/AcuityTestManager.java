@@ -51,6 +51,8 @@ public  class AcuityTestManager {
             //keep track of the acuitytest
             acuityTests.add(acuityTest); 
             
+            //DvaLogger.error(AcuityTestManager.class, "acuityTests size:" + acuityTests.size());
+            
             //if (acuityTest instanceof DynamicAcuityTest){
             //    acuityTest.setTreadmillSpeed(getSpeedValue()); 
             //}
@@ -68,7 +70,8 @@ public  class AcuityTestManager {
     }
     
     public static AcuityTest getCurrentAcuityTest(){
-        return acuityTests.size() > 1 ? acuityTests.get(acuityTests.size() - 1) : null;
+        //DvaLogger.debug(AcuityTestManager.class, "acuityTests size:" + acuityTests.size()); 
+        return acuityTests.size() >= 1 ? acuityTests.get(acuityTests.size() - 1) : null;
     }
     
     public static void updateStatus(){
@@ -120,6 +123,10 @@ public  class AcuityTestManager {
     public static int[] acceptProposedSpeedsSet(){
         currentSpeedsSet = (int[]) proposedSpeedsSet.clone(); 
         return currentSpeedsSet; 
+    }
+    
+    public void toFile(){
+        
     }
     
     /*

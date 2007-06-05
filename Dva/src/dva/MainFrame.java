@@ -1100,11 +1100,11 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jSliderDialogSetupDisplayerCalibrationSliderStateChanged
 
     private void jButtonDontKnowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDontKnowActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_DONTKNOW);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonDontKnowActionPerformed
 
     private void jButtonDialogSetupDisplayerApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogSetupDisplayerApplyActionPerformed
@@ -1160,91 +1160,91 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jButtonDialogSetupDisplayerOkActionPerformed
 
     private void jButtonOptotypeZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeZActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_Z);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeZActionPerformed
 
     private void jButtonOptotypeVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeVActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_V);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeVActionPerformed
 
     private void jButtonOptotypeSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeSActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_S);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeSActionPerformed
 
     private void jButtonOptotypeRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeRActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_R);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeRActionPerformed
 
     private void jButtonOptotypeOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeOActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_O);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeOActionPerformed
 
     private void jButtonOptotypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeNActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_N);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeNActionPerformed
 
     private void jButtonOptotypeKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeKActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_K);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //   DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeKActionPerformed
 
     private void jButtonOptotypeHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeHActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_H);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeHActionPerformed
 
     private void jButtonOptotypeDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeDActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_D);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeDActionPerformed
 
     private void jButtonOptotypeCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeCActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_C);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonOptotypeCActionPerformed
 
     private void jButtonDisplayNextOptotypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayNextOptotypeActionPerformed
-        try{
+        //try{
             displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.NEXT_OPTOTYPE);
-        } catch (AcuityTestException e){
-            DvaLogger.error(MainFrame.class, e); 
-        }
+        //} catch (AcuityTestException e){
+        //    DvaLogger.error(MainFrame.class, e); 
+        //}
     }//GEN-LAST:event_jButtonDisplayNextOptotypeActionPerformed
 
     private void jCheckBoxMenuItemPauseBetweenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemPauseBetweenActionPerformed

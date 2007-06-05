@@ -60,16 +60,19 @@ public class StaticAcuityTest  extends AcuityTest {
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("_divergence");   
+           this.setTestDone(true); 
            throw new AcuityTestDivergenceException();         
        }
        if(lastSize == -2) { //exceeded steps
            sc.doGraph("_exceededSteps");  
+           this.setTestDone(true); 
            throw new AcuityTestMaxStepException();
        }
        else if (lastSize == 0) { //convergence
           sc.doGraph("_convergence"); 
           this.setConvergenceStdDev( sc.getConvergenceValue() );
           this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
+          this.setTestDone(true); 
           throw new AcuityTestConvergenceException(sc.getConvergenceValue(), sc.getConvergenceValueStdDev());
        }
         

@@ -93,24 +93,24 @@ public class Patient {
     }
     
     public void createDirectory(){
-        patientdir = new File(outputdir + ("/" + lastname + "-" + firstname));
+        patientdir = new File(outputdir + ("/" + lastname + "_" + firstname));
         
         //create directory
-        patientdir.mkdir(); 
+        getPatientdir().mkdir(); 
     }
     
     public void toFile() throws PatientFileCreationException {
         
-        patientdir = new File(outputdir + ("/" + lastname + "-" + firstname) );
+        patientdir = new File(outputdir + ("/" + lastname + "_" + firstname) );
         
-        DvaLogger.debug(Patient.class, "patientdir:" + patientdir.getAbsolutePath() ); 
+        DvaLogger.debug(Patient.class, "patientdir:" + getPatientdir().getAbsolutePath() ); 
         
         //create directory
-        patientdir.mkdir(); 
+        getPatientdir().mkdir(); 
         
         File patientfile = null; 
         try {
-            patientfile = new File(patientdir + "/patient.xml");
+            patientfile = new File(getPatientdir() + "/patient.xml");
             FileUtils.writeStringToFile(patientfile, toXml()); 
             
         } catch (IOException ioex){
@@ -140,8 +140,12 @@ public class Patient {
     }
     
     public boolean isPatientExist(){
-        File tmp = new File(outputdir + "/" + lastname + "-" + firstname);
+        File tmp = new File(outputdir + "/" + lastname + "_" + firstname);
         return tmp.exists(); 
+    }
+
+    public File getPatientdir() {
+        return patientdir;
     }
     
 }

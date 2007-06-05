@@ -27,8 +27,15 @@ public class Patient {
     private File outputdir = null; 
     private File patientdir = null; 
     
+    public Patient(){
+    }
+    
     /** Creates a new instance of Patient */
     public Patient(File outputdir) {
+        this.outputdir = outputdir; 
+    }
+    
+    public void setOutputdir(File outputdir){
         this.outputdir = outputdir; 
     }
     
@@ -92,8 +99,12 @@ public class Patient {
         this.id = String.valueOf( System.currentTimeMillis() ); 
     }
     
+    public String getDirectoryName(){
+        return lastname + "_" + firstname; 
+    }
+    
     public void createDirectory(){
-        patientdir = new File(outputdir + ("/" + lastname + "_" + firstname));
+        patientdir = new File(outputdir + ("/" + getDirectoryName()));
         
         //create directory
         getPatientdir().mkdir(); 
@@ -101,7 +112,7 @@ public class Patient {
     
     public void toFile() throws PatientFileCreationException {
         
-        patientdir = new File(outputdir + ("/" + lastname + "_" + firstname) );
+        patientdir = new File(outputdir + ("/" + getDirectoryName()) );
         
         DvaLogger.debug(Patient.class, "patientdir:" + getPatientdir().getAbsolutePath() ); 
         
@@ -140,12 +151,19 @@ public class Patient {
     }
     
     public boolean isPatientExist(){
-        File tmp = new File(outputdir + "/" + lastname + "_" + firstname);
+        File tmp = new File(outputdir + ("/" + getDirectoryName() ) ) ;
         return tmp.exists(); 
     }
 
     public File getPatientdir() {
         return patientdir;
+    }
+    
+    public File getPatientdir(File outputdir){
+        this.outputdir = outputdir; 
+        this.patientdir = new File(outputdir + "/" + this.getDirectoryName()); 
+        
+        return this.patientdir; 
     }
     
 }

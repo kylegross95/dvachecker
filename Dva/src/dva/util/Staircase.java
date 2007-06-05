@@ -7,25 +7,11 @@
 
 package dva.util;
 
+import dva.acuitytest.AcuityTestManager;
 import java.io.IOException;
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.labels.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.renderer.xy.*;
-import org.jfree.chart.title.*;
-import org.jfree.data.time.*;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.annotations.XYImageAnnotation;
 import java.io.File;
-import java.lang.String;
-import java.lang.Math;
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.Paint;
-import java.io.*;
 
 /**
  * Staircase algo
@@ -276,6 +262,8 @@ public class Staircase {
     
     
     public void doGraph(String param) {
+        
+        param += AcuityTestManager.getFileId();
         XYSeriesCollection xyc = new XYSeriesCollection();
         XYSeriesCollection xyc2 = new XYSeriesCollection();
         xyc.addSeries(series);
@@ -312,7 +300,7 @@ public class Staircase {
         chart.setBackgroundPaint(Color.yellow); */
         
         //String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
-        String filenameLinear = "c:/temp/chart" + param + "-linear.jpg";
+        String filenameLinear = "C:/Documents and Settings/J-Chris/dvachecker_data/" + param + "-linear.jpg";
         
         try {
           //      ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);

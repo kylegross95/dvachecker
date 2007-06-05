@@ -51,17 +51,17 @@ public class Staircase {
     private int runDir; //1 going up, -1 going down
     private int runNumber; //number of runs so far
     private int peakIdx;
-    private float peaks[]; //vector with peaks
+    private double peaks[]; //vector with peaks
     private int valleyIdx;
-    private float valleys[]; //vector with valleys
+    private double valleys[]; //vector with valleys
     private double Lvalleys[];
     private double Lpeaks[];
     private boolean peaker; //var to identify double peaks
     private float minSizeCnt; 
     //private int lastPositive; //0: single, 1: double (peak)
     private boolean converged; //whether the algo has converged yet
-    private float convergenceVal;
-    private float convergenceValStdDev;
+    private double convergenceVal;
+    private double convergenceValStdDev;
     private int seriesCnt;
     private double[] curValHistory;
     private boolean[] curValResponses;
@@ -89,9 +89,9 @@ public class Staircase {
      * Creates a new instance of Staircase
      */
     public Staircase() {
-        peaks = new float[50];
+        peaks = new double[50];
         peakIdx = 0;
-        valleys = new float[50];
+        valleys = new double[50];
         valleyIdx = 0;
         curValHistory = new double[50];
         curValResponses = new boolean[50];
@@ -115,7 +115,8 @@ public class Staircase {
         seriesCnt = 1;
         //start logging curVal
         curValHistory[0] = initSize;
-        //series.add((double)seriesCnt,initSize);
+        series.add(seriesCnt,initSize);
+        series2.add(seriesCnt,initSize);
         seriesCnt++;
         peaker = false;
         minSizeCnt = 0;
@@ -144,7 +145,7 @@ public class Staircase {
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 runDir = 1;
-                valleys[valleyIdx] = curVal; //store valley information
+                valleys[valleyIdx] = sScale[(int)curVal-1]; //store valley information
                 valleyIdx++;
                 if (peaker) peaker = false; //in case of false double correct
             }//close elseif answer
@@ -180,7 +181,7 @@ public class Staircase {
                peaker = false; //reset this var
                if (stepSize == MIN_STEPSIZE) numCVals++;
                //lastPositive = 1; //log the double peak
-               peaks[peakIdx] = curVal; //log the peak
+               peaks[peakIdx] = sScale[(int)curVal-1]; //log the peak
                peakIdx++;
 
             }
@@ -192,10 +193,13 @@ public class Staircase {
     runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
     if(stepSize == MIN_STEPSIZE && !peaker) minSizeCnt++;
     
+    double oldCurVal = 0;
     
     //check for convergence
     if (minSizeCnt>=8 && numCVals == 4){ 
-        convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2])/6;    
+        convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]);
+        convergenceVal = convergenceVal + (peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]);    
+        convergenceVal = convergenceVal/12;
         Lvalleys = new double[3];
         Lpeaks = new double[3];
         Lvalleys[2] = (double) valleys[valleyIdx];
@@ -206,8 +210,9 @@ public class Staircase {
         Lpeaks[0] = (double) peaks[valleyIdx-2];
         double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
         double sumValleys = java.lang.Math.pow(Lvalleys[0]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]-convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]-convergenceVal,2.0);
-        convergenceValStdDev = (float) java.lang.Math.sqrt((1/6)*(sumPeaks+sumValleys));
+        convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
         converged = true; 
+        oldCurVal = curVal;
         curVal = 0;
         }//close if convergence
     
@@ -223,7 +228,8 @@ public class Staircase {
         if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
     }
     else { 
-        series.add(seriesCnt,convergenceVal); 
+        series.add(seriesCnt,curVal); 
+        series2.add(seriesCnt,oldCurVal); 
         curValHistory[seriesCnt] = curVal;
     
     }
@@ -245,7 +251,7 @@ public class Staircase {
     }//close whatSize
     
 
-    public float getConvergenceValue() {
+    public double getConvergenceValue() {
         if (converged) {
             DvaLogger.info(Staircase.class, "CurValHistory is '" + curValHistory + "'"); 
             DvaLogger.info(Staircase.class, "CurValResponses is '" + curValResponses + "'"); 
@@ -257,7 +263,7 @@ public class Staircase {
     }
     
 
-    public float getConvergenceValueStdDev() {
+    public double getConvergenceValueStdDev() {
         if (converged) return convergenceValStdDev;
     else return -1;
     }
@@ -268,9 +274,9 @@ public class Staircase {
         XYSeriesCollection xyc2 = new XYSeriesCollection();
         xyc.addSeries(series);
         xyc2.addSeries(series2);
-        //xyc.addSeries(seriesRunDir);
-        //xyc.addSeries(seriesPeaker);
-        org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
+        xyc.addSeries(seriesRunDir);
+        xyc.addSeries(seriesPeaker);
+       /* org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
                      ("DVA Experimental Values - Snellen Scale",  // Title
                       "Epoch",           // X-Axis label
                       "Value",           // Y-Axis label
@@ -279,7 +285,7 @@ public class Staircase {
                       true,                // Show legend
                       true,   
                       true
-                     );
+                     ); */
         
                 org.jfree.chart.JFreeChart chart2 = org.jfree.chart.ChartFactory.createXYLineChart
                      ("DVA Experimental Values - Linear Scale",  // Title
@@ -291,21 +297,21 @@ public class Staircase {
                       true,   
                       true
                      );
-        //annotation attempt for + & - symbols
+       /* //annotation attempt for + & - symbols
         XYPlot plot = chart.getXYPlot();
         Image image = Toolkit.getDefaultToolkit().getImage("c:/temp/plus.jpg");
         XYImageAnnotation ant = new XYImageAnnotation(500.0, 300.0, image);
         //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
         plot.addAnnotation(ant);
-        chart.setBackgroundPaint(Color.yellow);
+        chart.setBackgroundPaint(Color.yellow); */
         
-        String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
+        //String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
         String filenameLinear = "c:/temp/chart" + param + "-linear.jpg";
         
         try {
-                ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
+          //      ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
                 ChartUtilities.saveChartAsJPEG(new File(filenameLinear), chart2, 1000, 600);
-                DvaLogger.info(Staircase.class, "Result saved under '" + filenameLinear + "' & '" + filenameSnellen +"'"); 
+                DvaLogger.info(Staircase.class, "Result saved under '" + filenameLinear + "'");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

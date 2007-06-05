@@ -1342,6 +1342,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             
             //set no character
             jLabelCharacter.setText(" "); 
+            
+            //define file id
+            AcuityTestManager.setFileId(String.valueOf( System.currentTimeMillis() )); 
 
             //disable start button
             this.jButtonStartAcuityTest.setEnabled(false); 

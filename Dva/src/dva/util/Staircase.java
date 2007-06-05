@@ -204,7 +204,7 @@ public class Staircase {
         oldCurVal = curVal;
         curVal = 0;
         System.out.println("stddev: "+convergenceValStdDev);
-               
+                
         
         }//close if convergence
     

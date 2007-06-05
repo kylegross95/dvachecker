@@ -144,9 +144,8 @@ public  class AcuityTestManager {
         File actuitestfile = null; 
         
         try {
-            String fileid = String.valueOf( System.currentTimeMillis() ); 
-            AcuityTestManager.setFileId(fileid); 
-            actuitestfile = new File( patientdir + ("/acuitytest_" + fileid + ".xml" ) ); 
+            
+            actuitestfile = new File( patientdir + ("/acuitytest_" + AcuityTestManager.getFileId() + ".xml" ) ); 
             
             actuitestfile.createNewFile(); 
             

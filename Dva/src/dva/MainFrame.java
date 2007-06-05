@@ -1422,6 +1422,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             //write patient data to file
             patient.toFile();
             
+            //add ptient to the list
+            patients.put(getCurrentPatient().getDirectoryName(), getCurrentPatient()); 
+            
             AcuityTestManager.setPatientDirectory( patient.getPatientdir() ); 
             
             //int speeds[] = AcuityTestManager.acceptProposedSpeedsSet(); 

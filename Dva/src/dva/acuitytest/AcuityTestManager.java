@@ -11,8 +11,10 @@ import dva.displayer.DisplayModel;
 import dva.util.DvaLogger;
 import dva.util.MessageResources;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -126,8 +128,19 @@ public  class AcuityTestManager {
         return currentSpeedsSet; 
     }
     
-    public void toFile(){
-        //File actuitestdir = new File(patientdir + () ); 
+    public static void toFile() throws AcuityTestFileCreationException {
+        File actuitestfile = null; 
+        
+        try {
+            actuitestfile = new File( patientdir + ("/acuitytest_" + String.valueOf( System.currentTimeMillis() ) + ".xml" ) ); 
+            
+            DvaLogger.debug(AcuityTestManager.class, "actuitestfile:" + actuitestfile.getAbsoluteFile() );
+            
+            FileUtils.writeStringToFile(actuitestfile, toXml()); 
+            
+        } catch (IOException ioex){
+            throw new AcuityTestFileCreationException(actuitestfile, ioex); 
+        }
     }
     
     /*

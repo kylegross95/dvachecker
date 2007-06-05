@@ -184,16 +184,19 @@ public class DisplayModel extends Observable implements ComponentListener {
             return this.currentElement; 
             
         } catch (AcuityTestConvergenceException atcex){
-            setMessageToDisplay(atcex.toString());
-            DvaLogger.error(DisplayModel.class, atcex); 
+            AcuityTestManager.toFile();
+            setMessageToDisplay(atcex.getMessage());
+            DvaLogger.error(DisplayModel.class, atcex.getMessage()); 
             
         } catch (AcuityTestDivergenceException atdex){
-            setMessageToDisplay(atdex.toString());
-            DvaLogger.error(DisplayModel.class, atdex); 
+            AcuityTestManager.toFile();
+            setMessageToDisplay(atdex.getMessage());
+            DvaLogger.error(DisplayModel.class, atdex.getMessage()); 
             
         } catch (AcuityTestMaxStepException atmsex) {
-            setMessageToDisplay(atmsex.toString());
-            DvaLogger.error(DisplayModel.class, atmsex); 
+            AcuityTestManager.toFile();
+            setMessageToDisplay(atmsex.getMessage());
+            DvaLogger.error(DisplayModel.class, atmsex.getMessage()); 
             
         } finally {
             return null; 

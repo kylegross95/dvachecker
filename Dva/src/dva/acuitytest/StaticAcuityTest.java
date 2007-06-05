@@ -7,6 +7,7 @@
 
 package dva.acuitytest;
 
+import dva.DvaCheckerException;
 import dva.acuitytest.AcuityTest.TestAnswer;
 import dva.displayer.Element;
 import dva.displayer.Optotype;
@@ -38,7 +39,7 @@ public class StaticAcuityTest  extends AcuityTest {
 
     }
     
-    public Element getNext() throws AcuityTestException{
+    public Element getNext() throws DvaCheckerException {
         
         if (getTestAnswers().size() > 0){
             //get size of the last element
@@ -71,8 +72,9 @@ public class StaticAcuityTest  extends AcuityTest {
        else if (lastSize == 0) { //convergence
           sc.doGraph("_convergence"); 
           this.setConvergenceValue( sc.getConvergenceValue() );
-          this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
+          //this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
           this.setTestDone(true); 
+          //AcuityTestManager.toFile();
           throw new AcuityTestConvergenceException(sc.getConvergenceValue(), sc.getConvergenceValueStdDev());
        }
         

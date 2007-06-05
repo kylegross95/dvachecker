@@ -70,7 +70,7 @@ public class StaticAcuityTest  extends AcuityTest {
        }
        else if (lastSize == 0) { //convergence
           sc.doGraph("_convergence"); 
-          this.setConvergenceStdDev( sc.getConvergenceValue() );
+          this.setConvergenceValue( sc.getConvergenceValue() );
           this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
           this.setTestDone(true); 
           throw new AcuityTestConvergenceException(sc.getConvergenceValue(), sc.getConvergenceValueStdDev());

@@ -10,6 +10,7 @@ package dva.acuitytest;
 import dva.displayer.DisplayModel;
 import dva.util.DvaLogger;
 import dva.util.MessageResources;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -126,13 +127,13 @@ public  class AcuityTestManager {
     }
     
     public void toFile(){
-        
+        //File actuitestdir = new File(patientdir + () ); 
     }
     
     /*
      *
      */
-    public String toXml(){
+    public static String toXml(){
         StringBuffer sb = new StringBuffer("<acuitytests>");
         //for ()
         sb.append("</acuitytests>"); 
@@ -140,6 +141,10 @@ public  class AcuityTestManager {
             sb.append( at.toXml() ); 
         }
         return sb.toString(); 
+    }
+    
+    public static void setPatientDirectory(File _patientdir){
+        patientdir = _patientdir; 
     }
     
     
@@ -150,6 +155,7 @@ public  class AcuityTestManager {
     
     //resources
     private static MessageResources resourceBundle = new MessageResources("dva/Bundle"); // NOI18N; 
+    private static File patientdir = null; 
     
     public enum Status { INIT, TEST_RUNNING, TEST_FAILED, TEST_DONE, ALL_TEST_DONE }; 
     private static Random random = new Random();

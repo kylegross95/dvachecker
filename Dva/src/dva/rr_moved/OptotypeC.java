@@ -7,8 +7,9 @@
  * and open the template in the editor.
  */
 
-package dva.displayer;
+package dva.rr_moved;
 
+import dva.displayer.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;

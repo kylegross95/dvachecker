@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.File;
 import java.util.Observable;
 
 /**
@@ -79,10 +80,10 @@ public class DisplayModel extends Observable implements ComponentListener {
         currentElement = new Optotype();
     }
     
-    public boolean setupAcuityTest() {
+    public boolean setupAcuityTest(File patientdir) {
         try {
             AcuityTestManager.reset(); 
-            AcuityTestManager.setNextAcuityTest();
+            AcuityTestManager.setNextAcuityTest(patientdir);
             setMessageToDisplay(resourceBundle.getString("message.displayer.patientready"));
             return true; 
             
@@ -128,11 +129,8 @@ public class DisplayModel extends Observable implements ComponentListener {
                 if (operatorEvent != OperatorEvent.NEXT_OPTOTYPE){
                     //should be an 'OPTOTYPE_' event
                     this.patientAnswerStr = operatorEvent.toString(); 
-                    this.patientAnswer = operatorEvent.toString().equals(currentElement.toString()); 
+                    this.patientAnswer = patientAnswerStr.equals(currentElement.toString()); 
                 }
-
-                //save patient response
-                //this.patientAnswer = operatorEvent == OperatorEvent.LEFT_CLICK; 
 
                 //save patient answer
                 AcuityTestManager.getCurrentAcuityTest().saveAnswer(answerTime, this.currentElement, patientAnswer, patientAnswerStr);
@@ -175,7 +173,6 @@ public class DisplayModel extends Observable implements ComponentListener {
                 }
             }
 
-
             //notify ModelView
             setChanged(); 
             notifyObservers(DisplayModel.EventType.OPERATOR_EVENT);
@@ -185,17 +182,17 @@ public class DisplayModel extends Observable implements ComponentListener {
             return this.currentElement; 
             
         } catch (AcuityTestConvergenceException atcex){
-            AcuityTestManager.toFile();
+            AcuityTestManager.getCurrentAcuityTest().toFile();
             setMessageToDisplay(atcex.getMessage());
             DvaLogger.error(DisplayModel.class, atcex.getMessage()); 
             
         } catch (AcuityTestDivergenceException atdex){
-            AcuityTestManager.toFile();
+            AcuityTestManager.getCurrentAcuityTest().toFile();
             setMessageToDisplay(atdex.getMessage());
             DvaLogger.error(DisplayModel.class, atdex.getMessage()); 
             
         } catch (AcuityTestMaxStepException atmsex) {
-            AcuityTestManager.toFile();
+            AcuityTestManager.getCurrentAcuityTest().toFile();
             setMessageToDisplay(atmsex.getMessage());
             DvaLogger.error(DisplayModel.class, atmsex.getMessage()); 
             

@@ -80,7 +80,7 @@ public class Patient {
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.comment = comment.trim();
     }
 
     public String getId() {

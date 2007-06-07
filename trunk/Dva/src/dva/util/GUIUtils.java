@@ -8,6 +8,7 @@
 package dva.util;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.util.Enumeration;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -37,9 +38,10 @@ public class GUIUtils {
     private GUIUtils() {
     }
     
-    static public void showDialog(JDialog dialog, boolean state, java.awt.event.ActionEvent evt){
+    static public void showDialog(Container parent, JDialog dialog, boolean state, java.awt.event.ActionEvent evt){
         if (state){
             dialog.pack(); 
+            dialog.setLocationRelativeTo(parent);
             dialog.setVisible(true);
         } else {
             dialog.setVisible(false);

@@ -98,6 +98,8 @@ public abstract class AcuityTest {
             sb.append( this.getTestName() );
             sb.append( "\" treadmillspeed=\"");
             sb.append( this.treadmillSpeed ); 
+            sb.append( "\" eye=\"");
+            sb.append( this.eye ); 
             sb.append("\">"); 
             sb.append("<result value=\"");
             sb.append( this.getConvergenceValue() ); 
@@ -135,7 +137,7 @@ public abstract class AcuityTest {
         
         try {
             
-            actuitestfile = new File( patientdir + ("/acuitytest_" + getFileDesc() + ".xml" ) ); 
+            actuitestfile = new File( patientdir + ("/" + getFileDesc() + "_acuitytest-data.xml" ) ); 
             
             actuitestfile.createNewFile(); 
             

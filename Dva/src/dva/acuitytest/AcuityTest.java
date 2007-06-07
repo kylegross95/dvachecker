@@ -129,7 +129,7 @@ public abstract class AcuityTest {
     }
     
     public String getFileDesc(){
-        return formatter2.format(startDate) + "_" + String.format( "%.2f", this.getTreadmillSpeed() ) + "_" + this.eye ; 
+        return formatter2.format(startDate) + "_" + Math.round( this.getTreadmillSpeed() ) + "kmh_" + this.eye ; 
     }
     
     public void toFile() throws AcuityTestFileCreationException {

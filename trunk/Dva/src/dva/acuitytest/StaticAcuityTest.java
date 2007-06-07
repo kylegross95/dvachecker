@@ -23,7 +23,7 @@ public class StaticAcuityTest  extends AcuityTest {
     float lastSize;
     float lastStep;
     Staircase sc;
-    int runCnt = 0; 
+    //int runCnt = 0; 
     
     final static String charactersList[] = {"C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"};
     
@@ -32,11 +32,12 @@ public class StaticAcuityTest  extends AcuityTest {
         //initial size
         lastSize=14.0f;
         lastStep=4.0f;
-        runCnt = 0;
-        sc = new Staircase();
-        sc.initSize(lastSize,lastStep);
         
-
+    }
+    
+    public void init(){
+        sc = new Staircase();
+        sc.initSize(lastSize,lastStep, this.getPatientdir() , this.getFileDesc());
     }
     
     public Element getNext() throws DvaCheckerException {
@@ -57,7 +58,7 @@ public class StaticAcuityTest  extends AcuityTest {
         
         DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
         
-        if (++runCnt==50) sc.doGraph("_at50"); 
+        //if (++runCnt==50) sc.doGraph("_at50"); 
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("_divergence");   

@@ -9,10 +9,14 @@ package dva.acuitytest;
 
 import dva.DvaCheckerException;
 import dva.displayer.Element;
+import dva.util.DvaLogger;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -28,12 +32,21 @@ public abstract class AcuityTest {
         this.testName = testName; 
     }
     
+    public void setPatientdir(File patientdir){
+        this.patientdir = patientdir; 
+    }
+    
+    public File getPatientdir(){
+        return patientdir; 
+    }
+    
     public void saveAnswer(long answerTime, Element element, boolean patientAnswer, String patientAnswerStr){
         //add the patient answer to the answer list
         getTestAnswers().add( new TestAnswer(answerTime, patientAnswer, element, patientAnswerStr) ); 
     }
     
     public abstract String getTestName(); 
+    public abstract void init(); 
     
     public void setCurrentElement(Element current){
         this.current = current; 
@@ -112,6 +125,28 @@ public abstract class AcuityTest {
     public String getEye(){
         return this.eye; 
     }
+    
+    public String getFileDesc(){
+        return formatter2.format(startDate) + "_" + String.format( "%.2f", this.getTreadmillSpeed() ) + "_" + this.eye ; 
+    }
+    
+    public void toFile() throws AcuityTestFileCreationException {
+        File actuitestfile = null; 
+        
+        try {
+            
+            actuitestfile = new File( patientdir + ("/acuitytest_" + getFileDesc() + ".xml" ) ); 
+            
+            actuitestfile.createNewFile(); 
+            
+            DvaLogger.debug(AcuityTestManager.class, "actuitestfile:" + actuitestfile.getAbsoluteFile() );
+            
+            FileUtils.writeStringToFile(actuitestfile, toXml()); 
+            
+        } catch (IOException ioex){
+            throw new AcuityTestFileCreationException(actuitestfile, ioex); 
+        }
+    }
    
     private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>();; 
     private Random random = new Random(); 
@@ -120,6 +155,7 @@ public abstract class AcuityTest {
     private float treadmillSpeed = 0; 
     private boolean testFailed = false; 
     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
+    SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd-yyyy_HH-mm-ss");
     private Date startDate = null; 
     private Element current = null; 
     private String testName = ""; 
@@ -127,6 +163,7 @@ public abstract class AcuityTest {
     private double convergenceValue = 0.0; 
     private double convergenceStdDev = 0.0;  
     private String eye = ""; 
+    private File patientdir = null; 
     
     //resources
     protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 

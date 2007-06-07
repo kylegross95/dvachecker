@@ -67,6 +67,10 @@ public class Staircase {
     private XYSeries seriesRunDir;
     private XYSeries seriesPeaker;
     
+    //files
+    File outputdir = null; 
+    String fileprefix = ""; 
+    
     //snelling scale
         
         double[] sScale  = {0.1,0.13,0.17,0.2,0.25,0.33,0.4,0.5,0.67,0.8,1.0,1.25,1.67,2.0};
@@ -94,7 +98,7 @@ public class Staircase {
     }
     
    
-    public void initSize (float initSize, float initStepSize) {
+    public void initSize (float initSize, float initStepSize, File outputdir, String fileprefix) {
         runNumber = 1;
         runDir = 1;
        // curVal = INIT_STIM_SIZE; NOT USED
@@ -109,6 +113,8 @@ public class Staircase {
         seriesCnt++;
         peaker = false;
         minSizeCnt = 0;
+        this.outputdir = outputdir; 
+        this.fileprefix = fileprefix; 
     }
     
  
@@ -261,9 +267,8 @@ public class Staircase {
     }
     
     
-    public void doGraph(String param) {
+    public void doGraph(String param) throws ChartFileCreationException {
         
-        param += AcuityTestManager.getFileId();
         XYSeriesCollection xyc = new XYSeriesCollection();
         XYSeriesCollection xyc2 = new XYSeriesCollection();
         xyc.addSeries(series);
@@ -281,16 +286,16 @@ public class Staircase {
                       true
                      ); */
         
-                org.jfree.chart.JFreeChart chart2 = org.jfree.chart.ChartFactory.createXYLineChart
-                     ("DVA Experimental Values - Linear Scale",  // Title
-                      "Run",           // X-Axis label
-                      "Value",           // Y-Axis label
-                      xyc2,          // Dataset
-                       org.jfree.chart.plot.PlotOrientation.VERTICAL,
-                      true,                // Show legend
-                      true,   
-                      true
-                     );
+        org.jfree.chart.JFreeChart chart2 = org.jfree.chart.ChartFactory.createXYLineChart
+             ("DVA Experimental Values - Linear Scale",  // Title
+              "Run",           // X-Axis label
+              "Value",           // Y-Axis label
+              xyc2,          // Dataset
+               org.jfree.chart.plot.PlotOrientation.VERTICAL,
+              true,                // Show legend
+              true,   
+              true
+             );
        /* //annotation attempt for + & - symbols
         XYPlot plot = chart.getXYPlot();
         Image image = Toolkit.getDefaultToolkit().getImage("c:/temp/plus.jpg");
@@ -300,18 +305,19 @@ public class Staircase {
         chart.setBackgroundPaint(Color.yellow); */
         
         //String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
-        String filenameLinear = "C:/Documents and Settings/J-Chris/dvachecker_data/" + param + "-linear.jpg";
+        File chartfile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");
+        //String filenameLinear = "C:/Documents and Settings/J-Chris/dvachecker_data/" + param + "-linear.jpg";
         
         try {
-          //      ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
-                ChartUtilities.saveChartAsJPEG(new File(filenameLinear), chart2, 1000, 600);
-                DvaLogger.info(Staircase.class, "Result saved under '" + filenameLinear + "'");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            //ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
+            ChartUtilities.saveChartAsJPEG(chartfile, chart2, 1000, 600);
+            DvaLogger.info(Staircase.class, "Result saved under '" + chartfile.getAbsolutePath() + "'");
+        } catch (IOException ex) {
+            throw new ChartFileCreationException(chartfile, ex); 
         }
-    
     }
+    
+}
             
     
     

@@ -76,6 +76,8 @@ public class Displayer extends javax.swing.JFrame {
         
         displayView.addComponentListener(displayModel); 
         
+        resizeDisplayer();
+        
     }
     
     public void resizeDisplayer(){

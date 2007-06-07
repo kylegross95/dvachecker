@@ -25,29 +25,15 @@ public  class AcuityTestManager {
     // prevent from instanciation
     private AcuityTestManager() {
         
-    }
+    }       
     
-    public static void setFileId(String _fileid){
-        fileid = _fileid; 
-        
-    }
-    
-    private static String fileid = ""; 
-    
-    public static String getFileId(){
-        return fileid; 
-    }
-            
-    
-    public static void reset(){
+    public static void reset() {
         currentAcuityTestId = -1; 
-        for (AcuityTest at : acuityTests){
-            at = null; 
-        }
+        status = Status.INIT; 
         acuityTests.clear(); 
     }
     
-    public static void setNextAcuityTest(){
+    public static void setNextAcuityTest(File patientdir) throws AcuityTestException {
         try {
             currentAcuityTestId++;
             if (currentAcuityTestId >= acuityTestIds.length) {
@@ -60,19 +46,20 @@ public  class AcuityTestManager {
             
             acuityTest.setName(acuityTestIds[currentAcuityTestId]);
             
+            acuityTest.setPatientdir(patientdir); 
+            
             //set start date
             acuityTest.setStartDate(); 
+            
+            acuityTest.init();
             
             //keep track of the acuitytest
             acuityTests.add(acuityTest); 
             
             //DvaLogger.error(AcuityTestManager.class, "acuityTests size:" + acuityTests.size());
             
-            //if (acuityTest instanceof DynamicAcuityTest){
-            //    acuityTest.setTreadmillSpeed(getSpeedValue()); 
-            //}
         } catch (Exception e){
-            DvaLogger.error(DisplayModel.class, e); 
+            throw new AcuityTestException("Failed to set the next acuityTest", e); 
         }
     }
     
@@ -106,21 +93,21 @@ public  class AcuityTestManager {
         }
     }
     
-    public static int[] proposeSpeedSet(){
-        
-        proposedSpeedsSet[0] = 0;
-        proposedSpeedsSet[1] = 1;
-        proposedSpeedsSet[2] = 2;
-        
-        for (int i=0; i<proposedSpeedsSet.length; i++) {
-            int randomPosition = random.nextInt(proposedSpeedsSet.length);
-            int temp = proposedSpeedsSet[i];
-            proposedSpeedsSet[i] = proposedSpeedsSet[randomPosition];
-            proposedSpeedsSet[randomPosition] = temp;
-        }
-        
-        return proposedSpeedsSet; 
-    }
+//    public static int[] proposeSpeedSet(){
+//        
+//        proposedSpeedsSet[0] = 0;
+//        proposedSpeedsSet[1] = 1;
+//        proposedSpeedsSet[2] = 2;
+//        
+//        for (int i=0; i<proposedSpeedsSet.length; i++) {
+//            int randomPosition = random.nextInt(proposedSpeedsSet.length);
+//            int temp = proposedSpeedsSet[i];
+//            proposedSpeedsSet[i] = proposedSpeedsSet[randomPosition];
+//            proposedSpeedsSet[randomPosition] = temp;
+//        }
+//        
+//        return proposedSpeedsSet; 
+//    }
     
     public static String speedsSetToString(int[] speedsSet){
         String speedsinfo = ""; 
@@ -131,44 +118,27 @@ public  class AcuityTestManager {
         return speedsinfo; 
     }
     
-    public static float getSpeedValue(){
-        return (currentAcuityTestId>0 && currentAcuityTestId<acuityTestIds.length) ? speedsValue[currentSpeedsSet[currentAcuityTestId-1]] : 0.0f; 
-    }
+//    public static float getSpeedValue(){
+//        return (currentAcuityTestId>0 && currentAcuityTestId<acuityTestIds.length) ? speedsValue[currentSpeedsSet[currentAcuityTestId-1]] : 0.0f; 
+//    }
+//    
+//    public static int[] acceptProposedSpeedsSet(){
+//        currentSpeedsSet = (int[]) proposedSpeedsSet.clone(); 
+//        return currentSpeedsSet; 
+//    }
     
-    public static int[] acceptProposedSpeedsSet(){
-        currentSpeedsSet = (int[]) proposedSpeedsSet.clone(); 
-        return currentSpeedsSet; 
-    }
-    
-    public static void toFile() throws AcuityTestFileCreationException {
-        File actuitestfile = null; 
-        
-        try {
-            
-            actuitestfile = new File( patientdir + ("/acuitytest_" + AcuityTestManager.getFileId() + ".xml" ) ); 
-            
-            actuitestfile.createNewFile(); 
-            
-            DvaLogger.debug(AcuityTestManager.class, "actuitestfile:" + actuitestfile.getAbsoluteFile() );
-            
-            FileUtils.writeStringToFile(actuitestfile, toXml()); 
-            
-        } catch (IOException ioex){
-            throw new AcuityTestFileCreationException(actuitestfile, ioex); 
-        }
-    }
-    
+
     /*
      *
      */
-    public static String toXml(){
-        StringBuffer sb = new StringBuffer("<acuitytests>");
-        for (AcuityTest at : acuityTests){
-            sb.append( at.toXml() ); 
-        }
-        sb.append("</acuitytests>"); 
-        return sb.toString(); 
-    }
+//    public static String toXml(){
+//        StringBuffer sb = new StringBuffer("<acuitytests>");
+//        for (AcuityTest at : acuityTests){
+//            sb.append( at.toXml() ); 
+//        }
+//        sb.append("</acuitytests>"); 
+//        return sb.toString(); 
+//    }
     
     public static void setPatientDirectory(File _patientdir){
         patientdir = _patientdir; 
@@ -177,9 +147,9 @@ public  class AcuityTestManager {
     
     
     
-    private static int proposedSpeedsSet[] = new int[3]; 
-    private static int currentSpeedsSet[];  
-    private static float speedsValue[] = {0, 4, 8}; 
+    //private static int proposedSpeedsSet[] = new int[3]; 
+    //private static int currentSpeedsSet[];  
+    //private static float speedsValue[] = {0, 4, 8}; 
     
     //resources
     private static MessageResources resourceBundle = new MessageResources("dva/Bundle"); // NOI18N; 

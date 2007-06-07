@@ -44,63 +44,68 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
      */
     public void update(Observable o, Object object){
 
-        DisplayModel.EventType eventType= (DisplayModel.EventType)object; 
-        
-        if (!callibrating && eventType==DisplayModel.EventType.OPERATOR_EVENT ){
-            AcuityTestManager.Status status = AcuityTestManager.getStatus();
+        try {
+            DisplayModel.EventType eventType= (DisplayModel.EventType)object; 
 
-            if ( status == AcuityTestManager.Status.TEST_RUNNING || status == AcuityTestManager.Status.INIT){
-                if (displayer.getDisplayModel().getState() == DisplayModel.State.PAUSE){
+            if (!callibrating && eventType==DisplayModel.EventType.OPERATOR_EVENT ){
+                AcuityTestManager.Status status = AcuityTestManager.getStatus();
+
+                if ( status == AcuityTestManager.Status.TEST_RUNNING || status == AcuityTestManager.Status.INIT){
+                    if (displayer.getDisplayModel().getState() == DisplayModel.State.PAUSE){
+                        //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
+
+                        //enable the next button
+                        this.jButtonDisplayNextOptotype.setEnabled(true); 
+
+                    } else if (displayer.getDisplayModel().getState() == DisplayModel.State.TESTING){
+                        //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.waitanswer")); 
+                        //enable the next button
+                        this.jButtonDisplayNextOptotype.setEnabled(false); 
+
+                        jLabelCharacter.setText(AcuityTestManager.getCurrentAcuityTest().getCurrentElement().toString()); 
+                    }
+
+                } else if ( status == AcuityTestManager.Status.TEST_FAILED ){
+                    DvaLogger.debug(MainFrame.class, "TEST_FAILED");
+                    String[] options = {"Continue", "Abort"}; 
+                    int n = JOptionPane.showOptionDialog(this,
+                            resourceBundle.getString("message.acuitytest."+AcuityTestManager.getCurrentAcuityTest().getTestName()+".failed"),
+                            "Test Failure",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[0]);
+
+                    if (n == JOptionPane.YES_OPTION){
+                        //abort experiment
+                        DvaLogger.debug(MainFrame.class, "Abort");
+                    } else {
+                        //continue experiment
+                        DvaLogger.debug(MainFrame.class, "Continue");
+                    }
+
+                }  else if ( status == AcuityTestManager.Status.TEST_DONE ){
+                    DvaLogger.debug(MainFrame.class, "TEST_DONE");
+
+                    //update click area
                     //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
-                    
-                    //enable the next button
-                    this.jButtonDisplayNextOptotype.setEnabled(true); 
 
-                } else if (displayer.getDisplayModel().getState() == DisplayModel.State.TESTING){
-                    //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.waitanswer")); 
-                    //enable the next button
-                    this.jButtonDisplayNextOptotype.setEnabled(false); 
-                    
-                    jLabelCharacter.setText(AcuityTestManager.getCurrentAcuityTest().getCurrentElement().toString()); 
+                    String finishedTestName = AcuityTestManager.getAcuityTestName().toUpperCase();
+
+                    JOptionPane.showMessageDialog(this, resourceBundle.getString("message.acuitytest.finished", finishedTestName));
+
+                    AcuityTestManager.setNextAcuityTest(patient.getPatientdir()); 
+
+                    JOptionPane.showMessageDialog(this, AcuityTestManager.getCurrentAcuityTest().getOperatorInstruction() ); 
+
+                }  else if ( status == AcuityTestManager.Status.ALL_TEST_DONE ){
+                    DvaLogger.debug(MainFrame.class, "ALL_TEST_DONE");
                 }
-
-            } else if ( status == AcuityTestManager.Status.TEST_FAILED ){
-                DvaLogger.debug(MainFrame.class, "TEST_FAILED");
-                String[] options = {"Continue", "Abort"}; 
-                int n = JOptionPane.showOptionDialog(this,
-                        resourceBundle.getString("message.acuitytest."+AcuityTestManager.getCurrentAcuityTest().getTestName()+".failed"),
-                        "Test Failure",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
-
-                if (n == JOptionPane.YES_OPTION){
-                    //abort experiment
-                    DvaLogger.debug(MainFrame.class, "Abort");
-                } else {
-                    //continue experiment
-                    DvaLogger.debug(MainFrame.class, "Continue");
-                }
-
-            }  else if ( status == AcuityTestManager.Status.TEST_DONE ){
-                DvaLogger.debug(MainFrame.class, "TEST_DONE");
-
-                //update click area
-                //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue")); 
-
-                String finishedTestName = AcuityTestManager.getAcuityTestName().toUpperCase();
-
-                JOptionPane.showMessageDialog(this, resourceBundle.getString("message.acuitytest.finished", finishedTestName));
-
-                AcuityTestManager.setNextAcuityTest(); 
-
-                JOptionPane.showMessageDialog(this, AcuityTestManager.getCurrentAcuityTest().getOperatorInstruction() ); 
-
-            }  else if ( status == AcuityTestManager.Status.ALL_TEST_DONE ){
-                DvaLogger.debug(MainFrame.class, "ALL_TEST_DONE");
             }
+        } catch (Exception e){
+            GUIUtils.showWarning(this, "Problem !", e.getMessage()); 
+            DvaLogger.error(MainFrame.class, e); 
         }
     }
     
@@ -139,7 +144,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         public void actionPerformed(ActionEvent e) {
             
             //propose a speeds set
-            int speeds[] = AcuityTestManager.proposeSpeedSet(); 
+            //int speeds[] = AcuityTestManager.proposeSpeedSet(); 
             //jLabelDialogPatientSpeedsSetValue.setText( AcuityTestManager.speedsSetToString(speeds) ); 
             
             //disable the next button
@@ -1157,11 +1162,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jSliderDialogSetupDisplayerCalibrationSliderStateChanged
 
     private void jButtonDontKnowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDontKnowActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_DONTKNOW);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_DONTKNOW);
     }//GEN-LAST:event_jButtonDontKnowActionPerformed
 
     private void jButtonDialogSetupDisplayerApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogSetupDisplayerApplyActionPerformed
@@ -1217,91 +1218,48 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jButtonDialogSetupDisplayerOkActionPerformed
 
     private void jButtonOptotypeZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeZActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_Z);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_Z);
     }//GEN-LAST:event_jButtonOptotypeZActionPerformed
 
     private void jButtonOptotypeVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeVActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_V);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_V);
     }//GEN-LAST:event_jButtonOptotypeVActionPerformed
 
     private void jButtonOptotypeSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeSActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_S);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_S);
     }//GEN-LAST:event_jButtonOptotypeSActionPerformed
 
     private void jButtonOptotypeRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeRActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_R);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_R);
     }//GEN-LAST:event_jButtonOptotypeRActionPerformed
 
     private void jButtonOptotypeOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeOActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_O);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_O);
     }//GEN-LAST:event_jButtonOptotypeOActionPerformed
 
     private void jButtonOptotypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeNActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_N);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_N);
     }//GEN-LAST:event_jButtonOptotypeNActionPerformed
 
     private void jButtonOptotypeKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeKActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_K);
-        //} catch (AcuityTestException e){
-        //   DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_K);
     }//GEN-LAST:event_jButtonOptotypeKActionPerformed
 
     private void jButtonOptotypeHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeHActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_H);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_H);
     }//GEN-LAST:event_jButtonOptotypeHActionPerformed
 
     private void jButtonOptotypeDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeDActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_D);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_D);
+
     }//GEN-LAST:event_jButtonOptotypeDActionPerformed
 
     private void jButtonOptotypeCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOptotypeCActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_C);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.OPTOTYPE_C);
     }//GEN-LAST:event_jButtonOptotypeCActionPerformed
 
     private void jButtonDisplayNextOptotypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayNextOptotypeActionPerformed
-        //try{
-            displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.NEXT_OPTOTYPE);
-        //} catch (AcuityTestException e){
-        //    DvaLogger.error(MainFrame.class, e); 
-        //}
+        displayer.getDisplayModel().notifyOperatorEvent(DisplayModel.OperatorEvent.NEXT_OPTOTYPE);
     }//GEN-LAST:event_jButtonDisplayNextOptotypeActionPerformed
 
     private void jCheckBoxMenuItemPauseBetweenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItemPauseBetweenActionPerformed
@@ -1311,6 +1269,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     private void jButtonStartAcuityTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartAcuityTestActionPerformed
         
 
+        //get treadmill speed from user input
         String treadmillSpeed = (String)JOptionPane.showInputDialog(
                     this,
                     "Enter treadmill speed:",
@@ -1321,7 +1280,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         if ((treadmillSpeed != null) && (treadmillSpeed.length() > 0)) {
 
             //setup acuitytest
-            this.displayer.getDisplayModel().setupAcuityTest(); 
+            this.displayer.getDisplayModel().setupAcuityTest(patient.getPatientdir()); 
             
             //update mainframe GUI
             this.jLabelTreadmillSpeed.setText( treadmillSpeed );
@@ -1330,21 +1289,12 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         
             //check if displayer is visible
             if (!displayer.isVisible()) displayer.setVisible(true);
-
-            //set clickarea message
-            //jLabelClickArea.setText(resourceBundle.getString("message.clickarea.continue"));
-
-            //enable click area
-            //enableClickArea(true);
             
             //enable the next button
             this.jButtonDisplayNextOptotype.setEnabled(true); 
             
             //set no character
             jLabelCharacter.setText(" "); 
-            
-            //define file id
-            AcuityTestManager.setFileId(String.valueOf( System.currentTimeMillis() )); 
 
             //disable start button
             this.jButtonStartAcuityTest.setEnabled(false); 
@@ -1436,7 +1386,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             //enable StartAcuityTest button
             jButtonStartAcuityTest.setEnabled(true); 
 
-
             //update GUI
             updateJLabelPatientData(getCurrentPatient());
             
@@ -1452,10 +1401,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         }
     }//GEN-LAST:event_jButtonPatientOkActionPerformed
     
-    public void enableClickArea(boolean state){
-        this.enableClickArea = state; 
-    }
-    
     public static File getOutputDirectory(){
         return outputdir; 
     }
@@ -1468,36 +1413,35 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     }
     
     void loadPatientsList() {
+        
+        //check if it's a directory and if we can read it
+        if (outputdir.canRead() && outputdir.isDirectory()){
 
-        try {
-            //check if it's a directory and if we can read it
-            if (outputdir.canRead() && outputdir.isDirectory()){
+                File patientdirs[] = outputdir.listFiles();
 
-                    File patientdirs[] = outputdir.listFiles();
+                for (File patientdir : patientdirs){
 
-                    for (File patientdir : patientdirs){
-
+                        try {
                             DvaLogger.debug(MainFrame.class, "patient:"+patientdir.getPath());
 
                             File patientfile = new File(patientdir + "/patient.xml"); 
 
                             //load patient from file
                             FileReader fr = new FileReader(patientfile);
-                            
+
                             //read patient xml file
                             Patient p = PatientReader.process( fr ); 
-                            
+
                             //close reader
                             fr.close();
-                            
+
                             //add patient to list
                             patients.put( p.getDirectoryName(), p ); 
-                    }
-            }
-            
-        } catch (Exception ex){
-            DvaLogger.error(MainFrame.class, ex); 
-            
+                        }catch (Exception ex){
+                            DvaLogger.error(MainFrame.class, ex); 
+
+                        }
+                }
         }
     }
     
@@ -1519,9 +1463,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     HashMap<String, Patient> patients = new HashMap<String, Patient>();
     
     //GUI
-    private Color jLabelClickAreaBackgroundColor = null; 
     private Displayer displayer = null; 
-    private boolean enableClickArea = false; 
     private boolean callibrating = false;
     
     //resources

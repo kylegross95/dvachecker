@@ -51,8 +51,6 @@ public  class AcuityTestManager {
             //set start date
             acuityTest.setStartDate(); 
             
-            acuityTest.init();
-            
             //keep track of the acuitytest
             acuityTests.add(acuityTest); 
             

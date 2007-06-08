@@ -31,6 +31,7 @@ public class Optotype extends Element {
     public Optotype(String name, int x, int y, float size, Color color) {
         super(x, y, color);
         this.size = size;  
+        this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = name; 
         init();
     }
@@ -38,6 +39,7 @@ public class Optotype extends Element {
      public Optotype(String name, float size, Color color) {
         super(color);
         this.size = size;  
+        this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = name; 
         init();
     }
@@ -45,18 +47,21 @@ public class Optotype extends Element {
     public Optotype(String name, float size, Orientation orientation) {
         super(orientation);
         this.size = size;  
+        this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = name; 
         init();
     }
     
     public Optotype(String name, float size) {
         this.size = size;  
+        this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = name; 
         init();
     }
     
     public Optotype() {
         this.size = 14;  
+        this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = "square"; 
         init();
     }
@@ -100,6 +105,10 @@ public class Optotype extends Element {
     
     public float getSize() {
         return size; 
+    }
+    
+    public double getVa(){
+        return this.va; 
     }
     
     public void draw(Graphics2D g2D){
@@ -148,12 +157,20 @@ public class Optotype extends Element {
         StringBuffer sb = new StringBuffer("<optotype><name>");
         sb.append(this.name); 
         sb.append("</name><acuity>"); 
-        String va = String.valueOf( ScreenMapper.getVA( Math.round(this.size) ) );  
-        va = va == null ? "" : va; 
-        DvaLogger.debug("va:" + va); 
-        sb.append( va ); 
+        String vaStr = String.valueOf( va );  
+        vaStr = vaStr == null ? "" : vaStr; 
+        DvaLogger.debug("va:" + vaStr); 
+        sb.append( vaStr ); 
         sb.append("</acuity></optotype>"); 
         return sb.toString();
+    }
+    
+    public void setName(String name){
+        this.name = name; 
+    }
+    
+    public void setVa(double va){
+        this.va = va; 
     }
     
     //list of already instancied bufferedimage
@@ -161,6 +178,7 @@ public class Optotype extends Element {
 
     private BufferedImage bimg = null; 
     private float size; 
+    private double va; 
     protected String name = ""; 
 }
 

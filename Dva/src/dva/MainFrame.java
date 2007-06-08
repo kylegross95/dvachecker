@@ -1284,6 +1284,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         //set date and time
         this.jLabelAcuityTestDateTime.setText(AcuityTestManager.getCurrentAcuityTest().getStartDateAsString());
         
+        //init 
+        AcuityTestManager.getCurrentAcuityTest().init();
+        
         GUIUtils.showDialog(this, this.jDialogSetExperimentDetail, false, evt);
     }//GEN-LAST:event_jButtonDialogSetExperimentDetailOkActionPerformed
 

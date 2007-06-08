@@ -8,11 +8,13 @@
 package dva.acuitytest;
 
 import dva.DvaCheckerException;
-import dva.acuitytest.AcuityTest.TestAnswer;
 import dva.displayer.Element;
 import dva.displayer.Optotype;
 import dva.util.DvaLogger;
 import dva.util.Staircase;
+import dva.xml.AcuityTestReader;
+import java.io.File;
+import java.io.FileReader;
 
 /**
  *
@@ -40,25 +42,55 @@ public class StaticAcuityTest  extends AcuityTest {
         sc.initSize(lastSize,lastStep, this.getPatientdir() , this.getFileDesc());
     }
     
+    public Staircase getStaircase(){
+        return this.sc; 
+    }
+    
+    public static void reprocess(File acuitytestFile){
+        
+        try {
+            //load actuiyTest from file
+            FileReader fr = new FileReader(acuitytestFile);
+
+            //read actuiyTest xml file
+            StaticAcuityTest acuityTest = AcuityTestReader.process( fr ); 
+            
+            //float previousSize = 0; 
+
+            for (TestAnswer ta : acuityTest.getTestAnswers() ){
+
+                //float currentSize = ta.getElement().getSize(); 
+                boolean currentPatientAnswer = ta.getPatientAnswer(); 
+                
+                float computedSize = acuityTest.getStaircase().whatSize( currentPatientAnswer ); 
+                
+                // TODO: for each testanswer, apply the staircase, check the returned size with the one stored
+                // At the end, will get the mean + stddeviation
+                
+                
+                //previousSize = currentSize; 
+            }
+            
+        } catch (Exception dcex){
+            DvaLogger.error(StaticAcuityTest.class, dcex); 
+        }
+        
+    }
+    
+ 
+    
     public Element getNext() throws DvaCheckerException {
         
         if (getTestAnswers().size() > 0){
             //get size of the last element
             TestAnswer lastAnswer = getTestAnswers().get(getTestAnswers().size()-1);
-            lastSize = lastAnswer.getElement().getSize(); 
 
             //decrease size - adaptive algo
-            if (lastAnswer.isPatientAnswer()){
-                lastSize = sc.whatSize(true);
-            } else {
-                lastSize = sc.whatSize(false);    
-            }
+            lastSize = sc.whatSize( lastAnswer.getPatientAnswer() );
         }
         
         
-        DvaLogger.debug(StaticAcuityTest.class, "New Size:"+lastSize); 
-        
-        //if (++runCnt==50) sc.doGraph("_at50"); 
+        DvaLogger.debug(StaticAcuityTest.class, "size:"+lastSize); 
        
        if(lastSize == -1)  { //divergence
            sc.doGraph("_divergence");   

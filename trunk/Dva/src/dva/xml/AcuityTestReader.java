@@ -10,7 +10,10 @@ package dva.xml;
 import dva.DvaCheckerException;
 import dva.acuitytest.AcuityTest;
 import dva.acuitytest.StaticAcuityTest;
+import dva.acuitytest.TestAnswer;
+import dva.displayer.Optotype;
 import java.io.Reader;
+import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
@@ -24,9 +27,13 @@ import org.xml.sax.helpers.ParserAdapter;
  */
 public class AcuityTestReader extends DefaultHandler {
     
+    Optotype opto = new Optotype();
     String text = "";
     
-    private StaticAcuityTest acuityTest = new StaticAcuityTest(); 
+    String answerValue = ""; 
+    String answerStr = ""; 
+    
+    private StaticAcuityTest acuityTest = null; 
     
     /**
      * 
@@ -46,6 +53,7 @@ public class AcuityTestReader extends DefaultHandler {
      *
      */
     private AcuityTestReader() {
+        acuityTest = new StaticAcuityTest();
     }
 
     /**
@@ -55,7 +63,7 @@ public class AcuityTestReader extends DefaultHandler {
      * @param file
      * @throws DvaCheckerException
      */
-    public static AcuityTest process(Reader reader) throws DvaCheckerException {
+    public static StaticAcuityTest process(Reader reader) throws DvaCheckerException {
 
         try {
 
@@ -84,6 +92,20 @@ public class AcuityTestReader extends DefaultHandler {
      */
     public void startElement(String namespace, String localName, String qName, Attributes atts) {
         text = ""; 
+        
+        if (localName.equals("acuitytest")) {
+            acuityTest.setTreadmillSpeed( Float.valueOf( atts.getValue("treadmillspeed") ));
+            acuityTest.setEye( atts.getValue("eye") );
+            
+            acuityTest.init(); 
+            
+        } else if (localName.equals("answer")){
+            answerValue = atts.getValue("value");
+            answerStr = atts.getValue("str");
+            
+        } else if (localName.equals("optotype")){
+
+        }
     }
     
     public String getText(){
@@ -93,7 +115,6 @@ public class AcuityTestReader extends DefaultHandler {
     public void characters(char[] ch, int start, int length)
     {
         text = new String(ch, start, length);
-        //DvaLogger.debug(PatientReader.class, "value:"+text );
     }
 
     /**
@@ -104,22 +125,25 @@ public class AcuityTestReader extends DefaultHandler {
         //DvaLogger.debug(PatientReader.class, "startElement/localName:"+localName + ", text:" + getText());
         
         if (localName.equals("acuitytest")) {
-            //patient.setLastname( getText() );
+            //get treadmill speed
             
         } else if (localName.equals("answers")) {
             //patient.setFirstname( getText() );
             
         } else if (localName.equals("answer")) {
-            //patient.setSex( getText() );
+            //
+            acuityTest.saveAnswer(opto, Boolean.valueOf(answerValue), answerStr); 
             
         } else if (localName.equals("optotype")) {
-            //patient.setAge( getText() );
+            
+            
             
         } else if (localName.equals("name")) {
-            //patient.setComment( getText() );
+            opto.setName(getText());
+
             
         } else if (localName.equals("acuity")) {
-            //patient.setComment( getText() );
+            opto.setVa( Double.valueOf( getText() ) );
         }
     }
     

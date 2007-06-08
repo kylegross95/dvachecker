@@ -45,6 +45,11 @@ public abstract class AcuityTest {
         getTestAnswers().add( new TestAnswer(answerTime, patientAnswer, element, patientAnswerStr) ); 
     }
     
+    public void saveAnswer(Element element, boolean patientAnswer, String patientAnswerStr){
+        //add the patient answer to the answer list
+        getTestAnswers().add( new TestAnswer(patientAnswer, element, patientAnswerStr) ); 
+    }
+    
     public abstract String getTestName(); 
     public abstract void init(); 
     
@@ -150,7 +155,7 @@ public abstract class AcuityTest {
         }
     }
    
-    private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>();; 
+    private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>(); 
     private Random random = new Random(); 
     private int maxStep = 20; 
     private boolean testDone = false; 
@@ -170,56 +175,6 @@ public abstract class AcuityTest {
     //resources
     protected dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N; 
     
-    class TestAnswer {
-        
-        private Element element; 
-        private long answerTime; 
-        private boolean patientAnswer; 
-        private String patientAnswerStr; 
-        
-        public String toXml(){
-            StringBuffer sb = new StringBuffer("<answer value=\""); 
-                sb.append(patientAnswer);
-                sb.append("\" str=\"");
-                sb.append(this.patientAnswerStr); 
-                sb.append("\">");
-                sb.append(element.toXml()); 
-            sb.append("</answer>"); 
-            return sb.toString(); 
-        }
-
-        public TestAnswer(long answerTime, boolean patientAnswer, Element element, String patientAnswerStr){
-            this.answerTime = answerTime; 
-            this.element = element; 
-            this.setPatientAnswer(patientAnswer); 
-            this.patientAnswerStr = patientAnswerStr; 
-        }
-                
-        public Element getElement() {
-            return element;
-        }
-
-        public void setElement(Element element) {
-            this.element = element;
-        }
-
-        public float getAnswerTime() {
-            return answerTime;
-        }
-
-        public void setAnswerTime(long answerTime) {
-            this.answerTime = answerTime;
-        }
-
-        public boolean isPatientAnswer() {
-            return patientAnswer;
-        }
-
-        public void setPatientAnswer(boolean patientAnswer) {
-            this.patientAnswer = patientAnswer;
-        }
-    
-    }
 
     public ArrayList<TestAnswer> getTestAnswers() {
         return testAnswers;

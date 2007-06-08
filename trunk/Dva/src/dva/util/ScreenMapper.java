@@ -26,7 +26,23 @@ import java.awt.image.BufferedImage;
  */
 public class ScreenMapper {
     
-    private static double visualAcuityCharts[] = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1, 1.25, 1.67, 2};
+    
+    private static double visualAcuityCharts[] = {
+        0.1,    // 14
+        0.13,   // 13
+        0.17,   // 12
+        0.2,    // 11
+        0.25,   // 10
+        0.33,   // 9
+        0.4,    // 8
+        0.5,    // 7
+        0.67,   // 6
+        0.8,    // 5
+        1,      // 4
+        1.25,   // 3
+        1.67,   // 2
+        2       // 1
+    };
     
     private double horizontalRes = 1280;
     private double verticalRes = 800;

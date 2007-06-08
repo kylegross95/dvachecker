@@ -181,7 +181,7 @@ public class Staircase {
 
             }
             
-    DvaLogger.info(Staircase.class, "CurVal is '" + curVal+ "'"); 
+            DvaLogger.info(Staircase.class, "CurVal is '" + curVal+ "'"); 
     
         } 
     

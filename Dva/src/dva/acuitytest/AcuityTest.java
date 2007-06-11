@@ -103,6 +103,8 @@ public abstract class AcuityTest {
             sb.append( this.getTestName() );
             sb.append( "\" treadmillspeed=\"");
             sb.append( this.treadmillSpeed ); 
+            sb.append( "\" date=\"");
+            sb.append( formatter.format(startDate) ); 
             sb.append( "\" eye=\"");
             sb.append( this.eye ); 
             sb.append("\">"); 
@@ -154,6 +156,14 @@ public abstract class AcuityTest {
             throw new AcuityTestFileCreationException(actuitestfile, ioex); 
         }
     }
+    
+    public static SimpleDateFormat getDateFormatter(){
+        return formatter; 
+    }
+    
+    public static SimpleDateFormat getDateFormatter2(){
+        return formatter2; 
+    }
    
     private ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>(); 
     private Random random = new Random(); 
@@ -161,8 +171,8 @@ public abstract class AcuityTest {
     private boolean testDone = false; 
     private float treadmillSpeed = 0; 
     private boolean testFailed = false; 
-    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
-    SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd-yyyy_HH-mm-ss");
+    static private SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy - HH:mm:ss");
+    static private SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd-yyyy_HH-mm-ss");
     private Date startDate = null; 
     private Element current = null; 
     private String testName = ""; 
@@ -202,6 +212,10 @@ public abstract class AcuityTest {
     
     public void setStartDate(){
         startDate = new Date(); 
+    }
+    
+    public void setStartDate(Date startDate){
+        startDate = this.startDate; 
     }
 
     public void setResult(String resultComment) {

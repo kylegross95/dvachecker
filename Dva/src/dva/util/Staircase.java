@@ -7,14 +7,18 @@
 
 package dva.util;
 
-import java.awt.Color;
-import java.awt.Image;
 import java.io.IOException;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
 import java.io.File;
+import org.apache.commons.lang.ArrayUtils;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYImageAnnotation;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 
 /**
  * Staircase algo
@@ -112,12 +116,15 @@ public class Staircase {
         stepSize = initStepSize;
         seriesCnt = 1;
         //start logging curVal
-        curValHistory[0] = initSize;
+        curValHistory[seriesCnt-1] = initSize;
+        curValResponses[seriesCnt-1] = true; 
         series.add(seriesCnt,initSize);
         series2.add(seriesCnt,initSize);
         seriesCnt++;
         peaker = false;
         minSizeCnt = 0;
+        
+        //file management
         this.outputdir = outputdir; 
         this.fileprefix = fileprefix; 
     }
@@ -264,12 +271,15 @@ public class Staircase {
         //check min limit has not been surpassed
         if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
+        //keep track of patient answer
+        curValResponses[seriesCnt-1] = answer;
+        
         //plotting
         if (!converged)  {  
             series.add(seriesCnt,(-1)*sScale[14-(int)curVal]); 
             series2.add(seriesCnt,curVal);
             curValHistory[seriesCnt-1] = sScale[(int)curVal-1];
-            if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
+            //if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
         }
         else { 
             series.add(seriesCnt,curVal); 
@@ -295,79 +305,75 @@ public class Staircase {
     }//close whatSize
     
 
-    public double getConvergenceValue() {
-        if (converged) {
-            DvaLogger.info(Staircase.class, "CurValHistory is '" + curValHistory + "'"); 
-            DvaLogger.info(Staircase.class, "CurValResponses is '" + curValResponses + "'"); 
-            return convergenceVal;
-            
-        }
-        
-        else return -1;
-    }
+   
+   public double getConvergenceValue() {
+       return converged ? convergenceVal : -1;
+   }
     
 
-    public double getConvergenceValueStdDev() {
-        if (converged) return convergenceValStdDev;
-        else return -1;
-    }
+   public double getConvergenceValueStdDev() {
+       return converged ? convergenceValStdDev : -1;
+   }
     
     
     public void doGraph(String param) throws ChartFileCreationException {
         
-        XYSeriesCollection xyc = new XYSeriesCollection();
-        XYSeriesCollection xyc2 = new XYSeriesCollection();
-        xyc.addSeries(series);
-        xyc2.addSeries(series2);
-        xyc.addSeries(seriesRunDir);
-        xyc.addSeries(seriesPeaker);
-       /* org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
-                     ("DVA Experimental Values - Snellen Scale",  // Title
-                      "Epoch",           // X-Axis label
-                      "Value",           // Y-Axis label
-                      xyc,          // Dataset
-                       org.jfree.chart.plot.PlotOrientation.VERTICAL,
-                      true,                // Show legend
-                      true,   
-                      true
-                     ); */
+        //XYSeriesCollection xyc = new XYSeriesCollection();
+        //xyc.addSeries(series);
         
-        org.jfree.chart.JFreeChart chart2 = org.jfree.chart.ChartFactory.createXYLineChart
-             ("DVA Experimental Values - Linear Scale",  // Title
-              "Run",           // X-Axis label
-              "Value",           // Y-Axis label
-              xyc2,          // Dataset
-               org.jfree.chart.plot.PlotOrientation.VERTICAL,
-              true,                // Show legend
-              true,   
-              true
-             );
-       /* //annotation attempt for + & - symbols
-        XYPlot plot = chart.getXYPlot();
-        Image image = Toolkit.getDefaultToolkit().getImage("c:/temp/plus.jpg");
-        XYImageAnnotation ant = new XYImageAnnotation(500.0, 300.0, image);
-        //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
-        plot.addAnnotation(ant);
-        chart.setBackgroundPaint(Color.yellow); */
+        //xyc.addSeries(seriesRunDir);
+        //xyc.addSeries(seriesPeaker);
+//        org.jfree.chart.JFreeChart chart = org.jfree.chart.ChartFactory.createXYLineChart
+//                     ("DVA Experimental Values - Snellen Scale",  // Title
+//                      "Epoch",           // X-Axis label
+//                      "Value",           // Y-Axis label
+//                      xyc,          // Dataset
+//                       org.jfree.chart.plot.PlotOrientation.VERTICAL,
+//                      true,                // Show legend
+//                      true,   
+//                      true
+//                     ); 
+
+//        //annotation attempt for + & - symbols
+//        XYPlot plot = chart.getXYPlot();
+//        //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
+//        plot.addAnnotation( new XYImageAnnotation(5.0, 3.0, ImagesBuffer.get("plus") ) );
+//        chart.setBackgroundPaint(Color.yellow);
         
-        //annotation attempt for + & - symbols
-        XYPlot plot = chart2.getXYPlot();
-        Image image = ImagesBuffer.get("plus");
-        XYImageAnnotation ant = new XYImageAnnotation(500.0, 300.0, image);
-        //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
-        plot.addAnnotation(ant);
-        chart2.setBackgroundPaint(Color.yellow);
+//        File chartfile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");
+//        
+//        try {
+//            //ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
+//            ChartUtilities.saveChartAsJPEG(chartfile, chart2, 1000, 600);
+//            DvaLogger.info(Staircase.class, "Result saved under '" + chartfile.getAbsolutePath() + "'");
+//        } catch (IOException ex) {
+//            throw new ChartFileCreationException(chartfile, ex); 
+//        }
         
-        //String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
-        File chartfile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");
-        //String filenameLinear = "C:/Documents and Settings/J-Chris/dvachecker_data/" + param + "-linear.jpg";
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series2);
+        
+        final XYItemRenderer renderer1 = new StandardXYItemRenderer();
+        final NumberAxis rangeAxis1 = new NumberAxis("Value");
+        final NumberAxis domainAxis1 = new NumberAxis("Run");
+        
+        XYPlot linearPlot = new XYPlot(dataset, domainAxis1, rangeAxis1, renderer1);
+        linearPlot.setOrientation(PlotOrientation.VERTICAL);  
+        //loop though series and add annotation
+        for (int i=0; i < seriesCnt-2 ; i++){
+            linearPlot.addAnnotation( new XYImageAnnotation(series2.getX(i).intValue(), series2.getY(i).intValue(),  ImagesBuffer.get(curValResponses[i+1] ? "plus" : "minus") ) );
+        }
+        linearPlot.addAnnotation( new XYImageAnnotation(series2.getX(seriesCnt-2).intValue(), series2.getY(seriesCnt-2).intValue(),  ImagesBuffer.get("graypoint") ) );
+        
+        JFreeChart chartlinear = new JFreeChart("DVA Experimental Values - Linear Scale", JFreeChart.DEFAULT_TITLE_FONT, linearPlot, true);
+        File linearChartFile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");
         
         try {
-            //ChartUtilities.saveChartAsJPEG(new File(filenameSnellen), chart, 1000, 600);
-            ChartUtilities.saveChartAsJPEG(chartfile, chart2, 1000, 600);
-            DvaLogger.info(Staircase.class, "Result saved under '" + chartfile.getAbsolutePath() + "'");
+            //ChartUtilities.saveChartAsJPEG(snellenChartFile, chart, 1000, 600);
+            ChartUtilities.saveChartAsJPEG(linearChartFile, chartlinear, 1000, 600);
+            DvaLogger.info(Staircase.class, "Result saved under '" + linearChartFile.getAbsolutePath() + "'");
         } catch (IOException ex) {
-            throw new ChartFileCreationException(chartfile, ex); 
+            throw new ChartFileCreationException(linearChartFile, ex); 
         }
     }
     

@@ -157,6 +157,61 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         }
     }
     
+    /**
+     * New Experiment action
+     */
+    public class CreateReportAction extends AbstractAction {
+        
+        public CreateReportAction(String text, String icon, String desc) {
+            super(text, GUIUtils.createNavigationIcon(icon));
+            putValue(SHORT_DESCRIPTION, desc);
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            if (patients.size() <= 0) { 
+                DvaLogger.info(MainFrame.class, "There is no existing patient data!"); 
+                return;
+            } 
+
+            //Display selection dialog
+            String s = (String)JOptionPane.showInputDialog(
+                        MainFrame.getInstance(),
+                        "Select a patient name from the list:",
+                        "Create report",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        patients.keySet().toArray(),
+                        patients.keySet().toArray()[0]);
+
+             //If a string was returned, say so.
+            if ((s != null) && (s.length() > 0)) {
+
+                DvaLogger.debug(MainFrame.class, "Create report:" + s); 
+                //load patient
+                patient = patients.get(s); 
+
+                //set file chooser initial directory
+                jFileChooser.setCurrentDirectory( patient.getPatientdir(outputdir) );
+
+                //add filters
+                jFileChooser.addChoosableFileFilter( new AcuityTestFileFilter() ); 
+
+                //disable multiple selection
+                jFileChooser.setMultiSelectionEnabled(false); 
+
+                //shows dialog
+                int res = jFileChooser.showDialog(MainFrame.getInstance(), "Process"); 
+
+                // if operator select a file - process it
+                if(res == JFileChooser.APPROVE_OPTION) {
+                    StaticAcuityTest.reprocess( jFileChooser.getSelectedFile()); 
+                }
+
+                return;
+            }
+        }
+    }
+    
     
     /**
      * New Experiment action
@@ -1122,13 +1177,8 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jMenuItemNewExperiment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuFile.add(jMenuItemNewExperiment);
 
-        jMenuItemCreateReport.setText("Create report");
-        jMenuItemCreateReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemCreateReportActionPerformed(evt);
-            }
-        });
-
+        jMenuItemCreateReport.setAction(new CreateReportAction("Create Report", "mkreport24", "Create Report"));
+        jMenuItemCreateReport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuFile.add(jMenuItemCreateReport);
 
         jMenuFile.add(jSeparator1);
@@ -1217,52 +1267,6 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jMenuItemCreateReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCreateReportActionPerformed
-        
-        if (patients.size() <= 0) { 
-            DvaLogger.info(MainFrame.class, "There is no existing patient data!"); 
-            return;
-        } 
-        
-        //Display selection dialog
-        String s = (String)JOptionPane.showInputDialog(
-                    this,
-                    "Select a patient name from the list:",
-                    "Create report",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    patients.keySet().toArray(),
-                    patients.keySet().toArray()[0]);
-        
-         //If a string was returned, say so.
-        if ((s != null) && (s.length() > 0)) {
-            
-            DvaLogger.debug(MainFrame.class, "Create report:" + s); 
-            //load patient
-            patient = patients.get(s); 
-            
-            //set file chooser initial directory
-            this.jFileChooser.setCurrentDirectory( patient.getPatientdir(this.outputdir) );
-            
-            //add filters
-            this.jFileChooser.addChoosableFileFilter( new AcuityTestFileFilter() ); 
-            
-            //disable multiple selection
-            this.jFileChooser.setMultiSelectionEnabled(false); 
-            
-            //shows dialog
-            int res = this.jFileChooser.showDialog(this, "Process"); 
-            
-            // if operator select a file - process it
-            if(res == JFileChooser.APPROVE_OPTION) {
-                StaticAcuityTest.reprocess( jFileChooser.getSelectedFile()); 
-            }
-
-            return;
-        }
-        
-    }//GEN-LAST:event_jMenuItemCreateReportActionPerformed
 
     private void jButtonDialogSetExperimentDetailCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDialogSetExperimentDetailCancelActionPerformed
         GUIUtils.showDialog(this, this.jDialogSetExperimentDetail, false, evt); 

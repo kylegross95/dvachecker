@@ -729,11 +729,13 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCreateReport">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Create report"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new CreateReportAction(&quot;Create Report&quot;, &quot;mkreport24&quot;, &quot;Create Report&quot;)" type="code"/>
+                </Property>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+R"/>
+                </Property>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCreateReportActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JSeparator" name="jSeparator1">
             </MenuItem>

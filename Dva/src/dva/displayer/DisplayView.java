@@ -95,6 +95,9 @@ public class DisplayView extends JPanel implements Observer {
             //help garbage
             tx = null;
             
+        } else if (cd.getDisplayModel().isImage()) {
+            g2D.drawImage(cd.getDisplayModel().getImage(), 0, 0, null);
+
         } else {
             Element el = cd.getDisplayModel().getCurrentDisplayedElement(); 
             cd.getDisplayModel().getCurrentDisplayedElement().draw(g2D); 

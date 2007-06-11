@@ -7,11 +7,14 @@
 
 package dva.util;
 
+import java.awt.Color;
+import java.awt.Image;
 import java.io.IOException;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
 import java.io.File;
-import org.apache.commons.lang.ArrayUtils;
+import org.jfree.chart.annotations.XYImageAnnotation;
+import org.jfree.chart.plot.XYPlot;
 
 /**
  * Staircase algo
@@ -234,9 +237,9 @@ public class Staircase {
 //            convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
             
             
-            //NEW way 
-            double sum = 0; 
-            double sumOfSquare = 0; 
+            // -------------- Compute Mean and Standard deviation ----------
+            double sum = 0; // sum of all value
+            double sumOfSquare = 0; //sum of the square of all value
             
             for (int i=1; i <= NUMBER_PEAKS_VALLEYS_REQUIRED; i++){
             
@@ -346,6 +349,14 @@ public class Staircase {
         //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
         plot.addAnnotation(ant);
         chart.setBackgroundPaint(Color.yellow); */
+        
+        //annotation attempt for + & - symbols
+        XYPlot plot = chart2.getXYPlot();
+        Image image = ImagesBuffer.get("plus");
+        XYImageAnnotation ant = new XYImageAnnotation(500.0, 300.0, image);
+        //plot.setSeriesPaint(new Paint[]{Color.green,Color.orange,Color.red});
+        plot.addAnnotation(ant);
+        chart2.setBackgroundPaint(Color.yellow);
         
         //String filenameSnellen = "c:/temp/chart" + param + "-snellen.jpg";
         File chartfile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");

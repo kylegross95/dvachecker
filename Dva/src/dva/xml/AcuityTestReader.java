@@ -8,14 +8,12 @@
 package dva.xml;
 
 import dva.DvaCheckerException;
-import dva.acuitytest.AcuityTest;
 import dva.acuitytest.StaticAcuityTest;
-import dva.acuitytest.TestAnswer;
 import dva.displayer.Optotype;
 import java.io.Reader;
-import java.util.ArrayList;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
@@ -66,7 +64,6 @@ public class AcuityTestReader extends DefaultHandler {
     public static StaticAcuityTest process(Reader reader) throws DvaCheckerException {
 
         try {
-
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser sp = spf.newSAXParser();
 
@@ -94,12 +91,19 @@ public class AcuityTestReader extends DefaultHandler {
         text = ""; 
         
         if (localName.equals("acuitytest")) {
-            acuityTest.setTreadmillSpeed( Float.valueOf( atts.getValue("treadmillspeed") ));
-            acuityTest.setEye( atts.getValue("eye") );
+            String treadmillspeed = atts.getValue("treadmillspeed"); 
+            if (!StringUtils.isEmpty(treadmillspeed)) { 
+                acuityTest.setTreadmillSpeed( Float.valueOf( treadmillspeed )); 
+            }
             
-            acuityTest.setStartDate(); 
+            String eye = atts.getValue("eye"); 
+            if (!StringUtils.isEmpty(eye)) { 
+                acuityTest.setEye( eye );
+            }
             
-            acuityTest.init(); 
+            //acuityTest.setStartDate(); 
+            
+            //acuityTest.init(); 
             
         } else if (localName.equals("answer")){
             answerValue = atts.getValue("value");

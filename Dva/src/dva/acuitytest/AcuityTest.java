@@ -169,7 +169,7 @@ public abstract class AcuityTest {
     private String resultComment = ""; 
     private double convergenceValue = 0.0; 
     private double convergenceStdDev = 0.0;  
-    private String eye = ""; 
+    private String eye = "EYE"; 
     private File patientdir = null; 
     
     //resources

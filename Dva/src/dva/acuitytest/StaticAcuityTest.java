@@ -63,6 +63,10 @@ public class StaticAcuityTest  extends AcuityTest {
             //read actuiyTest xml file
             StaticAcuityTest acuityTest = AcuityTestReader.process( fr ); 
             
+            acuityTest.setPatientdir( acuitytestFile.getParentFile() ); 
+            acuityTest.setStartDate(); 
+            acuityTest.init(); 
+            
             for (TestAnswer ta : acuityTest.getTestAnswers() ){
 
                 boolean currentPatientAnswer = ta.getPatientAnswer(); 
@@ -74,12 +78,15 @@ public class StaticAcuityTest  extends AcuityTest {
                 switch (computedSize){
                     case 0:
                         DvaLogger.info(StaticAcuityTest.class, "=> convergence"); 
+                        acuityTest.getStaircase().doGraph("_convergence-TEST");
                         break; 
                     case -1:
                         DvaLogger.info(StaticAcuityTest.class, "=> divergence"); 
+                        acuityTest.getStaircase().doGraph("_divergence-TEST");
                         break;
                     case -2:
                         DvaLogger.info(StaticAcuityTest.class, "=> exceed max step"); 
+                        acuityTest.getStaircase().doGraph("_exceededSteps-TEST");
                         break; 
                     default:
                         /* ignore */

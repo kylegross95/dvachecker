@@ -9,17 +9,14 @@ package dva.displayer;
 
 
 import dva.util.DvaLogger;
+import dva.util.ImagesBuffer;
 import dva.util.ScreenMapper;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
-import javax.imageio.ImageIO;
-
 
 /**
  *
@@ -67,26 +64,7 @@ public class Optotype extends Element {
     }
     
     private void init(){
-        //check if bufferedImage is already existing
-        bimg = bimgList.get(name); 
-        
-        if (bimg==null) {
-            //open file
-            URL url = this.getClass().getResource("/dva/ressources/"+name+".jpg"); 
-            if (url!=null){
-                try {
-                    bimg = ImageIO.read(url);
-                    bimgList.put(name, bimg); 
-                } catch (IOException ex) {
-                    DvaLogger.fatal( Optotype.class, ex, "Failed to read image file " + url.getFile() ); 
-                }
-            } else {
-                DvaLogger.fatal(Optotype.class, "Failed to access image " + url.getFile()); 
-            }
-            
-        } else {
-            DvaLogger.debug(Optotype.class, "Re-use bufferedimage named '" + name + "'");
-        }
+        bimg = ImagesBuffer.get(name); 
     }
 
     public void setOrientation(Orientation orientation){

@@ -32,20 +32,28 @@ public class StaticAcuityTest  extends AcuityTest {
     /** Creates a new instance of StaticAcuityTest */
     public StaticAcuityTest() {
         //initial size
-        lastSize=14.0f;
-        lastStep=4.0f;
-        
+        lastSize = 14.0f;
+        lastStep = 4.0f;
     }
     
+    /*
+     *
+     */
     public void init(){
         sc = new Staircase();
         sc.initSize(lastSize,lastStep, this.getPatientdir() , this.getFileDesc());
     }
     
+    /*
+     *
+     */
     public Staircase getStaircase(){
         return this.sc; 
     }
     
+    /*
+     *
+     */
     public static void reprocess(File acuitytestFile){
         
         try {
@@ -55,20 +63,28 @@ public class StaticAcuityTest  extends AcuityTest {
             //read actuiyTest xml file
             StaticAcuityTest acuityTest = AcuityTestReader.process( fr ); 
             
-            //float previousSize = 0; 
-
             for (TestAnswer ta : acuityTest.getTestAnswers() ){
 
-                //float currentSize = ta.getElement().getSize(); 
                 boolean currentPatientAnswer = ta.getPatientAnswer(); 
+                //DvaLogger.debug(StaticAcuityTest.class, "currentPatientAnswer:" + currentPatientAnswer); 
                 
-                float computedSize = acuityTest.getStaircase().whatSize( currentPatientAnswer ); 
+                int computedSize = (int)acuityTest.getStaircase().whatSize( currentPatientAnswer ); 
+                //DvaLogger.debug(StaticAcuityTest.class, "computedsize:" + computedSize); 
                 
-                // TODO: for each testanswer, apply the staircase, check the returned size with the one stored
-                // At the end, will get the mean + stddeviation
-                
-                
-                //previousSize = currentSize; 
+                switch (computedSize){
+                    case 0:
+                        DvaLogger.info(StaticAcuityTest.class, "=> convergence"); 
+                        break; 
+                    case -1:
+                        DvaLogger.info(StaticAcuityTest.class, "=> divergence"); 
+                        break;
+                    case -2:
+                        DvaLogger.info(StaticAcuityTest.class, "=> exceed max step"); 
+                        break; 
+                    default:
+                        /* ignore */
+                        break;
+                }
             }
             
         } catch (Exception dcex){
@@ -78,7 +94,9 @@ public class StaticAcuityTest  extends AcuityTest {
     }
     
  
-    
+    /*
+     *
+     */
     public Element getNext() throws DvaCheckerException {
         
         if (getTestAnswers().size() > 0){

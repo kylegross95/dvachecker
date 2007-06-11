@@ -27,7 +27,7 @@ import org.xml.sax.helpers.ParserAdapter;
  */
 public class AcuityTestReader extends DefaultHandler {
     
-    Optotype opto = new Optotype();
+    Optotype opto = new Optotype(false);
     String text = "";
     
     String answerValue = ""; 
@@ -96,6 +96,8 @@ public class AcuityTestReader extends DefaultHandler {
         if (localName.equals("acuitytest")) {
             acuityTest.setTreadmillSpeed( Float.valueOf( atts.getValue("treadmillspeed") ));
             acuityTest.setEye( atts.getValue("eye") );
+            
+            acuityTest.setStartDate(); 
             
             acuityTest.init(); 
             

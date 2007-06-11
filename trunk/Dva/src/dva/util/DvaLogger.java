@@ -7,13 +7,16 @@
 
 package dva.util;
 
-import java.awt.Color;
+import java.lang.reflect.Field;
 
 /**
  *
  * @author J-Chris
  */
 public class DvaLogger {
+    
+    final public static DvaLogger.LogLevel level = DvaLogger.LogLevel.DEBUG; 
+    
     public enum LogLevel {
         DEBUG, INFO, WARN, ERROR, FATAL
     }
@@ -90,6 +93,22 @@ public class DvaLogger {
      */
     public static void log(LogLevel level, Class clazz, Exception e, String msg){
         if (jTextAreaLog==null) return; 
+        
+        if (e!=null) e.printStackTrace(); 
+        
+        DvaLogger.LogLevel clazzLevel = currentLogLevel; 
+        
+        if (clazz != null){
+            try{
+                //check class local level
+                Field fLevel = clazz.getDeclaredField("level"); 
+                clazzLevel = (DvaLogger.LogLevel)fLevel.get(clazz); 
+                //System.out.println("level:"+clazzLevel); 
+                if (clazzLevel.ordinal() > level.ordinal()) return; 
+
+            } catch (NoSuchFieldException nsfex){/* ignore */ }
+            catch (IllegalAccessException iaex){/* ignore */ }
+        }
         
         if ( currentLogLevel.ordinal() <= level.ordinal() ){
             if (msg==null) msg = ""; 

@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
  */
 public class ScreenMapper {
     
+    final public static DvaLogger.LogLevel level = DvaLogger.LogLevel.INFO; 
     
     private static double visualAcuityCharts[] = {
         0.1,    // 14

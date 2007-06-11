@@ -77,7 +77,7 @@ public class DisplayModel extends Observable implements ComponentListener {
     }
     
     public void enableCallibration(){
-        currentElement = new Optotype();
+        currentElement = new Optotype(true);
     }
     
     public boolean setupAcuityTest(File patientdir) {
@@ -303,7 +303,7 @@ public class DisplayModel extends Observable implements ComponentListener {
     //Graphics attribute
     private int x; 
     private int y; 
-    private Element currentElement = new Optotype(); 
+    private Element currentElement = new Optotype(true); 
     private double scaleCorrectionFactor = 1; 
     
     //message attributes

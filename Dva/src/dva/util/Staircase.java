@@ -73,7 +73,7 @@ public class Staircase {
     
     //snelling scale
         
-        double[] sScale  = {0.1,0.13,0.17,0.2,0.25,0.33,0.4,0.5,0.67,0.8,1.0,1.25,1.67,2.0};
+    double[] sScale  = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1.0, 1.25, 1.67, 2.0};
  
     /**
      * Creates a new instance of Staircase
@@ -140,112 +140,120 @@ public class Staircase {
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 runDir = 1;
-                valleys[valleyIdx] = sScale[14-(int)curVal-1]; //store valley information
+                
+                //DIRTY FIX (JC)
+                int curValFIXED = (int) (curVal>13 ? 13 : curVal); 
+                valleys[valleyIdx] = sScale[14-(int)curValFIXED-1]; //store valley information
+                
+                //valleys[valleyIdx] = sScale[14-(int)curVal-1]; //store valley information
                 valleyIdx++;
                 if (peaker) peaker = false; //in case of false double correct
             }//close elseif answer
 
-           }
-        else if (runDir == 1) { //climbing
+       } else if (runDir == 1) { //climbing
+            
             if(!answer && !peaker) { //keep climbing
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 
             //runDir = runDir;
-            }
-            
-            else if (!answer && peaker) { //keep on climbing, false alarm for double correct
+                
+            } else if (!answer && peaker) { //keep on climbing, false alarm for double correct
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 peaker = false;
                 //runDir = runDir;  
                 //lastPositive = 0; // not sure
                   
-            }     
-            
-            else if(answer && !peaker) { //check again for a positive response
+            } else if(answer && !peaker) { //check again for a positive response
                 stepSize = prevStepSize; 
                 curVal = prevVal;
                // runDir = runDir;
                 peaker = true; //we are at a potential double peak  
-                }
-            else if(answer && peaker) { //we are at a double peak, invert direction
+                
+            } else if(answer && peaker) { //we are at a double peak, invert direction
+                
                if(runNumber>1) stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
                curVal = prevVal - stepSize; 
                runDir = -1;  //direction inversionZ                 
                peaker = false; //reset this var
                if (stepSize == MIN_STEPSIZE) numCVals++;
+               
+  
                //lastPositive = 1; //log the double peak
-               peaks[peakIdx] = sScale[14-(int)curVal-1]; //log the peak
+               
+               //DIRTY FIX (JC)
+               int curValFIXED = (int) (curVal>13 ? 13 : curVal); 
+               peaks[peakIdx] = sScale[14-curValFIXED-1]; //log the peak
+               
+               //peaks[peakIdx] = sScale[14-(int)curVal-1]; //log the peak
                peakIdx++;
 
             }
-            
-            DvaLogger.info(Staircase.class, "CurVal is '" + curVal+ "'"); 
-    
         } 
-    
-    runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
-    if(stepSize == MIN_STEPSIZE && !peaker) ++minSizeCnt;
-    
-    double oldCurVal = 0;
-    
-    //check for convergence
-    if (numCVals == 6){  //do not consider minSizeCnt for now
-        convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]);
-        convergenceVal = convergenceVal + (peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]);    
-        convergenceVal = convergenceVal/12;
-        Lvalleys = new double[3];
-        Lpeaks = new double[3];
-        Lvalleys[2] = (double) valleys[valleyIdx];
-        Lvalleys[1] = (double) valleys[valleyIdx-1];
-        Lvalleys[0] = (double) valleys[valleyIdx-2];
-        Lpeaks[2] = (double) peaks[valleyIdx];
-        Lpeaks[1] = (double) peaks[valleyIdx-1];
-        Lpeaks[0] = (double) peaks[valleyIdx-2];
-        double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
-        double sumValleys = java.lang.Math.pow(Lvalleys[0]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]+convergenceVal,2.0);
-        convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
-        converged = true; 
-        oldCurVal = curVal;
-        curVal = 0;
-        System.out.println("stddev: "+convergenceValStdDev);
-                
         
+        DvaLogger.info(Staircase.class, "Current value:" + curVal + ", va:" + ScreenMapper.getVA( (int) curVal)); 
+    
+        runNumber = (peaker) ? runNumber : runNumber+1; //do not increase number of runs if we are in potential double peak
+        if(stepSize == MIN_STEPSIZE && !peaker) ++minSizeCnt;
+
+        double oldCurVal = 0;
+
+        //check for convergence
+        if (numCVals == 6){  //do not consider minSizeCnt for now
+            convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]);
+            convergenceVal = convergenceVal + (peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]);    
+            convergenceVal = convergenceVal/12;
+            Lvalleys = new double[3];
+            Lpeaks = new double[3];
+            Lvalleys[2] = (double) valleys[valleyIdx];
+            Lvalleys[1] = (double) valleys[valleyIdx-1];
+            Lvalleys[0] = (double) valleys[valleyIdx-2];
+            Lpeaks[2] = (double) peaks[valleyIdx];
+            Lpeaks[1] = (double) peaks[valleyIdx-1];
+            Lpeaks[0] = (double) peaks[valleyIdx-2];
+            double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
+            double sumValleys = java.lang.Math.pow(Lvalleys[0]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]+convergenceVal,2.0);
+            convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
+            converged = true; 
+            oldCurVal = curVal;
+            curVal = 0;
+            DvaLogger.info(Staircase.class, "convergenceVal:" + convergenceVal + ", stddev: "+convergenceValStdDev); 
+
         }//close if convergence
     
     
-    //check min limit has not been surpassed
-      if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+        //check min limit has not been surpassed
+        if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
-    //plotting
-    if (!converged)  {  
-        series.add(seriesCnt,(-1)*sScale[14-(int)curVal]); 
-        series2.add(seriesCnt,curVal);
-        curValHistory[seriesCnt-1] = sScale[(int)curVal-1];
-        if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
-    }
-    else { 
-        series.add(seriesCnt,curVal); 
-        series2.add(seriesCnt,oldCurVal); 
-        curValHistory[seriesCnt] = curVal;
+        //plotting
+        if (!converged)  {  
+            series.add(seriesCnt,(-1)*sScale[14-(int)curVal]); 
+            series2.add(seriesCnt,curVal);
+            curValHistory[seriesCnt-1] = sScale[(int)curVal-1];
+            if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
+        }
+        else { 
+            series.add(seriesCnt,curVal); 
+            series2.add(seriesCnt,oldCurVal); 
+            curValHistory[seriesCnt] = curVal;
+
+        }
     
-    }
     
+        /* // for debugging purposes
+        seriesRunDir.add(seriesCnt,runDir);
+        int tmpVal = (peaker) ? 1 : 0;
+        seriesPeaker.add(seriesCnt,stepSize);
+         */
     
-    /* // for debugging purposes
-    seriesRunDir.add(seriesCnt,runDir);
-    int tmpVal = (peaker) ? 1 : 0;
-    seriesPeaker.add(seriesCnt,stepSize);
-     */
+        seriesCnt++;
     
-    seriesCnt++;
-    
-    //various checks
-    if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
-    if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
+        //various checks
+        if (runNumber > MAX_RUNS) curVal = -2; //check if max number of runs exceeded
+        if (curVal > LIMIT_UP) curVal = -1; //check if upper bound has been surpassed
   
-    return curVal; 
+        return curVal; 
     }//close whatSize
     
 
@@ -263,7 +271,7 @@ public class Staircase {
 
     public double getConvergenceValueStdDev() {
         if (converged) return convergenceValStdDev;
-    else return -1;
+        else return -1;
     }
     
     

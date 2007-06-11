@@ -6,7 +6,9 @@
 
 package dva;
 
+import dva.acuitytest.AcuityTestFileFilter;
 import dva.acuitytest.AcuityTestManager;
+import dva.acuitytest.StaticAcuityTest;
 import dva.displayer.DisplayModel;
 import dva.displayer.Displayer;
 import dva.util.DvaLogger;
@@ -18,11 +20,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import org.apache.commons.lang.math.NumberUtils;
@@ -1240,6 +1242,23 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             //load patient
             patient = patients.get(s); 
             
+            //set file chooser initial directory
+            this.jFileChooser.setCurrentDirectory( patient.getPatientdir(this.outputdir) );
+            
+            //add filters
+            this.jFileChooser.addChoosableFileFilter( new AcuityTestFileFilter() ); 
+            
+            //disable multiple selection
+            this.jFileChooser.setMultiSelectionEnabled(false); 
+            
+            //shows dialog
+            int res = this.jFileChooser.showDialog(this, "Process"); 
+            
+            // if operator select a file - process it
+            if(res == JFileChooser.APPROVE_OPTION) {
+                StaticAcuityTest.reprocess( jFileChooser.getSelectedFile()); 
+            }
+
             return;
         }
         
@@ -1627,6 +1646,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     //GUI
     private Displayer displayer = null; 
     private boolean callibrating = false;
+    private JFileChooser jFileChooser = new JFileChooser(); 
     
     //resources
     private dva.util.MessageResources resourceBundle = new dva.util.MessageResources("dva/Bundle"); // NOI18N;  

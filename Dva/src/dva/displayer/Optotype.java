@@ -59,11 +59,11 @@ public class Optotype extends Element {
         init();
     }
     
-    public Optotype() {
+    public Optotype(boolean buffered) {
         this.size = 14;  
         this.va = ScreenMapper.getVA( Math.round(this.size) ); 
         this.name = "square"; 
-        init();
+        if (buffered) init();
     }
     
     private void init(){

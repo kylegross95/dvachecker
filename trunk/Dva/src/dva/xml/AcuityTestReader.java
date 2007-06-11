@@ -8,8 +8,10 @@
 package dva.xml;
 
 import dva.DvaCheckerException;
+import dva.acuitytest.AcuityTest;
 import dva.acuitytest.StaticAcuityTest;
 import dva.displayer.Optotype;
+import dva.util.DvaLogger;
 import java.io.Reader;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -96,14 +98,21 @@ public class AcuityTestReader extends DefaultHandler {
                 acuityTest.setTreadmillSpeed( Float.valueOf( treadmillspeed )); 
             }
             
+            String startdate = atts.getValue("date"); 
+            if (!StringUtils.isEmpty(startdate)) { 
+                try {
+                    acuityTest.setStartDate( AcuityTest.getDateFormatter().parse( startdate) ); 
+                    
+                } catch (Exception e){
+                    //ignore
+                    DvaLogger.error(AcuityTestReader.class, "Fail to parse date:" + e.getMessage()); 
+                }
+            }
+            
             String eye = atts.getValue("eye"); 
             if (!StringUtils.isEmpty(eye)) { 
                 acuityTest.setEye( eye );
             }
-            
-            //acuityTest.setStartDate(); 
-            
-            //acuityTest.init(); 
             
         } else if (localName.equals("answer")){
             answerValue = atts.getValue("value");

@@ -19,6 +19,8 @@ import javax.imageio.ImageIO;
  */
 public class ImagesBuffer {
     
+    final public static DvaLogger.LogLevel level = DvaLogger.LogLevel.INFO; 
+    
     //list of already instancied bufferedimage
     private static HashMap<String, BufferedImage> bimgList = new HashMap<String, BufferedImage>();
     

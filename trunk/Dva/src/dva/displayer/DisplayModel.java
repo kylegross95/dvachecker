@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Observable;
 
@@ -112,6 +113,7 @@ public class DisplayModel extends Observable implements ComponentListener {
 
                     //disable message
                     disableMessage(); 
+                    disableImage();
 
                     //display next character
                     currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
@@ -151,6 +153,7 @@ public class DisplayModel extends Observable implements ComponentListener {
                     } else {
 
                         disableMessage(); 
+                        disableImage();
 
                         //display next character
                         currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
@@ -164,6 +167,7 @@ public class DisplayModel extends Observable implements ComponentListener {
 
                 if (operatorEvent == OperatorEvent.NEXT_OPTOTYPE){
                     disableMessage(); 
+                    disableImage();
 
                     //display next character
                     currentElement = AcuityTestManager.getCurrentAcuityTest().getNext();
@@ -207,6 +211,24 @@ public class DisplayModel extends Observable implements ComponentListener {
         this.pauseBetween = pauseBetween; 
     }
     
+    public BufferedImage getImage(){
+        return bimg; 
+    }
+    
+    public void disableImage(){
+        this.image = false; 
+        this.bimg = null; 
+    }
+    
+     public void displayImage(BufferedImage bimg){
+        this.bimg = bimg; 
+        this.image = true; 
+        
+        //notify ModelView
+        setChanged(); 
+        notifyObservers(DisplayModel.EventType.DISPLAY_IMAGE);
+    }
+    
     public void setMessageToDisplay(String messageToDisplay){
         this.messageToDisplay = messageToDisplay; 
         this.message = true; 
@@ -242,6 +264,10 @@ public class DisplayModel extends Observable implements ComponentListener {
     
     public boolean isMessage(){
         return this.message; 
+    }
+    
+    public boolean isImage(){
+        return this.image; 
     }
     
     public int getX(){
@@ -290,7 +316,7 @@ public class DisplayModel extends Observable implements ComponentListener {
     //state machine attributes
     public enum OperatorEvent {NEXT_OPTOTYPE, OPTOTYPE_DONTKNOW, OPTOTYPE_C, OPTOTYPE_D, OPTOTYPE_H, OPTOTYPE_K, OPTOTYPE_N, OPTOTYPE_O, OPTOTYPE_R, OPTOTYPE_S, OPTOTYPE_V, OPTOTYPE_Z }; 
     public enum State { INIT, TESTING, PAUSE, END }; 
-    public enum EventType { DISPLAY_MESSAGE, OPERATOR_EVENT, SCALING, RESIZED_WINDOW}; 
+    public enum EventType { DISPLAY_MESSAGE, DISPLAY_IMAGE, OPERATOR_EVENT, SCALING, RESIZED_WINDOW}; 
     boolean pauseBetween = false; 
     private State currentState = State.INIT; 
     
@@ -305,6 +331,10 @@ public class DisplayModel extends Observable implements ComponentListener {
     private int y; 
     private Element currentElement = new Optotype(true); 
     private double scaleCorrectionFactor = 1; 
+    
+    //image attribute
+    private BufferedImage bimg = null; 
+    private boolean image = false; 
     
     //message attributes
     private String messageToDisplay = ""; 

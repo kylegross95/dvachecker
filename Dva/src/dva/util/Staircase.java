@@ -7,11 +7,11 @@
 
 package dva.util;
 
-import dva.acuitytest.AcuityTestManager;
 import java.io.IOException;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
 import java.io.File;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Staircase algo
@@ -28,6 +28,8 @@ import java.io.File;
   6)  It is assumed that the history of right and wrong responses will be stored by another object.
  */
 public class Staircase {
+    
+    final static int NUMBER_PEAKS_VALLEYS_REQUIRED = 6; 
     
     //state variables
     private float stepSize; //current step size
@@ -137,16 +139,20 @@ public class Staircase {
                 //runDir = runDir 
             }//close else if
             else if (!answer) { //reverse direction, start climbing
+                
+                //FIX JC - This part code has been moved up + A lower/upper bound condition avoid out of bound access
+                if (curVal>0 && curVal<15){
+                    valleys[valleyIdx] = sScale[14-(int)curVal]; //store valley information
+                    valleyIdx++;
+                }
+                
                 stepSize = prevStepSize;
                 curVal = prevVal + stepSize;
                 runDir = 1;
                 
-                //DIRTY FIX (JC)
-                int curValFIXED = (int) (curVal>13 ? 13 : curVal); 
-                valleys[valleyIdx] = sScale[14-(int)curValFIXED-1]; //store valley information
                 
                 //valleys[valleyIdx] = sScale[14-(int)curVal-1]; //store valley information
-                valleyIdx++;
+                //valleyIdx++;
                 if (peaker) peaker = false; //in case of false double correct
             }//close elseif answer
 
@@ -172,6 +178,12 @@ public class Staircase {
                 peaker = true; //we are at a potential double peak  
                 
             } else if(answer && peaker) { //we are at a double peak, invert direction
+               
+                //FIX JC - This part code has been moved up + A lower/upper bound condition avoid out of bound access
+               if (curVal>0 && curVal<15){
+                   peaks[peakIdx] = sScale[14-(int)curVal]; //log the peak
+                   peakIdx++;
+               }
                 
                if(runNumber>1) stepSize = (prevStepSize/2 >= MIN_STEPSIZE)? prevStepSize/2 : MIN_STEPSIZE; 
                curVal = prevVal - stepSize; 
@@ -182,12 +194,8 @@ public class Staircase {
   
                //lastPositive = 1; //log the double peak
                
-               //DIRTY FIX (JC)
-               int curValFIXED = (int) (curVal>13 ? 13 : curVal); 
-               peaks[peakIdx] = sScale[14-curValFIXED-1]; //log the peak
-               
                //peaks[peakIdx] = sScale[14-(int)curVal-1]; //log the peak
-               peakIdx++;
+               //peakIdx++;
 
             }
         } 
@@ -200,21 +208,48 @@ public class Staircase {
         double oldCurVal = 0;
 
         //check for convergence
-        if (numCVals == 6){  //do not consider minSizeCnt for now
-            convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]);
-            convergenceVal = convergenceVal + (peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]);    
-            convergenceVal = convergenceVal/12;
-            Lvalleys = new double[3];
-            Lpeaks = new double[3];
-            Lvalleys[2] = (double) valleys[valleyIdx];
-            Lvalleys[1] = (double) valleys[valleyIdx-1];
-            Lvalleys[0] = (double) valleys[valleyIdx-2];
-            Lpeaks[2] = (double) peaks[valleyIdx];
-            Lpeaks[1] = (double) peaks[valleyIdx-1];
-            Lpeaks[0] = (double) peaks[valleyIdx-2];
-            double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
-            double sumValleys = java.lang.Math.pow(Lvalleys[0]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]+convergenceVal,2.0);
-            convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
+        if (numCVals == NUMBER_PEAKS_VALLEYS_REQUIRED ){  //do not consider minSizeCnt for now
+            //DvaLogger.debug(Staircase.class, "valleyIdx:" + valleyIdx + ", valleys:" + ArrayUtils.toString(valleys) );
+            //DvaLogger.debug(Staircase.class, "peakIdx:" + peakIdx + ", peaks:" + ArrayUtils.toString(peaks) );
+            
+//            //OLD WAY to compute Mean - Has been fixed
+//            //FIX - Index mistake
+//            convergenceVal = (valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]+valleys[valleyIdx-6]);
+//            convergenceVal += (peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]+peaks[peakIdx-6]);    
+//            //convergenceVal = (valleys[valleyIdx]+valleys[valleyIdx-1]+valleys[valleyIdx-2]+valleys[valleyIdx-3]+valleys[valleyIdx-4]+valleys[valleyIdx-5]);
+//            //convergenceVal += (peaks[peakIdx]+peaks[peakIdx-1]+peaks[peakIdx-2]+peaks[peakIdx-3]+peaks[peakIdx-4]+peaks[peakIdx-5]);    
+//            convergenceVal = convergenceVal/12;
+            
+            //OLD WAY to compute Std Dev - seems wrong
+//            Lvalleys = new double[3];
+//            Lpeaks = new double[3];
+//            Lvalleys[2] = (double) valleys[valleyIdx];
+//            Lvalleys[1] = (double) valleys[valleyIdx-1];
+//            Lvalleys[0] = (double) valleys[valleyIdx-2];
+//            Lpeaks[2] = (double) peaks[valleyIdx];
+//            Lpeaks[1] = (double) peaks[valleyIdx-1];
+//            Lpeaks[0] = (double) peaks[valleyIdx-2];
+//            double sumPeaks = java.lang.Math.pow(Lpeaks[0]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[1]-convergenceVal,2.0)+java.lang.Math.pow(Lpeaks[2]-convergenceVal,2.0);
+//            double sumValleys = java.lang.Math.pow(Lvalleys[0]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[1]+convergenceVal,2.0)+java.lang.Math.pow(Lvalleys[2]+convergenceVal,2.0);
+//            convergenceValStdDev =  java.lang.Math.sqrt((1/12)*(sumPeaks+sumValleys));
+            
+            
+            //NEW way 
+            double sum = 0; 
+            double sumOfSquare = 0; 
+            
+            for (int i=1; i <= NUMBER_PEAKS_VALLEYS_REQUIRED; i++){
+            
+                sum += peaks[peakIdx - i];
+                sum += valleys[valleyIdx - i]; 
+                
+                sumOfSquare += peaks[peakIdx - i] * peaks[peakIdx - i];
+                sumOfSquare += valleys[valleyIdx - i] * valleys[valleyIdx - i];
+            }
+       
+            convergenceVal = sum / (NUMBER_PEAKS_VALLEYS_REQUIRED * 2); 
+            convergenceValStdDev = Math.sqrt( sumOfSquare/(NUMBER_PEAKS_VALLEYS_REQUIRED * 2) - convergenceVal * convergenceVal ); 
+            
             converged = true; 
             oldCurVal = curVal;
             curVal = 0;

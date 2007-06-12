@@ -730,7 +730,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCreateReport">
               <Properties>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new CreateReportAction(&quot;Create Report&quot;, &quot;mkreport24&quot;, &quot;Create Report&quot;)" type="code"/>
+                  <Connection code="new ReprocessResultsAction(&quot;Reprocess results&quot;, &quot;reprocres24&quot;, &quot;Reprocess results&quot;)" type="code"/>
                 </Property>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+R"/>

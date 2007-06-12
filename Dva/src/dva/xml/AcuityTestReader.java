@@ -27,7 +27,7 @@ import org.xml.sax.helpers.ParserAdapter;
  */
 public class AcuityTestReader extends DefaultHandler {
     
-    Optotype opto = new Optotype(false);
+    Optotype opto = null;
     String text = "";
     
     String answerValue = ""; 
@@ -119,7 +119,7 @@ public class AcuityTestReader extends DefaultHandler {
             answerStr = atts.getValue("str");
             
         } else if (localName.equals("optotype")){
-
+            opto = new Optotype(false); 
         }
     }
     
@@ -158,6 +158,7 @@ public class AcuityTestReader extends DefaultHandler {
 
             
         } else if (localName.equals("acuity")) {
+            //DvaLogger.debug(AcuityTestReader.class, "va:" + Double.valueOf( getText() ) ); 
             opto.setVa( Double.valueOf( getText() ) );
         }
     }

@@ -11,10 +11,11 @@ import java.io.IOException;
 import org.jfree.data.xy.*;
 import org.jfree.chart.ChartUtilities;
 import java.io.File;
-import org.apache.commons.lang.ArrayUtils;
+import java.text.DecimalFormat;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYImageAnnotation;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.SymbolAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
@@ -71,10 +72,10 @@ public class Staircase {
     private final int MAX_RUNS = 60;
     
     //chart output
-    private XYSeries series;
-    private XYSeries series2;
-    private XYSeries seriesRunDir;
-    private XYSeries seriesPeaker;
+//    private XYSeries series;
+    private XYSeries seriesLinear;
+//    private XYSeries seriesRunDir;
+//    private XYSeries seriesPeaker;
     
     //files
     File outputdir = null; 
@@ -82,7 +83,7 @@ public class Staircase {
     
     //snelling scale
         
-    double[] sScale  = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1.0, 1.25, 1.67, 2.0};
+    //double[] sScale  = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1.0, 1.25, 1.67, 2.0};
  
     /**
      * Creates a new instance of Staircase
@@ -95,10 +96,10 @@ public class Staircase {
         curValHistory = new double[50];
         curValResponses = new boolean[50];
         //lastPositive = 1; //to avoid step resizing at init
-        series = new XYSeries("Values-Snellen Scale");
-        series2 = new XYSeries("Values-Linear");
-        seriesRunDir = new XYSeries("RunDir");
-        seriesPeaker  = new XYSeries("Peaker");
+//        series = new XYSeries("Values-Snellen Scale");
+        seriesLinear = new XYSeries("Values-Linear");
+//        seriesRunDir = new XYSeries("RunDir");
+//        seriesPeaker  = new XYSeries("Peaker");
         numCVals = 0;
         convergenceVal = 0;
         convergenceValStdDev = 0;
@@ -118,8 +119,8 @@ public class Staircase {
         //start logging curVal
         curValHistory[seriesCnt-1] = initSize;
         curValResponses[seriesCnt-1] = true; 
-        series.add(seriesCnt,initSize);
-        series2.add(seriesCnt,initSize);
+//        series.add(seriesCnt,initSize);
+        seriesLinear.add(seriesCnt,initSize);
         seriesCnt++;
         peaker = false;
         minSizeCnt = 0;
@@ -152,7 +153,7 @@ public class Staircase {
                 
                 //FIX JC - This part code has been moved up + A lower/upper bound condition avoid out of bound access
                 if (curVal>0 && curVal<15){
-                    valleys[valleyIdx] = sScale[14-(int)curVal]; //store valley information
+                    valleys[valleyIdx] = ScreenMapper.getVA( (int)curVal ); //sScale[14-(int)curVal]; //store valley information
                     valleyIdx++;
                 }
                 
@@ -191,7 +192,7 @@ public class Staircase {
                
                 //FIX JC - This part code has been moved up + A lower/upper bound condition avoid out of bound access
                if (curVal>0 && curVal<15){
-                   peaks[peakIdx] = sScale[14-(int)curVal]; //log the peak
+                   peaks[peakIdx] = ScreenMapper.getVA( (int)curVal ); //sScale[14-(int)curVal]; //log the peak
                    peakIdx++;
                }
                 
@@ -269,21 +270,21 @@ public class Staircase {
     
     
         //check min limit has not been surpassed
-        if (curVal < LIMIT_DOWN && curVal != 0) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
+        if (curVal < LIMIT_DOWN && (curVal != 0 || numCVals < 6) ) curVal = LIMIT_DOWN; //check if lower bound has been surpassed
     
         //keep track of patient answer
         curValResponses[seriesCnt-1] = answer;
         
         //plotting
         if (!converged)  {  
-            series.add(seriesCnt,(-1)*sScale[14-(int)curVal]); 
-            series2.add(seriesCnt,curVal);
-            curValHistory[seriesCnt-1] = sScale[(int)curVal-1];
+//            series.add(seriesCnt,(-1)* ScreenMapper.getVA( (int)curVal ) ); //sScale[14-(int)curVal]); 
+            seriesLinear.add(seriesCnt,curVal);
+            curValHistory[seriesCnt-1] = ScreenMapper.getVA( (int)curVal ); //sScale[(int)curVal-1];
             //if(seriesCnt>0) curValResponses[seriesCnt-1] = answer;
         }
         else { 
-            series.add(seriesCnt,curVal); 
-            series2.add(seriesCnt,oldCurVal); 
+//            series.add(seriesCnt,curVal); 
+            seriesLinear.add(seriesCnt,oldCurVal); 
             curValHistory[seriesCnt] = curVal;
 
         }
@@ -351,21 +352,33 @@ public class Staircase {
 //        }
         
         XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series2);
+        dataset.addSeries(seriesLinear);
         
         final XYItemRenderer renderer1 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis1 = new NumberAxis("Value");
+//        final NumberAxis rangeAxis1 = new NumberAxis("Value");
+//        String[] symbols = new String[15];
+//        symbols[0] = "-"; 
+//        for (int i=1; i < 14; i++){
+//            //symbols[i+1] = String.valueOf( ScreenMapper.getVA(14-i+1) ); 
+//            symbols[i+1] = String.valueOf( ScreenMapper.getVA(i) ); 
+//        }
+//        final SymbolAxis rangeAxis2 = new SymbolAxis("Value", symbols);
+        final SymbolAxis rangeAxis2 = new SymbolAxis("VA", ScreenMapper.getVisualAcuityChartsAsStr());
+        
         final NumberAxis domainAxis1 = new NumberAxis("Run");
         
-        XYPlot linearPlot = new XYPlot(dataset, domainAxis1, rangeAxis1, renderer1);
+        XYPlot linearPlot = new XYPlot(dataset, domainAxis1, rangeAxis2, renderer1);
         linearPlot.setOrientation(PlotOrientation.VERTICAL);  
         //loop though series and add annotation
         for (int i=0; i < seriesCnt-2 ; i++){
-            linearPlot.addAnnotation( new XYImageAnnotation(series2.getX(i).intValue(), series2.getY(i).intValue(),  ImagesBuffer.get(curValResponses[i+1] ? "plus" : "minus") ) );
+            linearPlot.addAnnotation( new XYImageAnnotation(seriesLinear.getX(i).intValue(), seriesLinear.getY(i).intValue(),  ImagesBuffer.get(curValResponses[i+1] ? "plus" : "minus") ) );
         }
-        linearPlot.addAnnotation( new XYImageAnnotation(series2.getX(seriesCnt-2).intValue(), series2.getY(seriesCnt-2).intValue(),  ImagesBuffer.get("graypoint") ) );
+        linearPlot.addAnnotation( new XYImageAnnotation(seriesLinear.getX(seriesCnt-2).intValue(), seriesLinear.getY(seriesCnt-2).intValue(),  ImagesBuffer.get("graypoint") ) );
         
-        JFreeChart chartlinear = new JFreeChart("DVA Experimental Values - Linear Scale", JFreeChart.DEFAULT_TITLE_FONT, linearPlot, true);
+        DecimalFormat decf = new DecimalFormat("0.00"); 
+        String meanStr = decf.format(this.convergenceVal);
+        String stdStr = decf.format(this.convergenceValStdDev);
+        JFreeChart chartlinear = new JFreeChart("DVA Experimental Results (mean:" + meanStr + " +/- " + stdStr + ")", JFreeChart.DEFAULT_TITLE_FONT, linearPlot, false);
         File linearChartFile = new File(outputdir + "/" + fileprefix + param + "-linear.jpg");
         
         try {

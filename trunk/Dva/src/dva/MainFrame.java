@@ -6,6 +6,7 @@
 
 package dva;
 
+import dva.acuitytest.AcuityTest;
 import dva.acuitytest.AcuityTestFileFilter;
 import dva.acuitytest.AcuityTestManager;
 import dva.acuitytest.StaticAcuityTest;
@@ -20,6 +21,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -160,9 +162,9 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     /**
      * New Experiment action
      */
-    public class CreateReportAction extends AbstractAction {
+    public class ReprocessResultsAction extends AbstractAction {
         
-        public CreateReportAction(String text, String icon, String desc) {
+        public ReprocessResultsAction(String text, String icon, String desc) {
             super(text, GUIUtils.createNavigationIcon(icon));
             putValue(SHORT_DESCRIPTION, desc);
         }
@@ -177,7 +179,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
             String s = (String)JOptionPane.showInputDialog(
                         MainFrame.getInstance(),
                         "Select a patient name from the list:",
-                        "Create report",
+                        "Reprocess results",
                         JOptionPane.PLAIN_MESSAGE,
                         null,
                         patients.keySet().toArray(),
@@ -186,7 +188,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
              //If a string was returned, say so.
             if ((s != null) && (s.length() > 0)) {
 
-                DvaLogger.debug(MainFrame.class, "Create report:" + s); 
+                DvaLogger.debug(MainFrame.class, "Reprocess results:" + s); 
                 //load patient
                 patient = patients.get(s); 
 
@@ -197,14 +199,16 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
                 jFileChooser.addChoosableFileFilter( new AcuityTestFileFilter() ); 
 
                 //disable multiple selection
-                jFileChooser.setMultiSelectionEnabled(false); 
+                jFileChooser.setMultiSelectionEnabled(true); 
 
                 //shows dialog
                 int res = jFileChooser.showDialog(MainFrame.getInstance(), "Process"); 
 
                 // if operator select a file - process it
                 if(res == JFileChooser.APPROVE_OPTION) {
-                    StaticAcuityTest.reprocess( jFileChooser.getSelectedFile()); 
+                    File[] files = jFileChooser.getSelectedFiles(); 
+                    for (int i=0; i < files.length; i++)
+                        StaticAcuityTest.reprocess( files[i] ); 
                 }
 
                 return;
@@ -1177,7 +1181,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jMenuItemNewExperiment.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuFile.add(jMenuItemNewExperiment);
 
-        jMenuItemCreateReport.setAction(new CreateReportAction("Create Report", "mkreport24", "Create Report"));
+        jMenuItemCreateReport.setAction(new ReprocessResultsAction("Reprocess results", "reprocres24", "Reprocess results"));
         jMenuItemCreateReport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         jMenuFile.add(jMenuItemCreateReport);
 

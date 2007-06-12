@@ -140,11 +140,15 @@ public abstract class AcuityTest {
     }
     
     public void toFile() throws AcuityTestFileCreationException {
+        toFile(""); 
+    }
+    
+    public void toFile(String params) throws AcuityTestFileCreationException {
         File actuitestfile = null; 
         
         try {
             
-            actuitestfile = new File( patientdir + ("/" + getFileDesc() + "_acuitytest-data.xml" ) ); 
+            actuitestfile = new File( patientdir + ("/" + getFileDesc() + params + "_acuitytest-data.xml" ) ); 
             
             actuitestfile.createNewFile(); 
             
@@ -215,7 +219,7 @@ public abstract class AcuityTest {
     }
     
     public void setStartDate(Date startDate){
-        startDate = this.startDate; 
+        this.startDate = startDate; 
     }
 
     public void setResult(String resultComment) {

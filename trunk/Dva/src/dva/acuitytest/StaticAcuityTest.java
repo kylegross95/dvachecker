@@ -60,15 +60,33 @@ public class StaticAcuityTest  extends AcuityTest {
             //load actuiyTest from file
             FileReader fr = new FileReader(acuitytestFile);
             
-            //extract date
-            
-            //extract eye
-
             //read actuiyTest xml file
             StaticAcuityTest acuityTest = AcuityTestReader.process( fr ); 
             
+            //close stream
+            fr.close(); 
+            
+            //----------- extract data from file name -------------
+//            // name of the file should be like '06-05-2007_16-20-07_0kmh_left_acuitytest-data.xml'
+//            String name = acuitytestFile.getName(); 
+//            
+//            //tokenize according to '_'
+//            String[] tokens = name.split("_");
+//            String date = tokens[0] + "_" + tokens[1]; 
+//            String speed = tokens[2].replaceAll("kmh",""); 
+//            String eye = tokens[3]; 
+//            
+//            DvaLogger.debug(StaticAcuityTest.class, "date:" + date + ", speed:" + speed + ", eye:" + eye);
+//            try { acuityTest.setStartDate(AcuityTest.getDateFormatter2().parse(date));
+//            } catch (Exception e){
+//                DvaLogger.error(StaticAcuityTest.class, e); 
+//            }
+//            acuityTest.setEye( eye ); 
+            //----------- extract data from file name -------------
+            
             acuityTest.setPatientdir( acuitytestFile.getParentFile() ); 
-            acuityTest.setStartDate(); 
+                    
+            //acuityTest.setStartDate(); 
             acuityTest.init(); 
             
             for (TestAnswer ta : acuityTest.getTestAnswers() ){
@@ -79,24 +97,36 @@ public class StaticAcuityTest  extends AcuityTest {
                 int computedSize = (int)acuityTest.getStaircase().whatSize( currentPatientAnswer ); 
                 //DvaLogger.debug(StaticAcuityTest.class, "computedsize:" + computedSize); 
                 
+                boolean finished = false; 
+                
                 switch (computedSize){
                     case 0:
+                        acuityTest.setConvergenceValue( acuityTest.getStaircase().getConvergenceValue() );
+                        acuityTest.setConvergenceStdDev( acuityTest.getStaircase().getConvergenceValueStdDev() ); 
                         DvaLogger.info(StaticAcuityTest.class, "=> convergence"); 
-                        acuityTest.getStaircase().doGraph("_convergence-NEW");
+                        acuityTest.getStaircase().doGraph("_convergence");
+                        finished = true;
                         break; 
                     case -1:
                         DvaLogger.info(StaticAcuityTest.class, "=> divergence"); 
-                        acuityTest.getStaircase().doGraph("_divergence-NEW");
+                        acuityTest.getStaircase().doGraph("_divergence");
+                        finished = true;
                         break;
                     case -2:
                         DvaLogger.info(StaticAcuityTest.class, "=> exceed max step"); 
-                        acuityTest.getStaircase().doGraph("_exceededSteps-NEW");
+                        acuityTest.getStaircase().doGraph("_exceededSteps");
+                        finished = true;
                         break; 
                     default:
                         /* ignore */
                         break;
                 }
+                
+                if (finished) break; 
             }
+            
+            //recreate the file
+            acuityTest.toFile(); 
             
         } catch (Exception dcex){
             DvaLogger.error(StaticAcuityTest.class, dcex); 
@@ -134,7 +164,7 @@ public class StaticAcuityTest  extends AcuityTest {
        else if (lastSize == 0) { //convergence
           sc.doGraph("_convergence"); 
           this.setConvergenceValue( sc.getConvergenceValue() );
-          //this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
+          this.setConvergenceStdDev( sc.getConvergenceValueStdDev() ); 
           this.setTestDone(true); 
           //AcuityTestManager.toFile();
           throw new AcuityTestConvergenceException(sc.getConvergenceValue(), sc.getConvergenceValueStdDev());

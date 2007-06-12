@@ -137,7 +137,7 @@ public class Optotype extends Element {
         sb.append("</name><acuity>"); 
         String vaStr = String.valueOf( va );  
         vaStr = vaStr == null ? "" : vaStr; 
-        DvaLogger.debug("va:" + vaStr); 
+        //DvaLogger.debug("va:" + vaStr); 
         sb.append( vaStr ); 
         sb.append("</acuity></optotype>"); 
         return sb.toString();

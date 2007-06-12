@@ -29,6 +29,10 @@ public class DvaLogger {
         log(LogLevel.DEBUG, clazz, null, msg);
     }
     
+    public static void debug(Class clazz, Exception e){
+        log(LogLevel.DEBUG, clazz, e, null);
+    }
+    
     public static void info(String msg){
         log(LogLevel.INFO, msg);
     }

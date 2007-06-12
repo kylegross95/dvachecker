@@ -45,6 +45,25 @@ public class ScreenMapper {
         2       // 1
     };
     
+    private static String visualAcuityChartsAsStr[] = {
+
+        "", 
+        "2.00",      // 1
+        "1.67",   // 2
+        "1.25",   // 3
+        "1.00",      // 4
+        "0.80",    // 5
+        "0.67",   // 6
+        "0.50",    // 7
+        "0.40",    // 8
+        "0.33",   // 9
+        "0.25",   // 10
+        "0.20",    // 11
+        "0.17",   // 12
+        "0.13",   // 13
+        "0.10"    // 14
+    };
+    
     private double horizontalRes = 1280;
     private double verticalRes = 800;
     private float diagonalLength = 12.1f;
@@ -54,11 +73,15 @@ public class ScreenMapper {
     private double characterResolution = 1400;
     
     
+    public static String[] getVisualAcuityChartsAsStr(){
+        return visualAcuityChartsAsStr; 
+    }
     /*
      *
      */
     public static double getVA(int step){
-       return visualAcuityCharts[14 - step];
+       return visualAcuityCharts[14 - (step < 1 ? 1 : step)];
+       //return visualAcuityCharts[14 - step];
     }
     
     private GraphicsDevice outputGraphicsDevice = null;

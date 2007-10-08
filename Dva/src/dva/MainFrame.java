@@ -218,7 +218,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
     
     
     /**
-     * New Experiment action
+     * SetupDisplayer action
      */
     public class SetupDisplayerAction extends AbstractAction {
         
@@ -229,6 +229,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         
         public void actionPerformed(ActionEvent e) {
             
+            Displayer.getInstance().setVisible(true);
             Displayer.getInstance().getDisplayModel().enableCallibration();
             
             //show displayer setup dialog
@@ -578,6 +579,7 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Patient distance:");
 
+        jTextFieldDialogSetupDisplayerPatientDistance.setEditable(false);
         jTextFieldDialogSetupDisplayerPatientDistance.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldDialogSetupDisplayerPatientDistance.setText("6.00");
 
@@ -605,16 +607,19 @@ public class MainFrame extends javax.swing.JFrame implements Observer {
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Diagonal length:");
 
+        jTextFieldDialogSetupDisplayerHorizRes.setEditable(false);
         jTextFieldDialogSetupDisplayerHorizRes.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldDialogSetupDisplayerHorizRes.setText("1200");
 
         jLabel16.setText("px *");
 
+        jTextFieldDialogSetupDisplayerVertRes.setEditable(false);
         jTextFieldDialogSetupDisplayerVertRes.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldDialogSetupDisplayerVertRes.setText("800");
 
         jLabel17.setText("px");
 
+        jTextFieldDialogSetupDisplayerDiagonalLength.setEditable(false);
         jTextFieldDialogSetupDisplayerDiagonalLength.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldDialogSetupDisplayerDiagonalLength.setText("12.1");
 

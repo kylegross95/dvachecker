@@ -7,14 +7,11 @@
 
 package dva.acuitytest;
 
-import dva.displayer.DisplayModel;
-import dva.util.DvaLogger;
 import dva.util.MessageResources;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -43,6 +40,9 @@ public  class AcuityTestManager {
             
             Class clazz = Class.forName("dva.acuitytest." + acuityTestIds[currentAcuityTestId] + "AcuityTest");
             AcuityTest acuityTest = (AcuityTest) clazz.newInstance(); 
+            
+            // init random generator seed
+            acuityTest.getRandom().setSeed(new Date().getTime());
             
             acuityTest.setName(acuityTestIds[currentAcuityTestId]);
             

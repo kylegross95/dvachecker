@@ -40,22 +40,22 @@ public class Staircase {
     final static int NUMBER_PEAKS_VALLEYS_REQUIRED = 6; 
     
     //state variables
-    private float stepSize; //current step size
-    private float prevStepSize; //previous run step size
-    private float curVal; //current value/level/size
-    private float prevVal; //previous run value/level/size
-    private int runDir; //1 going up, -1 going down
-    private int runNumber; //number of runs so far
+    private float stepSize;         //current step size
+    private float prevStepSize;     //previous run step size
+    private float curVal;           //current value/level/size
+    private float prevVal;          //previous run value/level/size
+    private int runDir;             //1 going up, -1 going down
+    private int runNumber;          //number of runs so far
     private int peakIdx;
-    private double peaks[]; //vector with peaks
+    private double peaks[];         //vector with peaks
     private int valleyIdx;
-    private double valleys[]; //vector with valleys
+    private double valleys[];       //vector with valleys
     private double Lvalleys[];
     private double Lpeaks[];
-    private boolean peaker; //var to identify double peaks
+    private boolean peaker;         //var to identify double peaks
     private float minSizeCnt; 
-    //private int lastPositive; //0: single, 1: double (peak)
-    private boolean converged; //whether the algo has converged yet
+    //private int lastPositive;     //0: single, 1: double (peak)
+    private boolean converged;      //whether the algo has converged yet
     private double convergenceVal;
     private double convergenceValStdDev;
     private int seriesCnt;
@@ -81,20 +81,19 @@ public class Staircase {
     File outputdir = null; 
     String fileprefix = ""; 
     
-    //snelling scale
-        
+    //snelling scale        
     //double[] sScale  = {0.1, 0.13, 0.17, 0.2, 0.25, 0.33, 0.4, 0.5, 0.67, 0.8, 1.0, 1.25, 1.67, 2.0};
  
     /**
      * Creates a new instance of Staircase
      */
     public Staircase() {
-        peaks = new double[50];
+        peaks = new double[200];
         peakIdx = 0;
-        valleys = new double[50];
+        valleys = new double[200];
         valleyIdx = 0;
-        curValHistory = new double[50];
-        curValResponses = new boolean[50];
+        curValHistory = new double[200];
+        curValResponses = new boolean[200];
         //lastPositive = 1; //to avoid step resizing at init
 //        series = new XYSeries("Values-Snellen Scale");
         seriesLinear = new XYSeries("Values-Linear");
@@ -133,8 +132,8 @@ public class Staircase {
  
     public float whatSize(boolean answer) {
         //prepare for next round
-        prevStepSize = stepSize;
-        prevVal = curVal;  
+        prevStepSize    = stepSize;
+        prevVal         = curVal;  
         
         if(runDir == -1) { //descending
             if(answer && !peaker) { //check again

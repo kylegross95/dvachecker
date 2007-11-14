@@ -87,6 +87,7 @@ public class Staircase {
     /**
      * Creates a new instance of Staircase
      */
+    // Increase array size from 50 to 200 to avoid program crash when patient responses are more than 49
     public Staircase() {
         peaks = new double[200];
         peakIdx = 0;

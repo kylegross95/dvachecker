@@ -1,0 +1,2 @@
+With the help of Prof. Marco PELIZZONE and Jean-Philippe GUYOT working at the hospital of Geneva(Switzerland), we setup an experimental protocol allowing to accuiratly quantify the static and dynamic visual acuity of patient having vestibular problems.
+The project'dvachecker' includes the application 'dvachecker' and the specification allowing to setup the entire experimentation.
